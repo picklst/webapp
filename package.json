@@ -1,0 +1,22 @@
+{
+  "name": "Webapp",
+  "version": "0.0.3",
+  "description": "NextJS based WebApp",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "author": "aswinshenoy <aswinshenoy65@gmail.com>",
+  "dependencies": {
+    "@zeit/next-css": "^1.0.1",
+    "@zeit/next-sass": "^1.0.1",
+    "@zeit/next-source-maps": "0.0.3",
+    "next": "9.2.2",
+    "next-compose-plugins": "^2.2.0",
+    "node-sass": "^4.13.1",
+    "react": "16.13.0",
+    "react-dom": "16.13.0"
+  }
+}
