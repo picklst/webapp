@@ -1,12 +1,26 @@
 import * as React from 'react';
+// @ts-ignore
+import Login from "../../actions/functions/Login.ts";
+// @ts-ignore
+import { useGlobalState } from '../../actions/states/Auth.ts';
+import { useRouter } from 'next/router';
 
 const LoginForm: React.FC<React.Props> = () => {
+    const router = useRouter();
     const usernameField = React.useRef<HTMLInputElement>(null);
     const passwordField = React.useRef<HTMLInputElement>(null);
 
     const [touched, touch] = React.useState<boolean>(false);
     const [invalidUsername, showUsernameValidationError] = React.useState<boolean>(true);
     const [invalidPassword, showPasswordValidationError] = React.useState<boolean>(true);
+    const [invalidCredentials, setInvalidCredentials] = React.useState<boolean>(false);
+    const [token, setToken] = useGlobalState('token');
+
+    React.useEffect(() => {
+        if(token != undefined) {
+            router.push(`/dashboard`);
+        }
+    });
 
     function validateInput(input: string): boolean {
         if(input.length < 1)
@@ -26,12 +40,22 @@ const LoginForm: React.FC<React.Props> = () => {
     const handleLogin: React.ReactEventHandler<HTMLFormElement> = (ev) => {
         ev.preventDefault();
         const username = ev.currentTarget['username-email'].value.toLowerCase();
-        const password = ev.currentTarget['password'].value.toLowerCase();
+        const password = ev.currentTarget['password'].value;
         if(validateInput(username) && validateInput(password))
-            console.log(username, password);
+            Login({username, password}).then(response => {
+                if(response.hasOwnProperty('errors'))
+                    setInvalidCredentials(true);
+                else
+                   setToken(response.token);
+            })
     };
 
     return <div>
+        {
+            invalidCredentials ?
+                <div className="alert alert-danger">Invalid Username or Password. Please Try Again.</div>
+            : null
+        }
         <form onSubmit={handleLogin}>
             <div className="form-group">
                 <label htmlFor="username-email">Username / Email</label>
@@ -74,5 +98,6 @@ const LoginForm: React.FC<React.Props> = () => {
         </form>
     </div>;
 };
+
 
 export default LoginForm;
