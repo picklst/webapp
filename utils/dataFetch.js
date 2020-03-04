@@ -2,22 +2,25 @@ import fetch from 'isomorphic-fetch';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-
-const API_URL = 'http://127.0.0.1:7000/';
-const TOKEN_PREFIX = 'JWT';
+import { API } from '../constants';
 
 export default ({ query, variables }) => {
+
+    //@todo support custom/multiple providers, currently uses the 0 index provider
+    const API_URL = API.providers[0].endpoint;
+    const TOKEN_PREFIX = API.providers[0].endpoint;
+
     const token = cookies.get('token');
     const apiConfig = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: token ? `${TOKEN_PREFIX} ${token}` : null,
+            Authorization: token ? `${TOKEN_PREFIX}${token}` : null,
         },
         body: JSON.stringify({ query, variables }),
     };
 
-    return fetch(API_URL, apiConfig).then(function(response) {
+    return fetch(API_URL, apiConfig).then((response) => {
         const contentType = response.headers.get('content-type');
         if (response.ok) {
             if (contentType && contentType.indexOf('application/json') !== -1) {
@@ -30,5 +33,7 @@ export default ({ query, variables }) => {
         }
         console.error(`Response status ${response.status} during dataFetch for url ${response.url}.`);
         throw response;
+    }).catch((reason) => {
+        return reason
     });
 };

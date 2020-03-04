@@ -1,4 +1,5 @@
 import dataFetch from "../../utils/dataFetch";
+// @ts-ignore
 import { setUsername, setToken, setRefreshToken } from '../states/Auth.ts';
 
 interface tokenAuthParams { username: string, password: string }
@@ -19,13 +20,18 @@ async function Login({username, password}: tokenAuthParams)
 {
     return await getAuthToken(username, password).then(response => {
         if (response.errors) {
-            console.error("error in auth");
+            console.error("We have an error in authenticating you.");
             return { errors: response.errors };
-        } else {
+        } else if(response.data) {
             setToken(response.data.tokenAuth.refreshToken);
             setUsername(username);
             setRefreshToken(response.data.tokenAuth.token);
             return response.data.tokenAuth;
+        } else {
+            console.error("We are facing technical issues in authenticating you.");
+            return { errors: [
+                {message: "We tried our best, but we got no response from our servers. Please try refreshing the page or coming back later."}
+            ]};
         }
     });
 }

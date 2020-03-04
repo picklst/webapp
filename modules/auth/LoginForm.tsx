@@ -5,6 +5,8 @@ import Login from "../../actions/functions/Login.ts";
 import { useGlobalState } from '../../actions/states/Auth.ts';
 import { useRouter } from 'next/router';
 
+import shortid from "shortid";
+
 const LoginForm: React.FC<React.Props> = () => {
     const router = useRouter();
     const usernameField = React.useRef<HTMLInputElement>(null);
@@ -17,9 +19,7 @@ const LoginForm: React.FC<React.Props> = () => {
     const [token, setToken] = useGlobalState('token');
 
     React.useEffect(() => {
-        if(token != undefined) {
-            router.push(`/dashboard`);
-        }
+        if(typeof token === "string") { router.push(`/`); }
     });
 
     function validateInput(input: string): boolean {
@@ -37,6 +37,7 @@ const LoginForm: React.FC<React.Props> = () => {
         state<boolean>(!validateInput<string>(value));
     };
 
+    const [errors, setErrors] = React.useState<Array<object>|any>(null);
     const handleLogin: React.ReactEventHandler<HTMLFormElement> = (ev) => {
         ev.preventDefault();
         const username = ev.currentTarget['username-email'].value.toLowerCase();
@@ -44,45 +45,52 @@ const LoginForm: React.FC<React.Props> = () => {
         if(validateInput(username) && validateInput(password))
             Login({username, password}).then(response => {
                 if(response.hasOwnProperty('errors'))
+                {
+                    setErrors(response.errors);
                     setInvalidCredentials(true);
+                }
                 else
                    setToken(response.token);
             })
     };
 
-    return <div>
+    return <div className="bg-white p-2">
         {
             invalidCredentials ?
-                <div className="alert alert-danger">Invalid Username or Password. Please Try Again.</div>
+                <div className="alert alert-danger">
+                    {errors.map(e => <span key={shortid.generate()}>{e.message}</span>)}
+                </div>
             : null
         }
         <form onSubmit={handleLogin}>
             <div className="form-group">
-                <label htmlFor="username-email">Username / Email</label>
+                <label className="d-none" htmlFor="username-email">Username / Email</label>
                 <input
                     ref={usernameField}
                     name="username-email"
-                    placeholder="Username / Email"
+                    placeholder="Enter Username / Email"
                     spellCheck="false"
                     autoComplete="off"
                     autoCorrect="off"
                     autoCapitalize="off"
+                    className="d-block form-control-plaintext"
                     onFocus={() => { showUsernameValidationError<boolean>(false); }}
                     onBlur={(e) => handleInputBlur<HTMLInputElement, Function>(e, showUsernameValidationError)}
                 />
                 { invalidUsername && touched ? <div className="text-danger">Please enter a valid username / email</div> : null }
             </div>
             <div className="form-group">
-                <label htmlFor="password">Password</label>
+                <label className="d-none" htmlFor="password">Password</label>
                 <input
                     ref={passwordField}
                     name="password"
-                    placeholder="Password"
+                    placeholder="Enter Password"
                     type="password"
                     spellCheck="false"
                     autoComplete="off"
                     autoCorrect="off"
                     autoCapitalize="off"
+                    className="d-block form-control-plaintext"
                     onFocus={() => { showPasswordValidationError<boolean>(false);  }}
                     onBlur={(e) => handleInputBlur<HTMLInputElement, Function>(e, showPasswordValidationError)}
                 />
@@ -91,7 +99,7 @@ const LoginForm: React.FC<React.Props> = () => {
             <button
                 disabled={invalidUsername || invalidPassword}
                 type="submit"
-                className="btn btn-primary"
+                className="btn btn-block btn-primary"
             >
                 Login
             </button>

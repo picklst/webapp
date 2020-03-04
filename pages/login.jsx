@@ -8,8 +8,10 @@ const LoginPage = () => {
             title: "Login"
         }}
     >
-        <h1>Login</h1>
-        <LoginForm />
+        <div className="container p-2">
+            <h1>Login</h1>
+            <LoginForm />
+        </div>
     </Base>;
 };
 

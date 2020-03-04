@@ -10,27 +10,42 @@ type State = {
 };
 
 const defaultState: State = {
-    token: cookies.get('username'),
-    refreshToken: cookies.get('refreshToken'),
-    username: cookies.get('username')
+    token: cookies.get('username') || null,
+    refreshToken: cookies.get('refreshToken') || null,
+    username: cookies.get('username') || null
 };
 
 // @ts-ignore
 const { setGlobalState, useGlobalState } = createGlobalState(defaultState);
 
-export const setToken = (token: string) => {
-    cookies.set('token', token);
+export const setToken = (token: string|null) => {
+    if(token === null)
+        cookies.remove('token');
+    else
+        cookies.set('token', token);
     setGlobalState('token', token );
 };
 
-export const setRefreshToken = (refreshToken: string) => {
-    cookies.set('refreshToken', refreshToken);
+export const setRefreshToken = (refreshToken: string|null) => {
+    if(refreshToken === null)
+        cookies.remove('refreshToken');
+    else
+        cookies.set('refreshToken', refreshToken);
     setGlobalState('refreshToken', refreshToken );
 };
 
-export const setUsername = (username: string) => {
-    cookies.set('username', username);
+export const setUsername = (username: string|null) => {
+    if(username === null)
+        cookies.remove('username');
+    else
+        cookies.set('username', username);
     setGlobalState('username', username );
+};
+
+export const Logout = () => {
+    setUsername(null);
+    setToken(null);
+    setRefreshToken(null);
 };
 
 export { useGlobalState };

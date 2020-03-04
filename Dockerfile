@@ -1,5 +1,6 @@
 FROM node:alpine
 
+RUN apk add build-base zlib-dev jpeg-dev
 RUN mkdir /app
 WORKDIR /app
 

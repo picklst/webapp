@@ -1,6 +1,7 @@
 const withPlugins = require('next-compose-plugins');
 const sass = require('@zeit/next-sass');
 const css = require('@zeit/next-css');
+const OptimizedImages = require('next-optimized-images');
 const withSourceMaps = require( '@zeit/next-source-maps' );
 
 const customConfig = {
@@ -25,4 +26,5 @@ module.exports = withPlugins([
     [sass, {
         test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2|mp4)$/,
     }],
+    [OptimizedImages],
 ], customConfig);
