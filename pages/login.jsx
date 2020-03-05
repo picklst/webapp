@@ -1,6 +1,6 @@
 import React from 'react';
 import Base from "../components/core/Base";
-import LoginForm from "../modules/auth/LoginForm.tsx";
+import LoginCard from "../modules/auth/LoginCard.tsx";
 
 const LoginPage = () => {
     return <Base
@@ -10,7 +10,7 @@ const LoginPage = () => {
     >
         <div className="container p-2">
             <h1>Login</h1>
-            <LoginForm />
+            <LoginCard />
         </div>
     </Base>;
 };

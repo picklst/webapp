@@ -4,15 +4,19 @@ import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 
 type State = {
-    token: string,
-    username: string,
-    refreshToken: string
+    token: string|null,
+    username: string|null,
+    refreshToken: string|null,
+    userData: object|null,
+    rememberUser: boolean
 };
 
 const defaultState: State = {
-    token: cookies.get('username') || null,
+    token: cookies.get('token') || null,
     refreshToken: cookies.get('refreshToken') || null,
-    username: cookies.get('username') || null
+    username: cookies.get('username') || null,
+    userData: cookies.get('userData') || null,
+    rememberUser: cookies.get('rememberUser') || false
 };
 
 // @ts-ignore
@@ -23,7 +27,7 @@ export const setToken = (token: string|null) => {
         cookies.remove('token');
     else
         cookies.set('token', token);
-    setGlobalState('token', token );
+    setGlobalState('token', token);
 };
 
 export const setRefreshToken = (refreshToken: string|null) => {
@@ -31,7 +35,7 @@ export const setRefreshToken = (refreshToken: string|null) => {
         cookies.remove('refreshToken');
     else
         cookies.set('refreshToken', refreshToken);
-    setGlobalState('refreshToken', refreshToken );
+    setGlobalState('refreshToken', refreshToken);
 };
 
 export const setUsername = (username: string|null) => {
@@ -39,13 +43,37 @@ export const setUsername = (username: string|null) => {
         cookies.remove('username');
     else
         cookies.set('username', username);
-    setGlobalState('username', username );
+    setGlobalState('username', username);
+};
+
+export const setUserData = (userData: object|null) => {
+    if(userData === null)
+        cookies.remove('userData');
+    else
+        cookies.set('userData', userData);
+    setGlobalState('userData', userData);
+};
+
+export const setRememberUser = (value: boolean) => {
+    cookies.set('rememberUser', value);
+    setGlobalState('rememberUser', value);
+    if(!value)
+    {
+        setUsername(null);
+        setUserData(null);
+    }
 };
 
 export const Logout = () => {
-    setUsername(null);
     setToken(null);
     setRefreshToken(null);
+    if(cookies.get('rememberUser') === 'false')
+    {
+        cookies.remove('userData');
+        console.log('removing user data');
+        setUsername(null);
+        setUserData(null);
+    }
 };
 
 export { useGlobalState };

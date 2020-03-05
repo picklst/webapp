@@ -4,8 +4,9 @@ import Base from "../components/core/Base";
 import {Logout} from "../actions/states/Auth.ts";
 
 const IndexPage = () => {
-    const [username] = useGlobalState('username');
-    const isLoggedIn = typeof username === "string";
+    const [data] = useGlobalState('userData');
+    const [token] = useGlobalState('token');
+    const isLoggedIn = typeof token === 'string' && token.length>0;
 
     const renderAuthenticatedView = () =>
     <Base
@@ -14,7 +15,8 @@ const IndexPage = () => {
         }}
     >
         <div className="container">
-            <h1>Hello {username}!</h1>
+            <img src={data.avatarURL} className="w-25" alt="user-avatar" />
+            <h1>Hello {data.firstName} {data.lastName}!</h1>
             <button onClick={Logout} className="btn btn-primary">Logout</button>
         </div>
     </Base>;

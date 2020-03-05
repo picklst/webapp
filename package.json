@@ -4,12 +4,14 @@
   "description": "NextJS based WebApp",
   "main": "index.js",
   "scripts": {
-    "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "build-analyse": "ANALYZE=true next build",
+    "dev": "NODE_ENV='dev' node server.js",
+    "start": "node server.js"
   },
   "author": "aswinshenoy <aswinshenoy65@gmail.com>",
   "dependencies": {
+    "@next/bundle-analyzer": "^9.2.2",
     "@types/react": "16.9.23",
     "@types/react-dom": "16.9.5",
     "@zeit/next-css": "1.0.1",
@@ -21,6 +23,7 @@
     "isomorphic-fetch": "2.2.1",
     "next": "9.2.2",
     "next-compose-plugins": "2.2.0",
+    "next-offline": "^5.0.0",
     "next-optimized-images": "^2.5.5",
     "node-sass": "4.13.1",
     "prop-types": "15.7.2",
