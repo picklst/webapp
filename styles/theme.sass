@@ -1,0 +1,40 @@
+.light, .light-mode
+  background: #eee
+  color: black
+  min-height: 100vh
+
+.dark-mode, .dark
+  background: #333
+  color: white
+
+
+@media (prefers-color-scheme: dark) 
+  .light.dark-mode
+    background:  #333!important
+    color: white
+    .bg-white
+      background-color: #555!important
+    .bg-primary, .btn-primary
+      color: white
+      background-color: #0D47A1
+      border-color: #0D47A1
+      &:focus
+        border-color: white
+        outline: white
+    .text-primary
+      color: white!important
+    .text-danger
+      color: #eee!important
+
+  .dark.light-mode
+    background: black!important
+    color:  #ddd
+
+
+@media (prefers-color-scheme: light) 
+  .light.dark-mode
+    background: #eee!important
+    color:  #555
+  .dark.light-mode
+    background:  #eee!important
+    color: black

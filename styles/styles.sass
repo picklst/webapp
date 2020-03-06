@@ -1,6 +1,15 @@
-body
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
-  background-color: #eee!important
+@import "theme"
 
+body
+  background-color: #eee!important
+  min-height: 100vh
+
+.orientation-lock
+  display: none
+@media only screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape)
+  .app
+    display: none!important
+  .orientation-lock
+    display: block!important
 image
   max-width: 100%

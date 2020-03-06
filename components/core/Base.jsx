@@ -24,7 +24,8 @@ const Base = ({ children, meta }) => {
             <link rel='apple-touch-icon' href='/images/icons/icon-512x512.png'></link>
             <meta name='theme-color' content='#317EFB' />
         </Head>
-        { children }
+        <div className="app light dark-mode">{ children }</div>
+        <div className="orientation-lock"><h2>Only Portrait Mode Supported. Rotate Device</h2></div>
     </React.Fragment>
 };
 

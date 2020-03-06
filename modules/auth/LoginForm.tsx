@@ -145,7 +145,7 @@ const LoginForm: React.FC<React.Props> = () => {
                         />
                     </div>
                     <div className="form-group form-check px-4">
-                        <input type="checkbox" className="form-check-input mt-2" name="remember-me" />
+                        <input type="checkbox" className="form-check-input" name="remember-me" />
                         <label className="form-check-label" htmlFor="remember-me">Remember Me</label>
                     </div>
                     <button
