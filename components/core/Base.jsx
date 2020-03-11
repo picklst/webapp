@@ -29,10 +29,10 @@ const Base = ({ children, meta }) => {
     </React.Fragment>
 };
 
-Base.prototype = {
+Base.propTypes  = {
     children: PropTypes.element,
     meta: PropTypes.shape({
-        title: PropTypes.title,
+        title: PropTypes.string,
         description: PropTypes.string
     })
 };

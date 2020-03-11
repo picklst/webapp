@@ -1,20 +1,19 @@
 import * as React from "react";
+import shortid from "shortid";
 // @ts-ignore
 import Login from "../../actions/functions/Login.ts";
 // @ts-ignore
 import {setRememberUser, useGlobalState} from "../../actions/states/Auth.ts";
 import { useRouter } from "next/router";
 
-import shortid from "shortid";
+import TextInput from "../../components/forms/TextInput";
+
 
 const LoginForm: React.FC<React.Props> = () => {
     const router = useRouter();
-    const usernameField = React.useRef<HTMLInputElement>(null);
-    const passwordField = React.useRef<HTMLInputElement>(null);
 
-    const [touched, touch] = React.useState<boolean>(false);
-    const [invalidUsername, showUsernameValidationError] = React.useState<boolean>(true);
-    const [invalidPassword, showPasswordValidationError] = React.useState<boolean>(true);
+    const [invalidUsername, setInvalidUsernameState] = React.useState<boolean>(true);
+    const [invalidPassword, setInvalidPasswordState] = React.useState<boolean>(true);
     const [invalidCredentials, setInvalidCredentials] = React.useState<boolean>(false);
     const [token, setToken] = useGlobalState('token');
 
@@ -29,13 +28,6 @@ const LoginForm: React.FC<React.Props> = () => {
         return true;
     }
 
-    const handleInputBlur: React.ReactEventHandler<HTMLInputElement, Function> = (ev, state) => {
-        const value = ev.currentTarget.value;
-        touch<boolean>(true);
-        //@todo fix ts error
-        // @ts-ignore
-        state<boolean>(!validateInput<string>(value));
-    };
     const [rememberUser] = useGlobalState('rememberUser');
     const [userData] = useGlobalState('userData');
 
@@ -81,30 +73,18 @@ const LoginForm: React.FC<React.Props> = () => {
                         </div>
                     </div>
                 </div>
-                : <div className="form-group">
-                    <label
-                        aria-hidden={false}
-                        className={invalidUsername ? 'd-none' : 'font-weight-bold text-primary'}
-                        htmlFor="username-email"
-                    >
-                        Username / Email
-                    </label>
-                    {invalidUsername && touched ? <div className="text-danger mb-1">Please enter a valid username / email</div> : null}
-                    <input
-                        ref={usernameField}
-                        name="username-email"
-                        placeholder="Username or Email Address"
-                        spellCheck="false"
-                        autoComplete="username"
-                        autoCorrect="off"
-                        autoCapitalize="off"
-                        className="d-block p-2 form-control"
-                        onFocus={() => {
-                            showUsernameValidationError<boolean>(false);
-                        }}
-                        onBlur={(e) => handleInputBlur<HTMLInputElement, Function>(e, showUsernameValidationError)}
-                    />
-                </div>
+                : <TextInput
+                    autoCapitalize="off"
+                    autoCorrect="off"
+                    autoComplete="email"
+                    spellCheck="false"
+                    label="Username or Email Address"
+                    name="username-email"
+                    type="text"
+                    disableSpace
+                    isRequired
+                    onValidate={(state) => setInvalidUsernameState(!state)}
+                />
         }
     </div>;
 
@@ -119,34 +99,26 @@ const LoginForm: React.FC<React.Props> = () => {
         }
         {
             !isLoading ?
-                <form onSubmit={handleLogin}>
+                <form
+                    aria-label="Login Form"
+                    title="Login Form"
+                    onSubmit={handleLogin}
+                >
                     { renderUsernameInput() }
-                    <div className="form-group">
-                        <label
-                            aria-hidden={false}
-                            className={invalidPassword ? 'd-none' : 'font-weight-bold text-primary'}
-                            htmlFor="password"
-                        >
-                            Password
-                        </label>
-                        { invalidPassword && touched ? <div className="text-danger mb-1">Please enter a valid password</div> : null }
-                        <input
-                            ref={passwordField}
-                            name="password"
-                            placeholder="Password"
-                            type="password"
-                            spellCheck="false"
-                            autoComplete="password"
-                            autoCorrect="off"
-                            autoCapitalize="off"
-                            className="d-block p-2 form-control"
-                            onFocus={() => { showPasswordValidationError<boolean>(false);  }}
-                            onBlur={(e) => handleInputBlur<HTMLInputElement, Function>(e, showPasswordValidationError)}
-                        />
-                    </div>
+                    <TextInput
+                        autoCapitalize="off"
+                        autoCorrect="off"
+                        autoComplete="password"
+                        spellCheck="false"
+                        label="Password"
+                        name="password"
+                        type="password"
+                        isRequired
+                        onValidate={(state) => setInvalidPasswordState(!state)}
+                    />
                     <div className="form-group form-check px-4">
-                        <input type="checkbox" className="form-check-input" name="remember-me" />
-                        <label className="form-check-label" htmlFor="remember-me">Remember Me</label>
+                        <input aria-label="Remember User Details" id="remember-me-checkbox" type="checkbox" className="form-check-input" name="remember-me" />
+                        <label className="form-check-label" htmlFor="remember-me-checkbox">Remember Me</label>
                     </div>
                     <button
                         disabled={(invalidUsername || rememberUser === 'true') || invalidPassword}
@@ -156,7 +128,7 @@ const LoginForm: React.FC<React.Props> = () => {
                         LOGIN
                     </button>
                 </form>
-            : null
+            : <div>Logging you in</div>
         }
     </div>;
 };

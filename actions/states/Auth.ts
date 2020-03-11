@@ -32,7 +32,7 @@ export const setToken = (token: string|null) => {
 
 export const setRefreshToken = (refreshToken: string|null) => {
     if(refreshToken === null)
-        cookies.remove('refreshToken');
+        cookies.remove('refreshToken', { path: '/' });
     else
         cookies.set('refreshToken', refreshToken);
     setGlobalState('refreshToken', refreshToken);
@@ -40,7 +40,7 @@ export const setRefreshToken = (refreshToken: string|null) => {
 
 export const setUsername = (username: string|null) => {
     if(username === null)
-        cookies.remove('username');
+        cookies.remove('username', { path: '/' });
     else
         cookies.set('username', username);
     setGlobalState('username', username);
@@ -48,7 +48,7 @@ export const setUsername = (username: string|null) => {
 
 export const setUserData = (userData: object|null) => {
     if(userData === null)
-        cookies.remove('userData');
+        cookies.remove('userData', { path: '/' });
     else
         cookies.set('userData', userData);
     setGlobalState('userData', userData);
@@ -69,7 +69,7 @@ export const Logout = () => {
     setRefreshToken(null);
     if(cookies.get('rememberUser') === 'false')
     {
-        cookies.remove('userData');
+        cookies.remove('userData', { path: '/' });
         console.log('removing user data');
         setUsername(null);
         setUserData(null);
