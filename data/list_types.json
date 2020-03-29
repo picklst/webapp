@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Unranked",
+    "ranked": false,
+    "votable": false,
+    "publicVoting": false,
+    "collaboration": false,
+    "publicEntries": false,
+    "private": false,
+    "thumbnail": "list-type-wishlist.jpg"
+  },
+  {
+    "name": "Ranked",
+    "ranked": true,
+    "votable": false,
+    "publicVoting": false,
+    "collaboration": false,
+    "openCollaboration": false,
+    "private": false,
+    "thumbnail": "list-type-wishlist.jpg"
+  },
+  {
+    "name": "Collaborated, Voted & Ranked",
+    "ranked": true,
+    "votable": true,
+    "publicVoting": true,
+    "collaboration": true,
+    "publicEntries": true,
+    "private": false,
+    "thumbnail": "list-type-public-entries.jpg"
+  },
+  {
+    "name": "Ranked & Voted",
+    "ranked": true,
+    "votable": true,
+    "publicVoting": true,
+    "collaboration": false,
+    "publicEntries": false,
+    "private": false,
+    "thumbnail": "list-type-vote-ranking.jpg"
+  },
+  {
+    "name": "Secret List",
+    "ranked": false,
+    "votable": false,
+    "publicVoting": false,
+    "collaboration": false,
+    "publicEntries": false,
+    "private": true,
+    "thumbnail": "list-type-secret.jpg"
+  },
+  {
+    "name": "List with Friends",
+    "ranked": false,
+    "votable": false,
+    "publicVoting": false,
+    "collaboration": true,
+    "publicEntries": false,
+    "private": false,
+    "thumbnail": "list-type-invite-friends.jpg"
+  },
+  {
+    "name": "Secret List (Ranked)",
+    "ranked": true,
+    "votable": false,
+    "publicVoting": false,
+    "collaboration": false,
+    "publicEntries": false,
+    "private": true,
+    "thumbnail": "list-type-secret.jpg"
+  },
+  {
+    "name": "List & Vote with Friends",
+    "ranked": true,
+    "votable": true,
+    "publicVoting": false,
+    "collaboration": true,
+    "publicEntries": false,
+    "private": false,
+    "thumbnail": "list-type-invite-friends.jpg"
+  }
+]
