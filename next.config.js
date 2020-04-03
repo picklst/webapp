@@ -31,7 +31,7 @@ const customConfig = {
     //
     // },
 
-    generateInDevMode: true,
+    // generateInDevMode: true,
     workboxOpts: {
         runtimeCaching: [
             {

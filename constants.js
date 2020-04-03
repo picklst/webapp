@@ -3,7 +3,7 @@ module.exports = {
         providers: [
             {
                 key: "localhost",
-                endpoint: 'http://127.0.0.1:7000/',
+                endpoint: '/api/',
                 token_prefix: 'JWT '
             }
         ]

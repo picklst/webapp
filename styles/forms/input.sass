@@ -1,0 +1,65 @@
+label
+  margin-bottom: 0.25rem
+input, textarea
+  border-radius: 0!important
+.char-limit-warning
+  font-weight: bold
+  text-align: right
+  width: 100%
+.minimal
+  border-radius: 0
+  border: none
+  border-bottom: 1.2px solid
+  &:focus
+    outline: none!important
+    box-shadow: none!important
+
+.suggestion-list-wrapper
+  position: relative
+  bottom: 0
+  left: 0
+  width: 100%
+  z-index: 200
+  .focused
+    background: rgba(244,255,129,0.3)
+.suggestion-list-wrapper-mobile
+  overflow-x: scroll
+  overflow-y: hidden
+  max-height: 4rem
+  bottom: 0
+  div[role=option]
+    width: 70%
+    margin: 0.1rem 0.25rem
+    font-size: 0.8rem!important
+    white-space: nowrap
+    padding: 0.25rem
+    border-radius: 0.25rem
+    line-height: 0.1rem
+    background: rgba(155,155,155,0.3)
+    .small
+      display: block
+      font-size: 0.6rem!important
+
+.textarea-container
+  background: #444
+  .textarea-backdrop
+    position: absolute
+    top: 0
+    bottom: 0
+    left: 0
+    overflow-x: hidden
+    overflow-y: auto
+    line-height: 1.5
+    padding: .375rem .75rem
+    z-index: 1
+    mark
+      opacity: 0.25
+      padding: 0
+      color: white
+      border-radius: 0.25rem
+  .textarea
+    position: relative!important
+    top: 0
+    left: 0
+    z-index: 100
+    background: none!important

@@ -8,25 +8,48 @@
   color: white
 
 
-@media (prefers-color-scheme: dark) 
+@media (prefers-color-scheme: dark)
   .light.dark-mode
     background:  #333!important
     color: white
     a
       color: white
+    input, textarea
+      background: #444
+      color: #eee
+    .bg-light
+      background-color: #666!important
     .bg-white
       background-color: #555!important
+    .btn-outline-info
+      color: #00E5FF
+      border-color: #00E5FF
+    .text-light
+      color: #333!important
+    .btn-light
+      background-color: #333!important
+      border-color: #333!important
+      &:focus
+        border-color: #999
+        outline: #999
+    .text-dark
+      color: #eee!important
+    .text-primary
+      color: #00E5FF!important
+    .border-bottom-primary
+      border-bottom-color: #00E5FF!important
     .bg-primary, .btn-primary
-      color: white
-      background-color: #0D47A1
-      border-color: #0D47A1
+      background-color: #00E5FF!important
+      border-color: #00E5FF!important
       &:focus
         border-color: white
         outline: white
-    .text-primary
-      color: white!important
     .text-danger
-      color: #eee!important
+      color: #E91E63!important
+
+    .bg-warning.text-dark
+      color: black!important
+
 
   .dark.light-mode
     background: black!important

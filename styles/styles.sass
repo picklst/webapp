@@ -1,4 +1,5 @@
 @import "theme"
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/svg-with-js.min.css")
 
 body
   background-color: #eee!important
@@ -6,10 +7,43 @@ body
 
 .orientation-lock
   display: none
-@media only screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape)
+@media (min-width: 480px) and (max-width: 720px) and (orientation: landscape)
   .app
     display: none!important
   .orientation-lock
     display: block!important
 image
   max-width: 100%
+
+
+.plain-button
+  background: none
+  border: none
+  &:focus
+    outline: none!important
+
+.min-vh-75
+  min-height: 75vh
+
+.transform-none
+  transform: none!important
+
+.rounded-right-0
+  border-top-right-radius: 0!important
+  border-bottom-right-radius: 0!important
+
+.bottom-0
+  bottom: 0
+
+.left-0
+  left: 0
+
+.right-0
+  right: 0
+
+.border-bottom-primary
+  border-bottom-color: #007bff!important
+  border-bottom: 3px solid
+
+.line-height-1
+  line-height: 1
