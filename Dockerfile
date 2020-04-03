@@ -8,9 +8,9 @@ COPY package.json /app/package.json
 RUN cd /app; npm install
 COPY . /app
 
-RUN npm run build
-COPY .next ./app/.next
+#RUN npm run build
+#COPY .next ./app/.next
 
 EXPOSE 3000
 
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "dev" ]
