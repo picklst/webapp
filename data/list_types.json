@@ -5,7 +5,7 @@
     "votable": false,
     "publicVoting": false,
     "collaboration": false,
-    "publicEntries": false,
+    "acceptEntries": false,
     "private": false,
     "thumbnail": "list-type-wishlist.jpg"
   },
@@ -25,7 +25,7 @@
     "votable": true,
     "publicVoting": true,
     "collaboration": true,
-    "publicEntries": true,
+    "acceptEntries": true,
     "private": false,
     "thumbnail": "list-type-public-entries.jpg"
   },
@@ -35,7 +35,7 @@
     "votable": true,
     "publicVoting": true,
     "collaboration": false,
-    "publicEntries": false,
+    "acceptEntries": false,
     "private": false,
     "thumbnail": "list-type-vote-ranking.jpg"
   },
@@ -45,7 +45,7 @@
     "votable": false,
     "publicVoting": false,
     "collaboration": false,
-    "publicEntries": false,
+    "acceptEntries": false,
     "private": true,
     "thumbnail": "list-type-secret.jpg"
   },
@@ -55,7 +55,7 @@
     "votable": false,
     "publicVoting": false,
     "collaboration": true,
-    "publicEntries": false,
+    "acceptEntries": false,
     "private": false,
     "thumbnail": "list-type-invite-friends.jpg"
   },
@@ -65,7 +65,7 @@
     "votable": false,
     "publicVoting": false,
     "collaboration": false,
-    "publicEntries": false,
+    "acceptEntries": false,
     "private": true,
     "thumbnail": "list-type-secret.jpg"
   },
@@ -75,7 +75,7 @@
     "votable": true,
     "publicVoting": false,
     "collaboration": true,
-    "publicEntries": false,
+    "acceptEntries": false,
     "private": false,
     "thumbnail": "list-type-invite-friends.jpg"
   }

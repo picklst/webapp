@@ -14,8 +14,8 @@ const ListItemManager = ({
     onChange, onOpen, onDelete, onMoveUp, onMoveDown
 }) => {
 
-    const [title, setTitle] = useState(data.title);
-    const [description, setDescription] = useState(data.description);
+    const [name, setName] = useState(data.name);
+    const [comment, setComment] = useState(data.comment);
     const [url, setURL] = useState(data.url);
     const [media, setMedia] = useState(data.media);
     const [entityID, setEntityID] = useState(data.entityID);
@@ -36,8 +36,8 @@ const ListItemManager = ({
     const sendData = () => {
         if(typeof onChange === "function")
             onChange({
-                title,
-                description,
+                name,
+                comment,
                 url,
                 mentions: [...new Set([...DMentions, ...TMentions])],
                 tags: [...new Set([...DTags, ...TTags])],
@@ -71,14 +71,14 @@ const ListItemManager = ({
     const handleTitleInput = (val) => {
         setTMentions(getMentions(val));
         setTTags(getHashTags(val));
-        setTitle(val);
+        setName(val);
         setUpdateRequired(true);
     };
 
     const handleDescriptionInput = (val) => {
         setDMentions(getMentions(val));
         setDTags(getHashTags(val));
-        setDescription(val);
+        setComment(val);
         setUpdateRequired(true);
     };
 
@@ -94,7 +94,7 @@ const ListItemManager = ({
 
     const renderCollapsedItem =
     <div className="d-flex align-items-center ml-2">
-        <h5 className="m-0">{title ? title : 'Untitled Item'}</h5>
+        <h5 className="m-0">{name ? name : 'Untitled Item'}</h5>
     </div>;
 
     const renderItemCard =
@@ -114,8 +114,8 @@ const ListItemManager = ({
         />
         { isOpen && !isReordering ?
             <ListItemContentEditor
-                title={title}
-                description={description}
+                title={name}
+                description={comment}
                 url={url}
                 media={media}
                 entityID={entityID}
@@ -139,8 +139,8 @@ const ListItemManager = ({
 ListItemManager.propTypes = {
     data: PropTypes.shape({
         itemID: PropTypes.string,
-        title: PropTypes.string,
-        description: PropTypes.string,
+        name: PropTypes.string,
+        comment: PropTypes.string,
         url: PropTypes.string,
         mentions: PropTypes.arrayOf(PropTypes.string),
         media: PropTypes.shape({

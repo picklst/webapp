@@ -15,6 +15,7 @@ const ListManager = ({ items : it, isRankedListing, onChange }) => {
     const [currentItem, setCurrentItem] = useState(null);
 
     const handleUpdation = (items) => {
+        items.forEach((i, index) => { i.position = index + 1 });
         if(typeof onChange === "function")
             onChange(items);
     };
@@ -76,8 +77,6 @@ const ListManager = ({ items : it, isRankedListing, onChange }) => {
             className="add-button bg-primary text-light large-button"
         />
     </div>;
-
-    console.log(items);
 
     return <div>
         {renderAddFloatingButton}

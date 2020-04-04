@@ -5,6 +5,8 @@ import classNames from 'classnames';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
+import PublishList from "../../actions/functions/PublishList.ts";
+
 import ListPropertiesManager from "./list/properties/manager";
 import ListManager from "./list/manager";
 import Button from "../../components/ui/Button";
@@ -31,8 +33,16 @@ const ListEditor = ({ slug, editMode, isNew }) => {
     });
 
     const handlePublish = () => {
-        console.log(data);
-        console.log(items);
+        items.forEach(i => { delete(i['itemID']); });
+        PublishList({
+            name: data.name,
+            description: data.description,
+            tags: data.tags,
+            properties: data.properties,
+            items
+        }).then(r => {
+            console.log(r);
+        })
     };
 
     const handleCreate = (data) => {

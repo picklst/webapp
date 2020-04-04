@@ -4,10 +4,12 @@ import Cookies from 'universal-cookie';
 const cookies = new Cookies();
 import { API } from '../constants';
 
-export default ({ query, variables }) => {
+export default (
+    { query, variables },
+    API_URL = API.providers[0].endpoint
+) => {
 
     //@todo support custom/multiple providers, currently uses the 0 index provider
-    const API_URL = API.providers[0].endpoint;
     const TOKEN_PREFIX = API.providers[0].endpoint;
 
     const token = cookies.get('token');

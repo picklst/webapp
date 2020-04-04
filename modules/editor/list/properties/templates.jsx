@@ -15,12 +15,11 @@ const ListTemplatePicker = ({ onSelect, onRequestAdvanced }) => {
         setTypeSelected(index);
         const sel = types[index];
         onSelect({
-            isPublic:!sel.private,
+            isPrivate:sel.private,
             isRanked: sel.ranked,
             isVotable: sel.votable,
-            collaboration: sel.collaboration,
-            publicEntries: sel.publicEntries,
-            publicVoting: sel.publicVoting
+            acceptEntries: sel.acceptEntries,
+            areVotesPrivate: !sel.publicVoting
         });
     };
 

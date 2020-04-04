@@ -4,34 +4,33 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 import Toggler from "../../../../components/ui/Toggler";
 
-
 const ListAdvancedSettingsEditor = ({
     properties = {
-        isPublic: true,
+        isPrivate: false,
         isRanked: false,
         isVotable: false,
         collaboration: false,
-        publicVoting: false,
-        publicEntries: false,
+        areVotesPrivate: false,
+        canVoteMultipleItems: false,
+        acceptEntries: false,
     },
     showTemplateSuggestion = true,
     onChange, onRequestTemplates
 }) => {
-    const [isPublic, setPublic] = useState(properties.isPublic);
+    const [isPublic, setPublic] = useState(!properties.isPrivate);
     const [isRanked, setRanked] = useState(properties.isRanked);
     const [isVotable, setVotable] = useState(properties.isVotable);
-    const [collaboration, setCollaboration] = useState(properties.collaboration);
-    const [publicVoting, setPublicVoting] = useState(properties.publicVoting);
-    const [publicEntries, setPublicEntries] = useState(properties.publicEntries);
+    const [areVotesPrivate, setVotingPrivacy] = useState(properties.areVotesPrivate);
+    const [canVoteMultipleItems, setVoteMultiple] = useState(properties.canVoteMultipleItems);
+    const [acceptEntries, setAcceptEntries] = useState(properties.acceptEntries);
 
     const handleChange = () => {
         onChange({
-            isPublic,
+            isPrivate: !isPublic,
             isRanked,
             isVotable,
-            collaboration,
-            publicVoting,
-            publicEntries
+            areVotesPrivate,
+            acceptEntries
         })
     };
 
@@ -86,17 +85,17 @@ const ListAdvancedSettingsEditor = ({
                                 <React.Fragment>
                                     <div className="p-2">
                                         <Toggler
-                                            text="👥 Public Voting"
-                                            onChange={(v) => { setPublicVoting(v); setUpdated(true); }}
-                                            state={publicVoting}
+                                            text="👥 Keep Votes Secret"
+                                            onChange={(v) => { setVotingPrivacy(v); setUpdated(true); }}
+                                            state={areVotesPrivate}
                                             smalll
                                         />
                                     </div>
                                     <div className="p-2">
                                         <Toggler
                                             text="👥 Multiple Votes"
-                                            onChange={(v) => { setPublicVoting(v); setUpdated(true); }}
-                                            state={publicVoting}
+                                            onChange={(v) => { setVoteMultiple(v); setUpdated(true); }}
+                                            state={canVoteMultipleItems}
                                             small
                                         />
                                     </div>
@@ -106,21 +105,21 @@ const ListAdvancedSettingsEditor = ({
             }
             <div className="bg-light my-2 p-4">
                 <Toggler
-                    text={<h6 className="m-0">👯 Collaboration</h6>}
-                    onChange={(v) => { setCollaboration(v); setUpdated(true); }}
-                    state={collaboration}
+                    text={<h6 className="m-0">👯 Accept Entries</h6>}
+                    onChange={(v) => { setAcceptEntries(v); setUpdated(true); }}
+                    state={acceptEntries}
                 />
-                {
-                    collaboration ?
-                        <div className="p-2">
-                            <Toggler
-                                text="💁‍♀️Public Entries"
-                                onChange={(v) => { setPublicEntries(v); setUpdated(true); }}
-                                state={publicEntries}
-                                small
-                            />
-                        </div> : null
-                }
+                {/*{*/}
+                {/*    collaboration ?*/}
+                {/*        <div className="p-2">*/}
+                {/*            <Toggler*/}
+                {/*                text="💁‍♀️Public Entries"*/}
+                {/*                onChange={(v) => { setPublicEntries(v); setUpdated(true); }}*/}
+                {/*                state={publicEntries}*/}
+                {/*                small*/}
+                {/*            />*/}
+                {/*        </div> : null*/}
+                {/*}*/}
             </div>
         </div>
     </div>;
