@@ -3,82 +3,18 @@ import shortid from 'shortid';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-import { emailValidator, containsSpace } from "../../data/regexValidators";
+import { emailValidator, containsSpace } from "../../../data/regexValidators";
 
-import "../../styles/forms/input.sass";
+import "./style.sass";
 
-const SuggestionSelector = ({ options, focused, onSelect }) => {
-    const renderSuggestionSelector = i =>
-        <div onClick={() => onSelect(i.value)}>
-            <div className="d-flex p-2">
-                <div className="d-none d-sm-block" style={{ width: '4rem' }}>
-
-                </div>
-                <div style={{ width: 'auto' }}>
-                    <div className="font-weight-bold d-block d-sm-none">
-                        {  i.name && i.name.length > 0 ?
-                            `${i.name.substring(0, 35)}${i.name.length > 35 ? '...'  : ''}` :
-                            `${i.value.substring(0, 35)}${i.value.length > 35 ? '...' : ''}`
-                        }
-                    </div>
-                    <div className="font-weight-bold d-sm-block d-none">
-                        {i.name && i.name.length > 0 ? i.name : i.value}
-                    </div>
-                    <div className="small">{i.value}</div>
-                </div>
-            </div>
-        </div>;
-
-    return <div>
-        <div
-            className="d-none d-sm-block suggestion-list-wrapper bg-dark"
-            role="listbox"
-            tabIndex="0"
-            aria-activedescendant={options[focused] ? options[focused].value : null}
-        >
-            { options && options.length > 0 ?
-                options.map((i, index) =>
-                    <div
-                        key={shortid.generate()}
-                        role="option"
-                        className={focused === index ? 'focused' : null}
-                        aria-selected={focused === index}
-                    >
-                        {renderSuggestionSelector(i)}
-                    </div>
-                ) : <div>No results</div>
-            }
-        </div>
-        <div
-            className="d-flex d-sm-none bg-dark p-1 position-fixed fixed-bottom suggestion-list-wrapper-mobile"
-            style={{ zIndex: "6000" }}
-            role="listbox"
-            tabIndex="0"
-            aria-activedescendant={options[focused].value}
-        >
-            { options && options.length > 0 ?
-                options.map((i, index) =>
-                    <div
-                        key={shortid.generate()}
-                        role="option"
-                        className={focused === index ? 'focused' : null}
-                        aria-selected={focused === index}
-                    >
-                        {renderSuggestionSelector(i)}
-                    </div>
-                ) : <div>No results</div>
-            }
-        </div>
-    </div>;
-};
-
+import SuggestionSelector from "./SuggestionSelector";
 
 const TextInput = ({
     id, label, name, placeholder, type, value: val, inputClassName, className,
-    isRequired = false, isDisabled = false, showLimit = true, hideLabel = false, minimal = false,
+    isRequired = false, isDisabled = false, showLimit = true, hideLabel = false, minimal = false, autoFocus = false,
     highlighters, suggesters,
     errorText, customRegex, disableSpace, charLimit,
-    rows, spellCheck, autoComplete, autoCorrect, autoCapitalize, autoFocus,
+    rows, spellCheck, autoComplete, autoCorrect, autoCapitalize,
     onValidate, onChange,
 }) => {
 
@@ -127,9 +63,7 @@ const TextInput = ({
         setErrorState(false);
     };
 
-    const [wasBlured, setBlured] = useState(false);
     const handleBlur = (e) => {
-        setBlured(true);
         setTyping(false);
         const val = e.currentTarget.value;
         if(!validateInput(val))
@@ -146,6 +80,7 @@ const TextInput = ({
     };
 
     const textInput = createRef();
+
     const handleSuggestionSelect = sel => {
         suggesters.map(i => {
             const matches = value.match(i.regex);
@@ -168,7 +103,9 @@ const TextInput = ({
             if(e.keyCode === 13){
                 e.preventDefault();
                 setSug(0);
-                handleSuggestionSelect(suggesters[currentSuggestor].suggestions[currSug].value);
+                const valField =  suggesters[currentSuggestor].valueField ?
+                    suggesters[currentSuggestor].valueField : 'value';
+                handleSuggestionSelect(suggesters[currentSuggestor].suggestions[currSug][valField]);
             }
             // handle bottom arrow key press
             if(e.keyCode === 40 &&suggesters[currentSuggestor].suggestions.length-1 > currSug)
@@ -191,6 +128,10 @@ const TextInput = ({
         {
             return <SuggestionSelector
                 options={sug}
+                valueField={
+                    suggesters[currentSuggestor].valueField ?
+                        suggesters[currentSuggestor].valueField : 'value'
+                }
                 onSelect={handleSuggestionSelect}
                 focused={currSug}
             />
@@ -199,7 +140,7 @@ const TextInput = ({
     };
 
 
-    const inputID = `${name}-input`;
+    const inputID = `${name}-input-${shortid.generate()}`;
 
     return <div
         className={classNames(
@@ -237,70 +178,69 @@ const TextInput = ({
             }
         </div>
         { errorState && (value.length > 0 || isRequired) ?  <div className="small text-danger mb-1">{errorText ? errorText : `Please enter a valid ${String(label).toLowerCase()}.` }</div> : null }
-        {
-            type === "textarea" ?
-                <div className="d-inline-block w-100 textarea-container position-relative">
-                    <div
-                        className="textarea-backdrop"
-                        dangerouslySetInnerHTML={{ __html: getBackdropText(value) }}
-                    />
-                    <textarea
-                        id={id ? id : inputID}
-                        ref={textInput}
-                        onKeyDown={handleKey}
-                        aria-label={label}
-                        placeholder={placeholder}
-                        value={value}
-                        disabled={isDisabled}
-                        rows={rows}
-                        className={classNames(
-                            inputClassName,
-                            'textarea',
-                            'form-control text-input-field',
-                            { 'minimal': minimal},
-                        )}
-                        spellCheck={spellCheck}
-                        autoComplete={autoComplete}
-                        autoCorrect={autoCorrect}
-                        autoCapitalize={autoCapitalize}
-                        maxLength={charLimit}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        required={isRequired}
-                        aria-required={isRequired}
-                        autoFocus={autoFocus && !wasBlured}
-                    />
-                </div> :
-                <input
+        {   type === "textarea" ?
+            <div className="d-inline-block w-100 textarea-container position-relative">
+                <div
+                    className="textarea-backdrop"
+                    dangerouslySetInnerHTML={{ __html: getBackdropText(value) }}
+                />
+                <textarea
+                    id={id ? id : inputID}
                     ref={textInput}
                     onKeyDown={handleKey}
                     aria-label={label}
-                    id={id ? id : inputID}
-                    name={name}
-                    placeholder={placeholder ? placeholder : label}
+                    placeholder={placeholder}
+                    value={value}
+                    disabled={isDisabled}
+                    rows={rows}
+                    className={classNames(
+                        inputClassName,
+                        'textarea',
+                        'form-control text-input-field',
+                        { 'minimal': minimal},
+                    )}
                     spellCheck={spellCheck}
                     autoComplete={autoComplete}
                     autoCorrect={autoCorrect}
                     autoCapitalize={autoCapitalize}
-                    type={type}
-                    className={classNames(
-                        inputClassName,
-                        'd-block form-control',
-                        { 'is-invalid' : errorState && (value.length > 0 || isRequired) },
-                        { 'minimal': minimal},
-                    )}
+                    maxLength={charLimit}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={value}
                     required={isRequired}
                     aria-required={isRequired}
-                    autoFocus={!!autoFocus && !wasBlured}
+                    autoFocus={autoFocus && value.length < 1}
                 />
+            </div> :
+            <input
+                ref={textInput}
+                onKeyDown={handleKey}
+                aria-label={label}
+                id={id ? id : inputID}
+                name={name}
+                placeholder={placeholder ? placeholder : label}
+                spellCheck={spellCheck}
+                autoComplete={autoComplete}
+                autoCorrect={autoCorrect}
+                autoCapitalize={autoCapitalize}
+                type={type}
+                className={classNames(
+                    inputClassName,
+                    'd-block form-control',
+                    { 'is-invalid' : errorState && (value.length > 0 || isRequired) },
+                    { 'minimal': minimal},
+                )}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={value}
+                required={isRequired}
+                aria-required={isRequired}
+                autoFocus={autoFocus && value.length < 1}
+            />
         }
         { showSuggestor ? renderSuggestions() : null }
-    </div>
+    </div>;
 
 };
 
@@ -323,7 +263,6 @@ TextInput.propTypes  = {
     errorText: PropTypes.string,
     rows: PropTypes.number,
     spellCheck: PropTypes.string,
-    autoFocus: PropTypes.bool,
     autoComplete: PropTypes.oneOf(["off", "on", "email", "password", "username"]),
     autoCorrect: PropTypes.oneOf(["off", "on"]),
     autoCapitalize: PropTypes.oneOf(["off", "on"]),

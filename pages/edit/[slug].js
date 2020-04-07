@@ -1,10 +1,8 @@
 import React from 'react';
-import {useRouter} from "next/router";
 import Base from "../../components/core/Base";
 import ListEditor from "../../modules/editor/ListEditor";
 
-const EditListPage = () => {
-    const router = useRouter();
+const EditListPage = ({ slug }) => {
 
     return <Base
         meta={{
@@ -16,11 +14,17 @@ const EditListPage = () => {
     >
         <div className="d-flex justify-content-center">
             <ListEditor
-                slug={router.query.slug}
+                slug={slug}
                 editMode
             />
         </div>
     </Base>
+};
+
+EditListPage.getInitialProps = async ({ query }) => {
+    return {
+        slug: query.slug
+    }
 };
 
 export default EditListPage;

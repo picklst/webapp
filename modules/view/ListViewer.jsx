@@ -4,6 +4,8 @@ import shortid from 'shortid';
 import classNames from 'classnames';
 
 import getListAPI from "../../actions/api/getList.ts";
+import ListItemViewer from "./item/viewer";
+import ListHeaderViewer from "./list/header";
 
 const ListViewer = ({ slug }) => {
     const [data, setData] = useState(null);
@@ -29,11 +31,24 @@ const ListViewer = ({ slug }) => {
         }
     });
 
-    console.log(data);
+    const renderListItems = () => {
+        return data.items.map(i =>
+            <ListItemViewer
+                key={shortid.generate()}
+                name={i.name}
+                comment={i.comment}
+                url={i.url}
+            />
+        )
+    };
 
-    return isLoaded ? <div>
-        <h1>{data.name}</h1>
-        <div>By {data.curator.firstName} {data.curator.lastName}</div>
+    return isLoaded ? <div className="container">
+        <ListHeaderViewer
+            name={data.name}
+            slug={slug}
+            curator={data.curator}
+        />
+        { renderListItems() }
     </div> : null;
 
 };

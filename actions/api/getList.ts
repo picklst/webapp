@@ -24,12 +24,10 @@ async function getList({ slug, username, fields, endpoint})
                 name: fields.includes("name"),
                 description: fields.includes("description"),
                 curator: {
-                    publicInfo: {
-                        firstName: true,
-                        lastName: true,
-                        avatarURL: true,
-                        username: true,
-                    }
+                    firstName: true,
+                    lastName: true,
+                    avatarURL: true,
+                    username: true,
                 },
                 properties: {
                     isPrivate: true,
@@ -75,10 +73,6 @@ async function getListAPI(params: getListAPIParams)
         if (response.errors) {
             return { errors: response.errors };
         } else if(response.data) {
-            // @todo move tweaks to seperate utils func.
-            // tweaking curator data returned for direct access with curator.firstname etc.
-            if(params.fields.includes("curator"))
-                response.data.getList.curator = response.data.getList.curator.publicInfo;
             return response.data.getList;
         } else {
             return { errors: [

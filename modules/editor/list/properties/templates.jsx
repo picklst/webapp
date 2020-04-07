@@ -7,6 +7,28 @@ import SwipeList from "../../../../components/ui/SwipeList";
 
 const types = require("../../../../data/list_types.json");
 
+const TemplateSelectionCard = ({ data, index, isSelected, onSelect }) => {
+    const [isFocused, setFocus] = useState(false);
+
+    return <button
+        style={{backgroundImage: `url(${require("../../../../images/assets/thumbnails/"+data.thumbnail)})`,}}
+        className="list-type-selection-card w-100 btn plain-button"
+        onClick={() => onSelect(index)}
+        onFocus={() => setFocus(true)}
+        onBlur={() => setFocus(false)}
+    >
+        <div className="list-type-info text-left">
+            {data.name}
+        </div>
+        {
+            isSelected ?
+                <div className="selected">
+                    <FontAwesomeIcon icon={faCheckCircle} size="lg" />
+                </div> :
+            isFocused ? <div className="focused" />: null
+        }
+    </button>
+};
 
 const ListTemplatePicker = ({ onSelect, onRequestAdvanced }) => {
     const [typeSelected, setTypeSelected] = useState(-1);
@@ -14,13 +36,14 @@ const ListTemplatePicker = ({ onSelect, onRequestAdvanced }) => {
     const handleSelection = (index) => {
         setTypeSelected(index);
         const sel = types[index];
-        onSelect({
-            isPrivate:sel.private,
-            isRanked: sel.ranked,
-            isVotable: sel.votable,
-            acceptEntries: sel.acceptEntries,
-            areVotesPrivate: !sel.publicVoting
-        });
+        if(typeof onSelect === "function")
+            onSelect({
+                isPrivate:sel.private,
+                isRanked: sel.ranked,
+                isVotable: sel.votable,
+                acceptEntries: sel.acceptEntries,
+                areVotesPrivate: !sel.publicVoting
+            });
     };
 
     return <div className="p-3">
@@ -28,28 +51,22 @@ const ListTemplatePicker = ({ onSelect, onRequestAdvanced }) => {
             typeSelected === -1 ?
                 <p className="mb-2 small">What type of list, do you want to make?</p>
             : <div className="font-weight-bold text-primary mb-2">
-                List Template
+                List Type
             </div>
         }
         <SwipeList
             minWidth={200}
+            selectedIndex={typeSelected}
+            itemRole="option"
+            role="listbox"
             items={
                 types.map((t,index) =>
-                    <button
-                        style={{backgroundImage: `url(${require("../../../../images/assets/thumbnails/"+t.thumbnail)})`,}}
-                        className="list-type-selection-card w-100 btn plain-button"
-                        onClick={() => handleSelection(index)}
-                    >
-                        <div className="list-type-info text-left">
-                            {t.name}
-                        </div>
-                        {
-                            index === typeSelected?
-                                <div className="selected">
-                                    <FontAwesomeIcon icon={faCheckCircle} size="lg" />
-                                </div> : null
-                        }
-                    </button>
+                    <TemplateSelectionCard
+                        index={index}
+                        data={t}
+                        isSelected={index===typeSelected}
+                        onSelect={handleSelection}
+                    />
                 )
             }
         />

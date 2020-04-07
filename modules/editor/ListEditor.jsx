@@ -2,27 +2,56 @@ import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import shortid from 'shortid';
 import classNames from 'classnames';
+import {useRouter} from "next/router";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 import PublishList from "../../actions/functions/PublishList.ts";
+import UpdateListAPI from "../../actions/api/updateList.ts";
+import getListAPI from "../../actions/api/getList.ts";
 
 import ListPropertiesManager from "./list/properties/manager";
 import ListManager from "./list/manager";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Cards";
 
+
 const generateItemObj = () => { return { itemID: shortid.generate() } };
 
 
 const ListEditor = ({ slug, editMode, isNew }) => {
+    const router = useRouter();
+
     const [isCreated, setCreated] = useState(!isNew);
     const [isInitialized, setInitialized] = useState(false);
     const [data, setData] = useState({});
     const [items, setItems] = useState([]);
 
+    const [isQueried, setQueried] = useState(false);
+    const [loadError, setError] = useState(false);
     useEffect(() => {
-       if(!isInitialized)
+        if(editMode)
+        {
+            if(!isQueried) {
+                getListAPI({
+                    slug,
+                    fields: [ "name", "description", "curator", "properties", "items" ]
+                }).then(res => {
+                    setQueried(true);
+                    if (!Object.prototype.hasOwnProperty.call(res, 'errors')) {
+                        setData(res);
+                        setItems(res.items);
+                        setInitialized(true);
+                        setCreated(true);
+                    }
+                    else {
+                        setError(true);
+                    }
+                });
+            }
+        }
+       else if(!isInitialized)
        {
            setItems([generateItemObj()]);
            setData({
@@ -32,8 +61,27 @@ const ListEditor = ({ slug, editMode, isNew }) => {
        }
     });
 
+    const handleSave = () => {
+        items.forEach((i, index) => {
+            i.position = index + 1
+        });
+        console.log(items);
+        UpdateListAPI({
+            name: data.name,
+            slug: slug,
+            description: data.description,
+            tags: data.tags,
+            properties: data.properties,
+            items
+        }).then(r => {
+            // setQueried(false);
+        })
+    };
+
     const handlePublish = () => {
-        items.forEach(i => { delete(i['itemID']); });
+        items.forEach((i, index) => {
+            i.position = index + 1
+        });
         PublishList({
             name: data.name,
             description: data.description,
@@ -41,13 +89,14 @@ const ListEditor = ({ slug, editMode, isNew }) => {
             properties: data.properties,
             items
         }).then(r => {
-            console.log(r);
+            router.push(`/${r.curator.username}/${r.slug}`)
         })
     };
 
     const handleCreate = (data) => {
+        console.log(data);
         setCreated(true);
-        if(data.name.length < 1)
+        if(!data.name || data.name.length < 1)
             data.name = 'Untitled List';
         setData(data);
     };
@@ -55,7 +104,10 @@ const ListEditor = ({ slug, editMode, isNew }) => {
     const [cancelWarning, showCancelWarning] = useState(false);
     const renderTopbar = <div className="d-flex p-1">
         <div style={{ width: '45px' }} className="d-flex align-items-center justify-content-center">
-            <button onClick={() => showCancelWarning(true)} className="plain-button text-dark">
+            <button
+                onClick={() => showCancelWarning(true)}
+                className="plain-button text-dark"
+            >
                 <FontAwesomeIcon icon={faTimes} size="lg" />
             </button>
         </div>
@@ -92,16 +144,29 @@ const ListEditor = ({ slug, editMode, isNew }) => {
                                {renderTopbar}
                            </div>
                            <div className="col-3 d-flex justify-content-end px-2 px-md-4">
-                               <Button
-                                   onClick={handlePublish}
-                                   text={
-                                       <div className="small">
-                                           <FontAwesomeIcon icon={faPaperPlane} />
-                                           <div className="line-height-1 font-weight-bold">Publish</div>
-                                       </div>
-                                   }
-                                   className="text-primary plain-button p-0 m-0 no-shadow"
-                               />
+                               {
+                                   editMode ?
+                                       <Button
+                                           onClick={handleSave}
+                                           text={
+                                               <div className="small">
+                                                   <FontAwesomeIcon icon={faPaperPlane} />
+                                                   <div className="line-height-1 font-weight-bold">Save</div>
+                                               </div>
+                                           }
+                                           className="text-primary plain-button p-0 m-0 no-shadow"
+                                       />
+                                   : <Button
+                                           onClick={handlePublish}
+                                           text={
+                                               <div className="small">
+                                                   <FontAwesomeIcon icon={faPaperPlane} />
+                                                   <div className="line-height-1 font-weight-bold">Publish</div>
+                                               </div>
+                                           }
+                                           className="text-primary plain-button p-0 m-0 no-shadow"
+                                       />
+                               }
                            </div>
                        </div>
                    </div>
@@ -115,6 +180,7 @@ const ListEditor = ({ slug, editMode, isNew }) => {
                                            name={data.name}
                                            properties={data.properties}
                                            onUpdate={handleCreate}
+                                           comment={data.description}
                                        />
                                    </Card>
                                </div>

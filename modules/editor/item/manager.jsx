@@ -7,6 +7,7 @@ import ListItemContentEditor from "./contentEditor";
 
 import "../../../styles/list/item-editor.sass";
 import Card from "../../../components/ui/Cards";
+import ListItemViewer from "../../view/item/viewer";
 
 const ListItemManager = ({
     data, index, totalItems,
@@ -92,17 +93,12 @@ const ListItemManager = ({
         setUpdateRequired(true);
     };
 
-    const renderCollapsedItem =
-    <div className="d-flex align-items-center ml-2">
-        <h5 className="m-0">{name ? name : 'Untitled Item'}</h5>
-    </div>;
-
     const renderItemCard =
     <Card className={classNames("list-item-editor", !isReordering ? "rounded my-3" : "rounded-right-0" )} p={2}>
         <ListItemEditorHeader
             index={index}
             totalItems={totalItems}
-            itemID={data.itemID}
+            itemID={data.key}
             isOpen={isOpen && !isReordering}
             isRanked={isRanked}
             allowDeletion={allowDeletion}
@@ -127,7 +123,10 @@ const ListItemManager = ({
                 onURLInput={handleURLInput}
                 // onEntityInput={handleEntityInput}
             />
-            : renderCollapsedItem
+            : <ListItemViewer
+                name={name ? name : 'Untitled Item'}
+                comment={comment}
+            />
         }
     </Card>;
 
@@ -138,7 +137,7 @@ const ListItemManager = ({
 
 ListItemManager.propTypes = {
     data: PropTypes.shape({
-        itemID: PropTypes.string,
+        key: PropTypes.string,
         name: PropTypes.string,
         comment: PropTypes.string,
         url: PropTypes.string,

@@ -7,12 +7,11 @@ import ListAdvancedSettingsEditor from "./advanced";
 import Button from "../../../../components/ui/Button";
 
 const ListSettingsEditor = ({
-      properties: p,
+      properties,
       isPreview = false, isNew = false,
-      onSubmit, onSkip, onRequestEdit
+      onChange, onSubmit, onSkip, onRequestEdit
 }) => {
     const [showAdvancedOptions, setAdvancedOptions] = useState(false);
-    const [properties, setProperties] = useState(p);
 
     const listProperties = () => {
         if(properties)
@@ -37,13 +36,13 @@ const ListSettingsEditor = ({
                 {
                     showAdvancedOptions || !isNew ?
                         <ListAdvancedSettingsEditor
-                            onChange={setProperties}
+                            onChange={onChange}
                             showTemplateSuggestion={isNew}
                             onRequestTemplates={() => setAdvancedOptions(false)}
                             {...editorProps}
                         /> :
                         <ListTemplatePicker
-                            onSelect={setProperties}
+                            onSelect={onChange}
                             onRequestAdvanced={() => setAdvancedOptions(true)}
                         />
                 }
@@ -65,7 +64,7 @@ const ListSettingsEditor = ({
             </React.Fragment>
         : <div className="px-3 pt-2">
             <div className="text-primary position-relative font-weight-bold">
-                Properties
+                Type
                 <Button
                     onClick={onRequestEdit}
                     text={

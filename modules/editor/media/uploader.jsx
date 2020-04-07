@@ -57,7 +57,7 @@ const MediaUploader = ({ onComplete }) => {
         onComplete={(file) => {
             onComplete({
                 type: 'image',
-                file: file
+                url: file
             })
         }}
         image={image}

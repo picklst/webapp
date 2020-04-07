@@ -16,7 +16,11 @@ const UserProfilePage = (props) => {
         if(!isQueried) {
             getUserAPI({
                 username: username,
-                fields: [ "firstName", "lastName", "avatarURL" ]
+                fields: [
+                    "firstName", "lastName", "bio", "url",
+                    "avatarURL", "coverURL",
+                    "listCreatedCount", "followersCount", "followingCount",
+                ]
             }).then(res => {
                 setQueried(true);
                 if (!Object.prototype.hasOwnProperty.call(res, 'errors')) {

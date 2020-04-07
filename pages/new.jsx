@@ -13,10 +13,7 @@ const NewListPage = () => {
         }}
     >
         <h1>new</h1>
-        <ListEditor
-            isNew
-            editMode
-        />
+        <ListEditor isNew />
     </Base>
 };
 

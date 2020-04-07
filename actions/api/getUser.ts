@@ -18,12 +18,34 @@ async function getUser({ username, fields, endpoint})
                 __args: {
                     username: new VariableType('username')
                 },
-                publicInfo: {
-                    firstName: fields.includes("firstName"),
-                    lastName: fields.includes("lastName"),
-                    avatarURL: fields.includes("avatarURL"),
+                firstName: fields.includes("firstName"),
+                lastName: fields.includes("lastName"),
+                stats: {
+                    listsCreatedCount: fields.includes("listCreatedCount"),
+                    followersCount: fields.includes("followersCount"),
+                    followingCount: fields.includes("followingCount")
+                },
+                isVerified: fields.includes("isVerified"),
+                isProfilePrivate: fields.includes("isVerified"),
+                isBusinessProfile: fields.includes("isBusinessProfile"),
+                bio: fields.includes("bio"),
+                url: fields.includes("url"),
+                coverURL: fields.includes("coverURL"),
+                avatarURL: fields.includes("avatarURL"),
+                email: fields.includes("email"),
+                followers: {
+                    firstName: true,
+                    lastName: true,
                     username: true,
-                }
+                    avatarURL: true,
+                },
+                following: {
+                    firstName: true,
+                    lastName: true,
+                    username: true,
+                    avatarURL: true,
+                },
+                username: true,
             },
         }
     }, { pretty: false }).toString();
@@ -36,7 +58,7 @@ async function getUserAPI(params: getUserAPIParams)
         if (response.errors) {
             return { errors: response.errors };
         } else if(response.data) {
-            return response.data.getUser.publicInfo;
+            return response.data.getUser;
         } else {
             return { errors: [
                 {

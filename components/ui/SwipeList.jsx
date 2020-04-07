@@ -4,15 +4,23 @@ import shortid from 'shortid';
 
 import '../../styles/ui/swipelist.sass';
 
-const SwipeList = ({ items, minWidth = '60px', width = 'auto' }) => {
+const SwipeList = ({ items, selectedIndex, minWidth = '60px', width = 'auto', role, itemRole }) => {
 
+    const listID = shortid.generate();
     return <div className="srx-swipe-list">
-        <div className="list-container">
-            {items.map(i =>
+        <div
+            className="list-container"
+            role={role ? role : null}
+            aria-activedescendant={itemRole === "option" && selectedIndex ? `swipelist-${listID}-${selectedIndex}` : null}
+        >
+            {items.map((i,index) =>
                 <div
                     style={{ minWidth, width }}
                     className="swipe-list-item mr-2"
                     key={shortid.generate()}
+                    id={`swipelist-${listID}-${index}`}
+                    aria-selected={itemRole === "option" && selectedIndex ? index===selectedIndex : null}
+                    role={ itemRole ? itemRole : null}
                 >
                     {i}
                 </div>
@@ -24,7 +32,10 @@ const SwipeList = ({ items, minWidth = '60px', width = 'auto' }) => {
 
 SwipeList.propTypes = {
     items: PropTypes.arrayOf(PropTypes.node),
-    minWidth: PropTypes.number
+    selectedIndex: PropTypes.number,
+    minWidth: PropTypes.number,
+    itemRole: PropTypes.string,
+    role: PropTypes.string
 };
 
 export default SwipeList;

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { faWindowClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-// import '../../../styles/list/listItemLink.sass';
+import '../../../styles/list/link-previewer.sass';
+import Card from "../../../components/ui/Cards";
 
 // import dataFetch from "../../../utils/dataFetch";
 
@@ -36,37 +37,34 @@ const LinkPreview = ({ url, onDelete, onFetch }) => {
     //     }
     // });
 
-    const renderLinkPreview = () => <div className="list-item-link">
-        <div className="card p-2 m-2">
-            <button
-                onClick={() => onDelete()}
-                className="list-item-link-delete-button plain-button"
-            >
-                <FontAwesomeIcon icon={faWindowClose} />
-            </button>
-            <a href={url} target="_blank" className="mt-4 plain-link">
-                <div className="row m-0">
-                    { data.image && data.image.length > 0 ?
-                        <div className="col-3">
-                            <img src={data.image} className="w-100" />
+    return <Card
+        className="list-item-link position-relative"
+    >
+        <button
+            onClick={() => onDelete()}
+            className="position-absolute top-0 right-0 text-dark plain-button"
+        >
+            <FontAwesomeIcon icon={faWindowClose} />
+        </button>
+        <a href={url} target="_blank" className="d-block p-3 mt-4 plain-link">
+            {
+                isLoaded ?
+                    <div className="row m-0">
+                        { data.image && data.image.length > 0 ?
+                            <div className="col-3"><img src={data.image} className="w-100" />
+                            </div>
+                            : null
+                        }
+                        <div className="col px-0">
+                            <h6>{data.title}</h6>
+                            <div className="small-text" style={{ overflow: 'hidden' }}>{url}</div>
+                            <p className="small-text mb-0">{data.description}</p>
                         </div>
-                        : null
-                    }
-                    <div className="col px-0">
-                        <h6>{data.title}</h6>
-                        <div className="small-text" style={{ overflow: 'hidden' }}>{url}</div>
-                        <p className="small-text mb-0">{data.description}</p>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>;
-
-    return isLoaded ?
-        renderLinkPreview()
-        : <div className="mt-2 py-2 mx-2">
-            <b>Link:</b> <a href={url}>{url}</a>
-        </div>;
+                    </div> :
+                    <div className="w-100">{url}</div>
+            }
+        </a>
+    </Card>;
 };
 
 

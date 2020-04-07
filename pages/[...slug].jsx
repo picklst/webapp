@@ -47,9 +47,7 @@ const ListPage = (props) => {
     const renderListingPage = <Base
         meta={{ title: generateTitle(), description: generateDescription() }}
     >
-        <div className="container d-flex align-items-center justify-content-center p-2 min-vh-100">
-            { isLoaded ? <ListViewer slug={slug}/> : null }
-        </div>
+        { isLoaded ? <ListViewer slug={slug}/> : null }
     </Base>;
 
     return loadError ? <ErrorPage

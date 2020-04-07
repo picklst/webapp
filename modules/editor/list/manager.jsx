@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import shortid from 'shortid';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
@@ -7,21 +9,20 @@ import ListItemManager from "../item/manager";
 import Button from "../../../components/ui/Button";
 
 const generateItemObj = () => {
-    return { itemID: shortid.generate() }
+    return { key: shortid.generate(), }
 };
 
 const ListManager = ({ items : it, isRankedListing, onChange }) => {
     const [items, setItems] = useState( it ? it : [generateItemObj()]);
-    const [currentItem, setCurrentItem] = useState(null);
+    const [currentItem, setCurrentItem] = useState( null);
 
     const handleUpdation = (items) => {
-        items.forEach((i, index) => { i.position = index + 1 });
         if(typeof onChange === "function")
             onChange(items);
     };
 
     const handleItemDataChange = (val, index) => {
-        val.itemID = items[index].itemID;
+        val.key = items[index].key;
         items[index] = val;
         setItems(items);
         handleUpdation(items);
@@ -29,7 +30,7 @@ const ListManager = ({ items : it, isRankedListing, onChange }) => {
 
     const handleCreateItem = () => {
         const newItem = generateItemObj();
-        setCurrentItem(newItem.itemID);
+        setCurrentItem(newItem.key);
         setItems([...items, newItem]);
         handleUpdation([...items, newItem]);
     };
@@ -69,6 +70,27 @@ const ListManager = ({ items : it, isRankedListing, onChange }) => {
         }
     };
 
+
+    const reorder = (startIndex, endIndex) => {
+        const result = items;
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+        return result;
+    };
+
+    const handleDragEnd = (result) => {
+        if (!result.destination) {
+            setDragging(false);
+            return;
+        }
+        const items = reorder(
+            result.source.index,
+            result.destination.index,
+        );
+        setItems(items);
+        setDragging(false);
+    };
+
     const renderAddFloatingButton =
     <div id="list-editor-floating-buttons">
         <Button
@@ -78,26 +100,54 @@ const ListManager = ({ items : it, isRankedListing, onChange }) => {
         />
     </div>;
 
+    const [isDragging, setDragging] = useState(false);
     return <div>
         {renderAddFloatingButton}
-        {
-            items.map((data,i) =>
-                <ListItemManager
-                    key={shortid.generate()}
-                    isRanked={isRankedListing}
-                    data={data}
-                    index={i}
-                    totalItems={items.length}
-                    isOpen={currentItem === data.itemID || items.length === 1}
-                    allowDeletion
-                    onOpen={setCurrentItem}
-                    onDelete={handleItemDelete}
-                    onMoveUp={handleMoveUp}
-                    onMoveDown={handleMoveDown}
-                    onChange={(data) => handleItemDataChange(data, i)}
-                />
-            )
-        }
+        <DragDropContext
+            onDragStart={() => setDragging(true)}
+            onDragEnd={handleDragEnd}
+        >
+            <Droppable droppableId="droppable">
+                {(droppableProvided, droppableSnapshot) => (
+                    <div
+                        ref={droppableProvided.innerRef}
+                    >
+                    {items.map((data,i) =>
+                        <Draggable
+                            key={data.key}
+                            draggableId={data.key}
+                            index={i}
+                        >
+                        {(draggableProvided, draggableSnapshot) => (
+                            <div
+                                ref={draggableProvided.innerRef}
+                                {...draggableProvided.draggableProps}
+                                {...draggableProvided.dragHandleProps}
+                            >
+                                <ListItemManager
+                                    isReordering={isDragging}
+                                    key={i.key}
+                                    isRanked={isRankedListing}
+                                    data={data}
+                                    index={i}
+                                    totalItems={items.length}
+                                    isOpen={currentItem === data.key || items.length === 1}
+                                    allowDeletion
+                                    onOpen={setCurrentItem}
+                                    onDelete={handleItemDelete}
+                                    onMoveUp={handleMoveUp}
+                                    onMoveDown={handleMoveDown}
+                                    onChange={(data) => handleItemDataChange(data, i)}
+                                />
+                            </div>
+                        )}
+                        </Draggable>
+                    )}
+                    {droppableProvided.placeholder}
+                    </div>
+                )}
+            </Droppable>
+        </DragDropContext>
     </div>
 
 };

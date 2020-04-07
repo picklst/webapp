@@ -16,6 +16,10 @@ async function createList(objects)
             returning
             {
                 slug
+                curator
+                {
+                   username
+                }
             }
         }
     }`;
@@ -26,13 +30,12 @@ async function createList(objects)
 async function PublishList(listObj: PublishListParams)
 {
     const objects = [listObj];
-    console.log(objects);
     return await createList(objects).then(response => {
         if (response.errors) {
             console.error("We have an error in authenticating you.");
             return { errors: response.errors };
         } else if(response.data) {
-            return response.data;
+            return response.data.createList.returning[0];
         } else {
             console.error("We are facing technical issues in authenticating you.");
             return { errors: [
