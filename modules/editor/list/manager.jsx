@@ -30,8 +30,8 @@ const ListManager = ({ items : it, isRankedListing, onChange }) => {
 
     const handleCreateItem = () => {
         const newItem = generateItemObj();
-        setCurrentItem(newItem.key);
         setItems([...items, newItem]);
+        setCurrentItem(items.length);
         handleUpdation([...items, newItem]);
     };
 
@@ -89,6 +89,7 @@ const ListManager = ({ items : it, isRankedListing, onChange }) => {
         );
         setItems(items);
         setDragging(false);
+        handleUpdation(items);
     };
 
     const renderAddFloatingButton =
@@ -100,8 +101,9 @@ const ListManager = ({ items : it, isRankedListing, onChange }) => {
         />
     </div>;
 
+
     const [isDragging, setDragging] = useState(false);
-    return <div>
+    return <div className="p-2">
         {renderAddFloatingButton}
         <DragDropContext
             onDragStart={() => setDragging(true)}
@@ -131,7 +133,7 @@ const ListManager = ({ items : it, isRankedListing, onChange }) => {
                                     data={data}
                                     index={i}
                                     totalItems={items.length}
-                                    isOpen={currentItem === data.key || items.length === 1}
+                                    isOpen={currentItem === i || items.length === 1}
                                     allowDeletion
                                     onOpen={setCurrentItem}
                                     onDelete={handleItemDelete}

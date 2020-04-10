@@ -28,8 +28,8 @@ Card.propTypes = {
     children: PropTypes.node.isRequired,
     style: PropTypes.object,
     hasShadow: PropTypes.bool,
-    p: PropTypes.oneOf([ 1, 2, 3, 4, 5 ]),
-    m: PropTypes.oneOf([ 1, 2, 3, 4, 5 ])
+    p: PropTypes.oneOf([ 0, 1, 2, 3, 4, 5 ]),
+    m: PropTypes.oneOf([ 0, 1, 2, 3, 4, 5 ])
 };
 
 export default Card;

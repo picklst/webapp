@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import Base from "../components/core/Base";
 import ErrorPage from "../components/core/ErrorPage";
 import getUserAPI from "../actions/api/getUser.ts";
+import ProfileCard from "../modules/cards/profile";
+import UserListsFeed from "../modules/feeds/UserLists";
 
 const UserProfilePage = (props) => {
     const [username, setUsername] = useState(props.username);
@@ -11,14 +13,14 @@ const UserProfilePage = (props) => {
 
     const [isQueried, setQueried] = useState(false);
     const [loadError, setError] = useState(false);
-    const [isProfileLoaded, setLoaded] = useState(true);
+    const [isProfileLoaded, setLoaded] = useState(false);
     useEffect(() => {
         if(!isQueried) {
             getUserAPI({
                 username: username,
                 fields: [
                     "firstName", "lastName", "bio", "url",
-                    "avatarURL", "coverURL",
+                    "avatarURL", "coverURL", "isVerified",
                     "listCreatedCount", "followersCount", "followingCount",
                 ]
             }).then(res => {
@@ -52,14 +54,49 @@ const UserProfilePage = (props) => {
     const renderProfilePage = <Base
         meta={{ title: generateTitle(), description: generateDescription() }}
     >
-        <div className="container d-flex align-items-center justify-content-center p-2 min-vh-100">
-            {
-                isProfileLoaded ?
-                    <div>
-                        {username}
+        <div className="min-vh-100">
+
+            <div className="row mx-0 p-lg-4 p-md-2 p-0">
+                <div className="col-md-2 px-2">
+                </div>
+                <div className="col-md-10 p-0">
+                    {
+                        isProfileLoaded ?
+                            <ProfileCard
+                                username={userData.username}
+                                avatarURL={userData.avatarURL}
+                                coverURL={userData.coverURL}
+                                firstName={userData.firstName}
+                                lastName={userData.lastName}
+                                bio={userData.bio}
+                                url={userData.url}
+                                isVerified={userData.isVerified}
+                                stats={[
+                                    {
+                                        "label": "Lists",
+                                        "value": userData.stats.listsCreatedCount
+                                    },
+                                    {
+                                        "label": "Followers",
+                                        "value": userData.stats.followersCount
+                                    },
+                                    {
+                                        "label": "Following",
+                                        "value": userData.stats.followingCount
+                                    }
+                                ]}
+                            /> : null
+                    }
+                    <div className="row m-0">
+                        <div className="col-md-9 my-3">
+                            <UserListsFeed
+                                username={username}
+                            />
+                        </div>
                     </div>
-                : null
-            }
+
+                </div>
+            </div>
         </div>
     </Base>;
 

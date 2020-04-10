@@ -10,7 +10,7 @@ export default (
 ) => {
 
     //@todo support custom/multiple providers, currently uses the 0 index provider
-    const TOKEN_PREFIX = API.providers[0].endpoint;
+    const TOKEN_PREFIX = 'JWT ';
 
     const token = cookies.get('token');
     const apiConfig = {

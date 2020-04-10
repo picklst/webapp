@@ -1,4 +1,4 @@
-import React, { useState, createRef } from 'react';
+import React, {useState, createRef, useEffect} from 'react';
 import shortid from 'shortid';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -70,16 +70,32 @@ const TextInput = ({
             setErrorState(true);
     };
 
+    const textInput = createRef();
+    const backdropRef = createRef();
+
     const getBackdropText = (value) => {
         if(highlighters && highlighters)
         {
+            value = value.replace(/\r\n/g, '<br />').replace(/[\r\n]/g, '<br />');
             highlighters.map(i => value = value.replace(i.regex,`<mark class="${i.className}">$&</mark>`) );
             return value;
         }
         return null
     };
 
-    const textInput = createRef();
+    const handleScroll = () => {
+        if(type === "textarea")
+        {
+            if(textInput.current.scrollTop !== 0)
+            {
+                backdropRef.current.scrollTop = textInput.current.scrollTop
+            }
+        }
+    };
+    useEffect(() => {
+        handleScroll();
+    });
+
 
     const handleSuggestionSelect = sel => {
         suggesters.map(i => {
@@ -150,15 +166,18 @@ const TextInput = ({
         )}
     >
         <div className="row m-0">
-            <div className="col-8 p-1">
-                <label
-                    aria-hidden={false}
-                    className={value.length > 0 && !errorState && !hideLabel ? 'font-weight-bold text-primary small' : 'd-none'}
-                    htmlFor={id ? id : inputID}
-                >
-                    {label}
-                </label>
-            </div>
+            {
+                !hideLabel ?
+                    <div className="col-8 p-1">
+                        <label
+                            aria-hidden={false}
+                            className={value.length > 0 && !errorState ? 'font-weight-bold text-primary small' : 'd-none'}
+                            htmlFor={id ? id : inputID}
+                        >
+                            {label}
+                        </label>
+                    </div> : null
+            }
             {
                 value.length > 0 && isTyping && charLimit && showLimit ?
                     <div className="col-4 d-flex align-items-end p-1">
@@ -181,7 +200,8 @@ const TextInput = ({
         {   type === "textarea" ?
             <div className="d-inline-block w-100 textarea-container position-relative">
                 <div
-                    className="textarea-backdrop"
+                    ref={backdropRef}
+                    className="textarea-backdrop w-100"
                     dangerouslySetInnerHTML={{ __html: getBackdropText(value) }}
                 />
                 <textarea
@@ -207,6 +227,7 @@ const TextInput = ({
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                     onChange={handleChange}
+                    onScroll={handleScroll}
                     required={isRequired}
                     aria-required={isRequired}
                     autoFocus={autoFocus && value.length < 1}

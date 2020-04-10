@@ -4,6 +4,13 @@ import ListEditor from "../../modules/editor/ListEditor";
 
 const EditListPage = ({ slug }) => {
 
+    const handleExit = () => {
+        if(window)
+        {
+            window.history.back()
+        }
+    };
+
     return <Base
         meta={{
             title: 'Edit List',
@@ -16,6 +23,7 @@ const EditListPage = ({ slug }) => {
             <ListEditor
                 slug={slug}
                 editMode
+                onExit={handleExit}
             />
         </div>
     </Base>

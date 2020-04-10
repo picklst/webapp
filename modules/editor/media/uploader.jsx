@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 import Button from "../../../components/ui/Button";
-import ImageEditor from "./imageEditor";
+import ImageEditor from "../../../components/editors/ImageEditor/imageEditor";
 
 import '../../../styles/list/media-uploader.sass';
 

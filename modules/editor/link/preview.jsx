@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { faWindowClose } from "@fortawesome/free-solid-svg-icons";
+import { faWindowClose, faExternalLinkAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import '../../../styles/list/link-previewer.sass';
@@ -38,6 +38,7 @@ const LinkPreview = ({ url, onDelete, onFetch }) => {
     // });
 
     return <Card
+        p={0}
         className="list-item-link position-relative"
     >
         <button
@@ -46,7 +47,7 @@ const LinkPreview = ({ url, onDelete, onFetch }) => {
         >
             <FontAwesomeIcon icon={faWindowClose} />
         </button>
-        <a href={url} target="_blank" className="d-block p-3 mt-4 plain-link">
+        <a href={url} target="_blank" className="d-block p-3 plain-link">
             {
                 isLoaded ?
                     <div className="row m-0">
@@ -61,7 +62,10 @@ const LinkPreview = ({ url, onDelete, onFetch }) => {
                             <p className="small-text mb-0">{data.description}</p>
                         </div>
                     </div> :
-                    <div className="w-100">{url}</div>
+                    <div className="text-primary w-100">
+                        <FontAwesomeIcon icon={faExternalLinkAlt} />
+                        <span className="pl-2">{url}</span>
+                    </div>
             }
         </a>
     </Card>;

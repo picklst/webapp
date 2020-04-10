@@ -1,13 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import ListItemEditorHeader from "./header";
-import ListItemContentEditor from "./contentEditor";
-
 import "../../../styles/list/item-editor.sass";
-import Card from "../../../components/ui/Cards";
-import ListItemViewer from "../../view/item/viewer";
+import ItemCard from "../../cards/item";
 
 const ListItemManager = ({
     data, index, totalItems,
@@ -93,46 +89,33 @@ const ListItemManager = ({
         setUpdateRequired(true);
     };
 
-    const renderItemCard =
-    <Card className={classNames("list-item-editor", !isReordering ? "rounded my-3" : "rounded-right-0" )} p={2}>
-        <ListItemEditorHeader
+    return <ItemCard
             index={index}
             totalItems={totalItems}
-            itemID={data.key}
-            isOpen={isOpen && !isReordering}
-            isRanked={isRanked}
-            allowDeletion={allowDeletion}
+
+            name={name}
+            comment={comment}
+            url={url}
+            media={media}
+            entityID={entityID}
+            className="my-2"
+
+            isEditing={isOpen}
+            isRankedList={isRanked}
+            showPosition={!isReordering}
+            showMoveButton={!isReordering}
+            showDeleteButton={!isReordering && allowDeletion}
             allowEditing={!isReordering}
+
+            onEdit={onOpen}
             onMoveUp={onMoveUp}
             onMoveDown={onMoveDown}
             onDelete={onDelete}
-            onOpen={onOpen}
-        />
-        { isOpen && !isReordering ?
-            <ListItemContentEditor
-                title={name}
-                description={comment}
-                url={url}
-                media={media}
-                entityID={entityID}
-                onChangeTitle={handleTitleInput}
-                onChangeDescription={handleDescriptionInput}
-                onChangeMedia={handleMediaInput}
-                // onFetchURL={(d) => handleLinkLoaded(d)}
-                // onDeleteURL={() => handleURLInput(null)}
-                onURLInput={handleURLInput}
-                // onEntityInput={handleEntityInput}
-            />
-            : <ListItemViewer
-                name={name ? name : 'Untitled Item'}
-                comment={comment}
-            />
-        }
-    </Card>;
-
-    return <div>
-        { renderItemCard }
-    </div>
+            onChangeTitle={handleTitleInput}
+            onChangeDescription={handleDescriptionInput}
+            onChangeMedia={handleMediaInput}
+            onChangeLink={handleURLInput}
+        />;
 };
 
 ListItemManager.propTypes = {

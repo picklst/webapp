@@ -21,7 +21,7 @@ const Toggler = ({
     };
 
     return <div className={classNames("d-flex align-items-center", classes)}>
-        <div style={{ width: '80%' }}>
+        <div style={{ width: '80%' }} className="p-2">
             <label htmlFor={id}>{text}</label>
         </div>
         <div style={{ width: '20%' }} className="d-flex justify-content-end">
@@ -33,7 +33,7 @@ const Toggler = ({
                 handleDiameter={small ? 20 : 30}
                 uncheckedIcon={false}
                 checkedIcon={false}
-                boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                boxShadow="0px 1px 5px rgba(0, 0, 0 , 0.6)"
                 activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
                 height={small ? 16 : 20}
                 width={small ? 32 : 48}

@@ -8,11 +8,18 @@ import MediaUploader from "../media/uploader";
 import ListEditorContentTypeSelector from "../content/TypeSelector";
 import CommentInput from "../content/CommentInput";
 import NameInput from "../content/NameInput";
+import MediaPreview from "../media/preview";
+import Button from "../../../components/ui/Button";
 
+const defaultLabels = {
+    save: "Save"
+};
 
 const ListItemContentEditor = ({
-    title, description, url, media, entityID,
-    onChangeTitle, onChangeDescription, onURLInput, onChangeMedia
+    itemKey, title, description, url: link, media, entityID,
+    labels = defaultLabels,
+    enableSaving = false,
+    onChangeTitle, onChangeDescription, onURLInput, onChangeMedia, onSave
 }) => {
 
     const [id, setID] = useState(shortid.generate());
@@ -20,39 +27,52 @@ const ListItemContentEditor = ({
     const [descriptionEditor, showDescriptionEditor] = useState(description ? description : '');
     const [linkEditor, showLinkEditor] = useState(!!url);
 
+    const [name, setName] = useState(title ? title : '');
+    const [comment, setComment] = useState(description ? description : '');
+    const [url, setURL] = useState(link ? link : '');
+
+    const handleNameChange = (v) => { setName(v); onChangeTitle(v); };
+    const handleCommentChange = (v) => { setComment(v); onChangeDescription(v) };
+    const handleURLChange = (v) => { setURL(v); onURLInput(v) };
+
+    const getHashTags = () => {
+        const hashtagRegex = /([#][\w-\d|.]+)/g;
+        let dTags = comment.match(hashtagRegex);
+        let tTags = name.match(hashtagRegex);
+        tTags = tTags ? tTags : [];
+        dTags = dTags ? dTags : [];
+        return [...new Set([...tTags ,...dTags])];
+    };
+
+    const handleSave = () => {
+        onSave({
+            itemKey,
+            name,
+            comment,
+            url,
+            tags: getHashTags()
+        });
+    };
+
     return <div>
         <NameInput
-            onChange={onChangeTitle}
-            value={title}
+            onChange={handleNameChange}
+            value={name}
         />
-        {
-            media ?
-                <div className="p-2 w-100">
-                    {
-                        media.type === 'image' ?
-                            <img
-                                src={media.url}
-                                alt="list-item-image"
-                                style={{ maxWidth: '100%' }}
-                            />
-                        : null
-                    }
-                </div>
-            : null
-        }
+        { media ? <MediaPreview type={media.type} url={media.url} onDelete={() => onChangeMedia(null)} /> : null }
         { url ? <LinkPreview onDelete={() => onURLInput(null)} url={url}/> : null }
         {
             descriptionEditor ? <CommentInput
                 id={`list-editor-description-input-${id}`}
-                value={description}
-                onChange={onChangeDescription}
+                value={comment}
+                onChange={handleCommentChange}
                 enableUserMentioning
             /> : null
         }
         <LinkAttacher
             isOpen={linkEditor && !url}
             onClose={() => showLinkEditor(false)}
-            onComplete={onURLInput}
+            onComplete={handleURLChange}
         />
         <div className="py-2">
             <ListEditorContentTypeSelector
@@ -76,6 +96,14 @@ const ListItemContentEditor = ({
                 ]}
             />
         </div>
+        {
+            enableSaving ?
+                <Button
+                    className="purple-button"
+                    text={labels.save}
+                    onClick={handleSave}
+                /> : null
+        }
     </div>
 };
 
@@ -88,6 +116,10 @@ ListItemContentEditor.propTypes = {
         file: PropTypes.any,
     }),
     entityID: PropTypes.string,
+    labels: {
+        save: PropTypes.string
+    },
+    enableSaving: PropTypes.bool,
     onChangeTitle: PropTypes.func,
     onChangeDescription: PropTypes.func,
     onURLInput: PropTypes.func,

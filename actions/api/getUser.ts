@@ -33,18 +33,18 @@ async function getUser({ username, fields, endpoint})
                 coverURL: fields.includes("coverURL"),
                 avatarURL: fields.includes("avatarURL"),
                 email: fields.includes("email"),
-                followers: {
-                    firstName: true,
-                    lastName: true,
-                    username: true,
-                    avatarURL: true,
-                },
-                following: {
-                    firstName: true,
-                    lastName: true,
-                    username: true,
-                    avatarURL: true,
-                },
+                // followers: {
+                //     firstName: false,
+                //     lastName: false,
+                //     username: false,
+                //     avatarURL: false,
+                // },
+                // following: {
+                //     firstName: false,
+                //     lastName: false,
+                //     username: false,
+                //     avatarURL: false,
+                // },
                 username: true,
             },
         }

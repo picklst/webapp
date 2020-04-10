@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import {useRouter} from "next/router";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faTimes, faPaperPlane, faSave, faEye } from "@fortawesome/free-solid-svg-icons";
 
 import PublishList from "../../actions/functions/PublishList.ts";
 import UpdateListAPI from "../../actions/api/updateList.ts";
@@ -17,10 +17,10 @@ import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Cards";
 
 
-const generateItemObj = () => { return { itemID: shortid.generate() } };
+const generateItemObj = () => { return { key: shortid.generate() } };
 
 
-const ListEditor = ({ slug, editMode, isNew }) => {
+const ListEditor = ({ slug, editMode, isNew, onExit }) => {
     const router = useRouter();
 
     const [isCreated, setCreated] = useState(!isNew);
@@ -94,7 +94,6 @@ const ListEditor = ({ slug, editMode, isNew }) => {
     };
 
     const handleCreate = (data) => {
-        console.log(data);
         setCreated(true);
         if(!data.name || data.name.length < 1)
             data.name = 'Untitled List';
@@ -112,13 +111,17 @@ const ListEditor = ({ slug, editMode, isNew }) => {
             </button>
         </div>
         <div style={{ width: 'auto' }} className="d-flex align-items-center p-2">
-            <div className="topbar-title">Create your List</div>
+            <div className="topbar-title">
+                { editMode ? 'Edit your List' : 'Create your List' }
+            </div>
         </div>
         {
             data !== {} && cancelWarning ?
                 <div id="cancel-warning">
                     <div className="text-center">
-                        <h4 className="mb-3">Discard this list?</h4>
+                        <h4 className="mb-3 text-white">
+                            { editMode ? 'Discard new changes' : 'Discard this List' }
+                        </h4>
                         <Button
                             text="Cancel"
                             className="grey-button rounded-pill px-4 py-1 mr-2"
@@ -127,7 +130,7 @@ const ListEditor = ({ slug, editMode, isNew }) => {
                         <Button
                             text="Discard"
                             className="red-button rounded-pill px-4 py-1 mr-2"
-                            onClick={() => showCancelWarning(false)}
+                            onClick={onExit}
                         />
                     </div>
                 </div> : null
@@ -149,9 +152,9 @@ const ListEditor = ({ slug, editMode, isNew }) => {
                                        <Button
                                            onClick={handleSave}
                                            text={
-                                               <div className="small">
-                                                   <FontAwesomeIcon icon={faPaperPlane} />
-                                                   <div className="line-height-1 font-weight-bold">Save</div>
+                                               <div>
+                                                   <FontAwesomeIcon icon={faSave} />
+                                                   <div className="small line-height-1 font-weight-bold">Save</div>
                                                </div>
                                            }
                                            className="text-primary plain-button p-0 m-0 no-shadow"
@@ -204,7 +207,10 @@ const ListEditor = ({ slug, editMode, isNew }) => {
                         {renderTopbar}
                     </div>
                     <ListPropertiesManager
+                        isNew
                         onUpdate={handleCreate}
+                        properties={data.properties}
+                        name={data.name}
                      />
                     <div style={{ marginBottom: '5vh' }} />
                 </div>

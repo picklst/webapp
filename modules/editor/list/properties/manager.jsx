@@ -11,13 +11,11 @@ import '../../../../styles/list/list-creator.sass';
 
 import ListPropertyEditorWrapper from "./wrapper";
 import MediaUploader from "../../media/uploader";
+import MediaPreview from "../../media/preview";
 
 const ListPropertiesManager = ({
-    name: nm,
-    comment,
-    properties: prop,
-    cover: cv,
-    isPreview,
+    name: nm, comment, properties: prop, cover: cv,
+    isPreview, isNew,
     onUpdate
 }) => {
 
@@ -32,7 +30,7 @@ const ListPropertiesManager = ({
 
     const [descriptionEditor, showDescriptionEditor] = useState(!!comment);
 
-    const [name, setName] = useState(nm ? nm : 'Untitled List');
+    const [name, setName] = useState(nm ? nm : '');
     const [description, setDescription] = useState(comment ? comment : '');
     const [properties, setProperties] = useState(prop ? prop : null);
     const [cover, setCover] = useState(cv ? cv : null);
@@ -49,13 +47,12 @@ const ListPropertiesManager = ({
     return <div>
         <ListSettingsEditor
             properties={properties}
-            isPreview={isPropertiesSet}
-            isNew={!prop}
+            isPreview={isPreview || isPropertiesSet}
+            isNew={!isPropertiesSet}
             onRequestEdit={() => setPropertiesEditor(false)}
             onChange={setProperties}
             onSubmit={() => {
                 setPropertiesEditor(true);
-                handleSubmit();
             }}
             onSkip={() => {
                 setProperties({...defaultProps});
@@ -66,7 +63,6 @@ const ListPropertiesManager = ({
             <ListPropertyEditorWrapper
                 propertyName="Name"
                 isEditing={!isNamed}
-
                 editor={
                     <NameInput
                         onChange={setName}
@@ -81,6 +77,8 @@ const ListPropertiesManager = ({
                     handleSubmit(name, description, properties)
                 }}
                 onSkip={() => {
+                    console.log('HELLO');
+                    setName('Untitled List');
                     setNamed(true);
                     handleSubmit()
                 }}
@@ -108,20 +106,7 @@ const ListPropertiesManager = ({
                     }}
                 /> : null
         }
-        {
-            cover ?
-            <div className="p-2 w-100">
-            {
-                cover.type === 'image' ?
-                    <img
-                        src={cover.url}
-                        alt="list-cover-image"
-                        style={{ maxWidth: '100%' }}
-                    />
-                    : null
-            }
-            </div> : null
-        }
+        { cover ? <MediaPreview type={cover.type} url={cover.url} onDelete={() => setCover(null)} /> : null }
         {
             isNamed && isPropertiesSet ?
                 <ListEditorContentTypeSelector

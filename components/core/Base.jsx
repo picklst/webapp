@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Head from "next/head";
 import '../../styles/styles.sass';
 import '../../styles/bootstrap.min.css';
+import Topbar from "./Topbar";
 
 const seoTags = require('../../data/seo.json');
 
@@ -25,6 +26,7 @@ const Base = ({ children, meta }) => {
             <meta name='theme-color' content='#317EFB' />
         </Head>
         <div className="app light dark-mode">
+            <Topbar />
             { children }
         </div>
         <div className="orientation-lock"><h2>Only Portrait Mode Supported. Rotate Device</h2></div>

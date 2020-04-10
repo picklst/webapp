@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import classNames from 'classnames';
 import Cropper from 'react-easy-crop'
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faUndo, faCheck } from "@fortawesome/free-solid-svg-icons";
 
-import PopUp from "../../../components/ui/PopUp";
-import Button from "../../../components/ui/Button";
+import PopUp from "../../ui/PopUp";
+import Button from "../../ui/Button";
 import getCroppedImg from "./cropImage";
-
 
 const AdjustmentButton = ({ text, isSelected, onClick }) => {
     return <button

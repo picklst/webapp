@@ -6,7 +6,15 @@ interface updateListAPIParams {
     description: string,
     tags: object,
     properties: object,
-    items: object
+    items: [
+        {
+            name: string,
+            key: string,
+            comment: string,
+            position: bigint,
+            url: string,
+        }
+    ]
 }
 
 async function updateList(o)

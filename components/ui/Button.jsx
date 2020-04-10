@@ -4,7 +4,13 @@ import classNames from 'classnames';
 
 import '../../styles/ui/button.sass';
 
-const Button = ({ text, link, onClick, type, className: classes }) => {
+const emptyfunc = () => {};
+
+const Button = ({
+    text, link,
+    type, className: classes,
+    onClick = emptyfunc, onFocus = emptyfunc, onBlur = emptyfunc
+}) => {
     return link ?
     <a href={link}>
         <button className={classNames("srx-button", classes)}>
@@ -15,6 +21,8 @@ const Button = ({ text, link, onClick, type, className: classes }) => {
         type={type}
         className={classNames("srx-button", classes)}
         onClick={onClick}
+        onBlur={onBlur}
+        onFocus={onFocus}
     >
         {text}
     </button>
