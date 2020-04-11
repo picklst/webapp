@@ -27,6 +27,8 @@ async function getLists({ fields, query: q, limit, offset })
                     offset: new VariableType('offset'),
                 },
                 name: fields.includes("name"),
+                createdTimestamp: fields.includes("createdTimestamp"),
+                lastUpdateTimestamp: fields.includes("lastUpdateTimestamp"),
                 slug: true,
             },
         }

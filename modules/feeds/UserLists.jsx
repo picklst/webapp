@@ -16,7 +16,7 @@ const UserListsFeed = ({
     useEffect(() => {
         if(!isQueried){
             getListsAPI({
-                fields: ["name"],
+                fields: [ "name", "lastUpdateTimestamp", "createdTimestamp" ],
                 limit: 10,
                 offset: 0,
                 query: {
@@ -40,6 +40,8 @@ const UserListsFeed = ({
                         username={username}
                         name={i.name}
                         slug={i.slug}
+                        createdTimestamp={i.createdTimestamp}
+                        lastEditTimestamp={i.lastEditTimestamp}
                     />
                 </div>
             )

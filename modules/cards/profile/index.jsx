@@ -2,11 +2,16 @@ import React from 'react';
 import shortid from 'shortid';
 import Card from "../../../components/ui/Cards";
 import Button from "../../../components/ui/Button";
+import ImageUploader from "../../../components/forms/ImageUploader";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencilAlt } from "@fortawesome/free-solid-svg-icons"
 
 const ProfileCard = ({
     firstName, lastName, username, bio, url, stats,
     isVerified,
-    avatarURL, coverURL
+    avatarURL, coverURL,
+    onChangeAvatar
 }) => {
 
     const renderStatCard = ({ value, label }) =>
@@ -38,6 +43,17 @@ const ProfileCard = ({
                         maxHeight: '150px',
                         bottom: '2vh'
                     }}
+                />
+                <ImageUploader
+                    lockAspectRatio
+                    aspect={1}
+                    buttonComponent={
+                        <Button
+                            className="small-button blue-button"
+                            text={<FontAwesomeIcon icon={faPencilAlt} />}
+                        />
+                    }
+                    onComplete={onChangeAvatar}
                 />
             </div>
             <div className="col-6 d-flex justify-content-end py-2">

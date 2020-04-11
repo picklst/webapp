@@ -5,6 +5,8 @@ import getUserAPI from "../actions/api/getUser.ts";
 import ProfileCard from "../modules/cards/profile";
 import UserListsFeed from "../modules/feeds/UserLists";
 
+import uploadMediaAPI from "../actions/api/uploadMedia.ts";
+
 const UserProfilePage = (props) => {
     const [username, setUsername] = useState(props.username);
     const [firstName, setFirstName] = useState(props.firstName);
@@ -38,6 +40,14 @@ const UserProfilePage = (props) => {
             });
         }
     });
+
+
+    const handleChangeAvatar = (image) => {
+        console.log(image);
+        uploadMediaAPI({ image, type: 'userAvatar'}).then(r => {
+            console.log(r);
+        })
+    };
 
     const generateTitle = () => {
         if(firstName !== null || lastName !== null)
@@ -85,6 +95,7 @@ const UserProfilePage = (props) => {
                                         "value": userData.stats.followingCount
                                     }
                                 ]}
+                                onChangeAvatar={handleChangeAvatar}
                             /> : null
                     }
                     <div className="row m-0">

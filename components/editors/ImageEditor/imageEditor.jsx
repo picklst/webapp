@@ -9,7 +9,7 @@ import PopUp from "../../ui/PopUp";
 import Button from "../../ui/Button";
 import getCroppedImg from "./cropImage";
 
-const AdjustmentButton = ({ text, isSelected, onClick }) => {
+const AdjustmentButton = ({ text, isSelected, onClick, }) => {
     return <button
         onClick={onClick}
         className={classNames('plain-button adjustment-button mx-3 font-weight-bold', isSelected ? 'text-warning' : 'text-light')}
@@ -18,11 +18,11 @@ const AdjustmentButton = ({ text, isSelected, onClick }) => {
     </button>
 };
 
-const ImageEditor = ({ image, onClose, onComplete }) => {
+const ImageEditor = ({ image, aspect:as = 4/3, lockAspectRatio, onClose, onComplete }) => {
 
     const [crop, onCropChange] = useState({ x: 0, y: 0 });
     const [zoom, onZoomChange] = useState(1);
-    const [aspect, setAspect] = useState(4/3);
+    const [aspect, setAspect] = useState(as);
     const [rotation, onRotationChange] = useState(0);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
@@ -80,9 +80,15 @@ const ImageEditor = ({ image, onClose, onComplete }) => {
                     />
                 </div>
                 <div className="p-3 d-flex justify-content-center align-items-center w-100">
-                    <AdjustmentButton isSelected={aspect===16/9} text="16:9" onClick={() => setAspect(16/9)}/>
-                    <AdjustmentButton isSelected={aspect===4/3} text="4:3" onClick={() => setAspect(4/3)}/>
-                    <AdjustmentButton isSelected={aspect===1} text="1:1" onClick={() => setAspect(1)}/>
+                    {
+                        !lockAspectRatio ?
+                            <React.Fragment>
+                                <AdjustmentButton isSelected={aspect===16/9} text="16:9" onClick={() => setAspect(16/9)}/>
+                                <AdjustmentButton isSelected={aspect===4/3} text="4:3" onClick={() => setAspect(4/3)}/>
+                                <AdjustmentButton isSelected={aspect===1} text="1:1" onClick={() => setAspect(1)}/>
+                            </React.Fragment>
+                        : null
+                    }
                     <AdjustmentButton
                         text={<FontAwesomeIcon icon={faUndo} />}
                         onClick={() => onRotationChange( rotation > 0 ? rotation-90 : 360)}

@@ -24,7 +24,10 @@ const ListPage = (props) => {
             getListAPI({
                 slug,
                 username,
-                fields: [ "name", "description", "curator", "properties", "items" ]
+                fields: [
+                    "name", "description", "curator", "properties", "items",
+                    "createdTimestamp", "lastEditTimestamp"
+                ]
             }).then(res => {
                 setQueried(true);
                 if (!Object.prototype.hasOwnProperty.call(res, 'errors')) {
