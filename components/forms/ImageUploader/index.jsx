@@ -34,7 +34,7 @@ const ImageUploader = ({
     };
 
     return !isSelected ?
-        <div className="list-media-uploader">
+        <div className="list-media-uploader" tabIndex={0}>
             {buttonComponent}
             <input
                 type="file"
@@ -46,10 +46,11 @@ const ImageUploader = ({
             aspect={aspect}
             lockAspectRatio={lockAspectRatio}
             onComplete={(file) => {
+                setSelected(false);
                 onComplete({
                     type: 'image',
                     url: file
-                })
+                });
             }}
             image={image}
             onClose={setSelected}

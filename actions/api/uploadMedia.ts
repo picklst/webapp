@@ -33,7 +33,7 @@ async function uploadMediaAPI(params: uploadMediaAPIParams)
         if (response.errors) {
             return { errors: response.errors };
         } else if(response.data) {
-            return response.data.createItem;
+            return response.data.uploadMedia;
         } else {
             return { errors: [
                     {

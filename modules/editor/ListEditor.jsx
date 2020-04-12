@@ -15,6 +15,7 @@ import ListPropertiesManager from "./list/properties/manager";
 import ListManager from "./list/manager";
 import Button from "../../components/ui/Button";
 import Card from "../../components/ui/Cards";
+import BottomPopup from "../../components/ui/BottomPopup";
 
 
 const generateItemObj = () => { return { key: shortid.generate() } };
@@ -200,21 +201,22 @@ const ListEditor = ({ slug, editMode, isNew, onExit }) => {
                        </div>
                    </div>
                </div>
-           </div>
-           : <div id="list-creator">
-                <div className="list-creator-container bg-white position-relative">
-                    <div id="list-creator-header" className="bg-white">
-                        {renderTopbar}
-                    </div>
-                    <ListPropertiesManager
-                        isNew
-                        onUpdate={handleCreate}
-                        properties={data.properties}
-                        name={data.name}
-                     />
-                    <div style={{ marginBottom: '5vh' }} />
-                </div>
-            </div>
+            </div> :
+           <BottomPopup
+                title={ editMode ? 'Edit your List' : 'Create your List' }
+                showDiscardWarning
+                discardLabel="Discard List"
+                className="bg-white"
+                onClose={onExit}
+           >
+                <ListPropertiesManager
+                    isNew
+                    onUpdate={handleCreate}
+                    properties={data.properties}
+                    name={data.name}
+                 />
+                <div style={{ marginBottom: '5vh' }} />
+           </BottomPopup>
         : null
 };
 

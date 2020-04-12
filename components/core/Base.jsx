@@ -4,6 +4,7 @@ import Head from "next/head";
 import '../../styles/styles.sass';
 import '../../styles/bootstrap.min.css';
 import Topbar from "./Topbar";
+import BottomBar from "./BottomBar";
 
 const seoTags = require('../../data/seo.json');
 
@@ -28,6 +29,9 @@ const Base = ({ children, meta }) => {
         <div className="app light dark-mode">
             <Topbar />
             { children }
+            <div className="d-block d-md-none">
+                <BottomBar />
+            </div>
         </div>
         <div className="orientation-lock"><h2>Only Portrait Mode Supported. Rotate Device</h2></div>
     </React.Fragment>

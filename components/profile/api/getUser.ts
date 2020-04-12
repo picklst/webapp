@@ -1,4 +1,4 @@
-import dataFetch from "../../utils/dataFetch";
+import dataFetch from "../../../utils/dataFetch";
 import { jsonToGraphQLQuery, VariableType } from 'json-to-graphql-query';
 
 interface getUserAPIParams {

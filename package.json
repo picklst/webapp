@@ -42,8 +42,10 @@
     "react-hooks-global-state": "^1.0.0",
     "react-modal": "^3.11.2",
     "react-switch": "^5.0.1",
+    "react-waypoint": "^9.0.2",
     "shortid": "^2.2.15",
     "slugify": "^1.4.0",
+    "styled-components": "^5.1.0",
     "universal-cookie": "^4.0.3",
     "use-clippy": "^1.0.6"
   }

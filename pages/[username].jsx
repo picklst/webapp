@@ -2,16 +2,13 @@ import React, {useEffect, useState} from 'react';
 import Base from "../components/core/Base";
 import ErrorPage from "../components/core/ErrorPage";
 import getUserAPI from "../actions/api/getUser.ts";
-import ProfileCard from "../modules/cards/profile";
-import UserListsFeed from "../modules/feeds/UserLists";
 
-import uploadMediaAPI from "../actions/api/uploadMedia.ts";
+import { ProfileCard, ProfileFeed } from '../components/profile';
 
 const UserProfilePage = (props) => {
     const [username, setUsername] = useState(props.username);
     const [firstName, setFirstName] = useState(props.firstName);
     const [lastName, setLastName] = useState(props.lastName);
-    const [userData, setUserData] = useState(null);
 
     const [isQueried, setQueried] = useState(false);
     const [loadError, setError] = useState(false);
@@ -20,18 +17,13 @@ const UserProfilePage = (props) => {
         if(!isQueried) {
             getUserAPI({
                 username: username,
-                fields: [
-                    "firstName", "lastName", "bio", "url",
-                    "avatarURL", "coverURL", "isVerified",
-                    "listCreatedCount", "followersCount", "followingCount",
-                ]
+                fields: [ "firstName", "lastName" ]
             }).then(res => {
                 setQueried(true);
                 if (!Object.prototype.hasOwnProperty.call(res, 'errors')) {
                    setUsername(res.username);
                    setFirstName(res.firstName);
                    setLastName(res.lastName);
-                   setUserData(res);
                    setLoaded(true);
                 }
                 else {
@@ -40,14 +32,6 @@ const UserProfilePage = (props) => {
             });
         }
     });
-
-
-    const handleChangeAvatar = (image) => {
-        console.log(image);
-        uploadMediaAPI({ image, type: 'userAvatar'}).then(r => {
-            console.log(r);
-        })
-    };
 
     const generateTitle = () => {
         if(firstName !== null || lastName !== null)
@@ -65,49 +49,22 @@ const UserProfilePage = (props) => {
         meta={{ title: generateTitle(), description: generateDescription() }}
     >
         <div className="min-vh-100">
-
-            <div className="row mx-0 p-lg-4 p-md-2 p-0">
-                <div className="col-md-2 px-2">
-                </div>
-                <div className="col-md-10 p-0">
-                    {
-                        isProfileLoaded ?
-                            <ProfileCard
-                                username={userData.username}
-                                avatarURL={userData.avatarURL}
-                                coverURL={userData.coverURL}
-                                firstName={userData.firstName}
-                                lastName={userData.lastName}
-                                bio={userData.bio}
-                                url={userData.url}
-                                isVerified={userData.isVerified}
-                                stats={[
-                                    {
-                                        "label": "Lists",
-                                        "value": userData.stats.listsCreatedCount
-                                    },
-                                    {
-                                        "label": "Followers",
-                                        "value": userData.stats.followersCount
-                                    },
-                                    {
-                                        "label": "Following",
-                                        "value": userData.stats.followingCount
-                                    }
-                                ]}
-                                onChangeAvatar={handleChangeAvatar}
-                            /> : null
-                    }
-                    <div className="row m-0">
-                        <div className="col-md-9 my-3">
-                            <UserListsFeed
-                                username={username}
-                            />
+            {
+                isProfileLoaded ?
+                    <div className="row mx-0 p-lg-4 p-md-2 p-0">
+                        <div className="col-md-2 px-2">
                         </div>
-                    </div>
+                        <div className="col-md-10 p-0">
+                            <ProfileCard username={username} />
+                            <div className="row m-0">
+                                <div className="col-md-9 my-3">
+                                    <ProfileFeed username={username} />
+                                </div>
+                            </div>
 
-                </div>
-            </div>
+                        </div>
+                    </div> : null
+            }
         </div>
     </Base>;
 
