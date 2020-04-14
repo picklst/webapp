@@ -2,12 +2,8 @@ import React, {useEffect, useState} from 'react';
 import Base from "../components/core/Base";
 import ErrorPage from "../components/core/ErrorPage";
 import getListAPI from "../actions/api/getList.ts";
-import ListViewer from "../modules/view/ListViewer";
 
-import createItemAPI from "../actions/api/createItem.ts";
-import updateItemAPI from "../actions/api/updateItem.ts";
-import moveItemAPI from "../actions/api/moveItem.ts";
-import deleteItemAPI from "../actions/api/deleteItem.ts";
+import { ListViewer } from "../components/list";
 
 const ListPage = (props) => {
     const [slug, setSlug] = useState(props.slug);
@@ -43,45 +39,6 @@ const ListPage = (props) => {
         }
     });
 
-    const handleAddItem = (data) => {
-        createItemAPI({
-            object: data,
-            slug
-        }).then(r => {
-            console.log(r);
-            setQueried(false);
-        })
-    };
-
-    const handleEditItem = (data) => {
-        updateItemAPI({
-            object: data,
-            slug
-        }).then(r => {
-            console.log(r);
-            setQueried(false);
-        });
-    };
-
-    const handleDeleteItem = (key) => {
-        deleteItemAPI({
-            key,
-            slug
-        }).then(r => {
-            console.log(r);
-            setQueried(false);
-        });
-    };
-
-    const handleMoveItem = ({ key, direction }) => {
-        moveItemAPI({
-            key, direction
-        }).then(r => {
-           console.log(r);
-           setQueried(false);
-        });
-    };
-
     const generateTitle = () => {
         if( name !== null)
             return `${name} - @${username}`;
@@ -101,10 +58,7 @@ const ListPage = (props) => {
             <ListViewer
                 slug={slug}
                 data={data}
-                onAddItem={handleAddItem}
-                onDeleteItem={handleDeleteItem}
-                onEditItem={handleEditItem}
-                onMove={handleMoveItem}
+                requireUpdate={() => setQueried(false)}
             />
             : null
         }

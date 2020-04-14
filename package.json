@@ -2,7 +2,7 @@
   "name": "Webapp",
   "version": "0.0.3",
   "description": "NextJS based WebApp",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "build": "next build",
     "build-analyse": "ANALYZE=true next build",
@@ -22,6 +22,7 @@
     "@zeit/next-source-maps": "0.0.3",
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
+    "date-fns": "^2.12.0",
     "es6-promise": "4.2.8",
     "framer-motion": "^1.9.1",
     "imagemin-mozjpeg": "^8.0.0",
@@ -48,5 +49,8 @@
     "styled-components": "^5.1.0",
     "universal-cookie": "^4.0.3",
     "use-clippy": "^1.0.6"
+  },
+  "devDependencies": {
+    "babel-plugin-styled-components": "^1.10.7"
   }
 }

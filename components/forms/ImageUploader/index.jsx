@@ -47,10 +47,8 @@ const ImageUploader = ({
             lockAspectRatio={lockAspectRatio}
             onComplete={(file) => {
                 setSelected(false);
-                onComplete({
-                    type: 'image',
-                    url: file
-                });
+                console.log(file);
+                onComplete(file);
             }}
             image={image}
             onClose={setSelected}

@@ -22,7 +22,10 @@ export default ({ username }) => {
     useEffect(() => {
         if(!isQueried){
             getListsAPI({
-                fields: [ "name", "lastUpdateTimestamp", "createdTimestamp" ],
+                fields: [
+                    "name", "lastUpdateTimestamp", "createdTimestamp", "curator", "itemCount",
+                    "properties"
+                ],
                 limit: 2,
                 offset: offset,
                 query: {
@@ -38,8 +41,8 @@ export default ({ username }) => {
         }
     });
 
-    return isLoaded ? <Feed
-        username={username}
+    return isLoaded ?
+    <Feed
         listData={data}
         onLoadMore={handleLoadMore}
         canLoadMore={!maxLoaded}

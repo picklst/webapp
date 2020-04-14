@@ -48,6 +48,11 @@ async function getList({ slug, username, fields, endpoint})
                     comment: true,
                     url: true,
                     position: true,
+                    media: {
+                        url: true,
+                        type: true,
+                        aspect: true
+                    }
                 },
                 slug: true,
             },

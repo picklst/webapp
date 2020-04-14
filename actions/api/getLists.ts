@@ -14,7 +14,7 @@ interface getListsAPIParams {
 
 async function getLists({ fields, query: q, limit, offset })
 {
-    const query = jsonToGraphQLQuery({
+    const qr = {
         query: {
             __variables: {
                 limit: 'Int',
@@ -29,10 +29,39 @@ async function getLists({ fields, query: q, limit, offset })
                 name: fields.includes("name"),
                 createdTimestamp: fields.includes("createdTimestamp"),
                 lastUpdateTimestamp: fields.includes("lastUpdateTimestamp"),
+                description: fields.includes("description"),
+                coverURL: fields.includes("coverURL"),
+                properties: {
+                    isPrivate: true,
+                    isRanked: true,
+                    forceCuratorRanking: true,
+                    isVotable: true,
+                    areVotesPrivate: true,
+                    canVoteMultipleItems: true,
+                    isRateable: true,
+                    areRatingsPrivate: true,
+                    acceptEntries: true
+                },
+                curator: {
+                    username: true,
+                    firstName: true,
+                    lastName: true,
+                    avatarURL: true,
+                    isVerified: true,
+                },
+                itemCount: fields.includes("itemCount"),
                 slug: true,
             },
         }
-    }, { pretty: false }).toString();
+    };
+    const ignoreFields = [];
+    if(!fields.includes("curator"))
+        ignoreFields.push("curator");
+    if(!fields.includes("properties"))
+        ignoreFields.push("properties");
+    if(!fields.includes("items"))
+        ignoreFields.push("items");
+    const query = jsonToGraphQLQuery(qr, { pretty: false, ignoreFields }).toString();
     return await dataFetch({ query, variables: { limit, offset } }).then(res => res);
 }
 

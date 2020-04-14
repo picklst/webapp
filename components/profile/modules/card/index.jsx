@@ -24,6 +24,6 @@ export default ({ username }) => {
         }
     });
 
-    return data ? <Card {...data} /> : <h1>Loading</h1>
+    return data ? <Card {...data} requireUpdate={() => setQueried(false)} /> : <h1>Loading</h1>
 
 };

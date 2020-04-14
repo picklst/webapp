@@ -17,8 +17,8 @@ const ListRequester = ({ message, username, onChange, onSubmit, onClose }) => {
                 placeholder={`Enter your message for @${username} describing the list you wish to request.`}
                 name="requestMessage"
                 type="textarea"
-                onChange={message}
-                value={onChange}
+                onChange={onChange}
+                value={message}
                 minimal
                 charLimit={200}
                 showLimit

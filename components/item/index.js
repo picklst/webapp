@@ -1,0 +1,1 @@
+export {Card as ItemCard} from './views';

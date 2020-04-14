@@ -17,7 +17,6 @@ const Container = styled.div`
     width: 100%;
     min-height: 100vh;
     background: rgba(0,0,0,0.5);
-    overflow-y: auto;
     @media (max-width: 480px) {
       align-items: flex-end
     }
@@ -26,7 +25,7 @@ const Container = styled.div`
 const Wrapper = styled.div`
     width: 100%;
     max-width: 720px;
-    box-shadow: 5px 5px 5px rgba(0,0,0,0.5);
+    box-shadow: 2px 5px 15px rgba(0,0,0,0.5);
     @media (max-width: 480px) {
       padding-bottom: 8vh
     }
@@ -41,7 +40,7 @@ const Topbar = styled.div`
     top: 0;
     left: 0;
     width: 100%;
-    padding: 0.25rem;
+    padding: 0.5rem;
     font-size: 1rem;
     border-bottom-color: #007bff!important;
     border-bottom: 3px solid;
@@ -58,6 +57,11 @@ const CancelWarning = styled.div`
     width: 100%;
     height: 100vh;
     background-color: rgba(0,0,0,0.8);
+`;
+
+const ContentWrapper = styled.div`
+    max-height: 100vh;
+    overflow-y: auto;
 `;
 
 const BottomPopup = ({
@@ -106,7 +110,9 @@ const BottomPopup = ({
                 </CancelWarning>
                 : null
             }
-            {children}
+            <ContentWrapper>
+                {children}
+            </ContentWrapper>
         </Wrapper>
     </Container>
 };

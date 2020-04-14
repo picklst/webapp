@@ -1,12 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from "next/head";
+import styled from 'styled-components';
+
 import '../../styles/styles.sass';
 import '../../styles/bootstrap.min.css';
 import Topbar from "./Topbar";
 import BottomBar from "./BottomBar";
 
 const seoTags = require('../../data/seo.json');
+
 
 const Base = ({ children, meta }) => {
     const title = `${meta && meta.title ? `${meta.title} |` : '' } ${seoTags.siteName} - ${seoTags.tagLine}`;
@@ -19,7 +22,7 @@ const Base = ({ children, meta }) => {
             <meta name="description" content={meta && meta.description ? meta.description : seoTags.description} />
             <meta name="twitter:title" content={title} />
             <meta name="og:title" property="og:title" content={title} />
-            <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1" />
+            <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1, user-scalable=no" />
             <link rel="manifest" href="/manifest.json" />
             <link href='/images/icons/icon-32x32.png' rel='icon' type='image/png' sizes='16x16' />
             <link href='/images/icons/icon-32x32.png' rel='icon' type='image/png' sizes='32x32' />
@@ -33,7 +36,6 @@ const Base = ({ children, meta }) => {
                 <BottomBar />
             </div>
         </div>
-        <div className="orientation-lock"><h2>Only Portrait Mode Supported. Rotate Device</h2></div>
     </React.Fragment>
 };
 

@@ -1,18 +1,21 @@
 import React, {useState} from 'react';
+import dynamic from "next/dynamic";
+
 import { useGlobalState } from '../../../../actions/states/Auth.ts';
 
 import Card from "../../../ui/Cards";
 import Button from "../../../ui/Button";
 
 import { About, Avatar, Cover } from "../../elements";
-import { ProfileEditor, ListRequester } from "../../";
+import { ProfileEditor, ListRequester, FollowButton } from "../../";
 
-import ListEditor from "../../../../modules/editor/ListEditor";
+const ListEditor =  dynamic(import("../../../../modules/editor/ListEditor"));
 import StatCard from "./StatCard";
 
 export default ({
      firstName, lastName, username, bio, url, stats,
      isVerified, avatarURL, coverURL,
+    requireUpdate
 }) => {
 
     const [myUserData] = useGlobalState('userData');
@@ -49,10 +52,7 @@ export default ({
                 {
                     !isOwnProfile ?
                         <React.Fragment>
-                            <Button
-                                className="btn no-shadow btn-info px-4 rounded"
-                                text="Follow"
-                            />
+                            <FollowButton username={username} onChange={requireUpdate} />
                             <div className="d-md-block d-none">
                                 <Button
                                     className="btn ml-2 no-shadow btn-primary px-4 rounded"

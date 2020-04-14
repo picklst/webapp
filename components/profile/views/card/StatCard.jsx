@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default  ({ followersCount, listsCount, followingCount }) => {
+export default  ({ followersCount, listsCreatedCount, followingCount }) => {
     const renderStatCard = ({ value, label }) =>
         <div className="mx-3 mx-md-2 text-center">
             <div className="h4 mb-0">{value}</div>
@@ -8,7 +8,7 @@ export default  ({ followersCount, listsCount, followingCount }) => {
         </div>;
 
     return <React.Fragment>
-        { renderStatCard({ value: listsCount, label: 'Lists' })}
+        { renderStatCard({ value: listsCreatedCount, label: 'Lists' })}
         { renderStatCard({ value: followersCount, label: 'Followers' })}
         { renderStatCard({ value: followingCount, label: 'Following' })}
     </React.Fragment>

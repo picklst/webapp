@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
-import {useGlobalState} from "../../../../actions/states/Auth.ts";
-import uploadMediaAPI from "../../../../actions/api/uploadMedia.ts";
-import getUserAPI from "../../api/getUser.ts";
-import updateProfileAPI from "../../api/updateProfile.ts";
-
+import { useGlobalState } from "../../../../actions/states/Auth.ts";
+import { getUserAPI, updateProfileAPI, uploadProfileMediaAPI } from "../../api"
 
 import { Editor } from '../../views';
 
@@ -35,15 +32,12 @@ export default ({ usePopup, onComplete, onExit, }) => {
     const [isSaving, setSaving] = useState(false);
     const handleSave = () => {
         setSaving(true);
-        if(typeof data.avatar == "object")
+        if(typeof data.avatar == "object" || typeof data.cover == "object")
         {
-            uploadMediaAPI({ image: data.avatar, type: 'userAvatar'}).then(r => {
-                console.log(r);
-            });
-        }
-        if(typeof data.cover == "object")
-        {
-            uploadMediaAPI({ image: data.cover, type: 'userCover'}).then(r => {
+            uploadProfileMediaAPI({
+                avatarURL:  data.avatar ? data.avatar.url : null,
+                coverURL: data.cover ? data.cover.url : null,
+            }).then(r => {
                 console.log(r);
             });
         }

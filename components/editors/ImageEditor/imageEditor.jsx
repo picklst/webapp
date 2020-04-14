@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import shortid from 'shortid';
 import classNames from 'classnames';
 import Cropper from 'react-easy-crop'
 
@@ -32,7 +33,7 @@ const ImageEditor = ({ image, aspect:as = 4/3, lockAspectRatio, onClose, onCompl
 
     const handleSubmission = async (e) => {
         const croppedImage = await getCroppedImg(image, croppedAreaPixels, rotation);
-        onComplete(croppedImage);
+        onComplete({ key: shortid.generate(), url: croppedImage, aspect, type: "image" });
     };
 
     return  <PopUp

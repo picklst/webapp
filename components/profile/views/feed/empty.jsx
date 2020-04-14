@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
+import dynamic from "next/dynamic";
 import styled from 'styled-components';
 
 import {useGlobalState} from "../../../../actions/states/Auth.ts";
-import ListEditor from "../../../../modules/editor/ListEditor";
-import Button from "../../../ui/Button";
-import { ListRequester } from "../../index";
+const ListEditor =  dynamic(import("../../../../modules/editor/ListEditor"));
+const ListRequester = dynamic(() => import("../../index").then(mod => mod.ListRequester));
 
+import Button from "../../../ui/Button";
 
 const Wrapper = styled.div`
   min-height: 35vh;
@@ -17,6 +18,8 @@ const Wrapper = styled.div`
 const Content = styled.div`
     text-align: center;
     font-size: calc(1rem + 0.8vw);
+    margin-top: 10vh;
+    margin-bottom: 20vh;
 `;
 
 export default ({ username }) => {
@@ -29,7 +32,7 @@ export default ({ username }) => {
         <Wrapper>
             <Content>
                 <div>
-                    Looks like you have not made any lists... <br />
+                    Looks like you have not made any lists...
                     Create your first list now!
                 </div>
                 <Button
@@ -49,7 +52,7 @@ export default ({ username }) => {
         <Wrapper>
             <Content>
                 <div>
-                    Oops! @{username} is yet to publish a list. <br />
+                    Oops! @{username} is yet to publish a list.
                     But, you can ask for a list now.
                 </div>
                 <Button

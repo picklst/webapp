@@ -17,12 +17,13 @@ const Button = ({
             {text}
         </button>
     </a>
-    :<button
+    : <button
         type={type}
         className={classNames("srx-button", classes)}
         onClick={onClick}
         onBlur={onBlur}
         onFocus={onFocus}
+        tabIndex={0}
     >
         {text}
     </button>
