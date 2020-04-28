@@ -25,6 +25,8 @@ async function getList({ slug, username, fields, endpoint})
                 description: fields.includes("description"),
                 createdTimestamp: fields.includes("createdTimestamp"),
                 lastUpdateTimestamp: fields.includes("lastUpdateTimestamp"),
+                itemCount: fields.includes("itemCount"),
+                userCanEdit: fields.includes("userCanEdit"),
                 curator: {
                     firstName: true,
                     lastName: true,

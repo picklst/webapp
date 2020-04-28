@@ -29,7 +29,7 @@ const Editor = ({
 
     return <div>
         <Cover
-            url={typeof cover === "object" ? cover.url : cover}
+            url={cover && typeof cover === "object" ? cover.url : cover}
             onChange={setCover}
             showEditButton
         />
@@ -37,7 +37,7 @@ const Editor = ({
             <div className="col-6 px-2 position-relative">
                 <Avatar
                     showEditButton
-                    url={typeof avatar === "object" ? avatar.url : avatar}
+                    url={avatar && typeof avatar === "object" ? avatar.url : avatar}
                     onChange={setAvatar}
                 />
             </div>

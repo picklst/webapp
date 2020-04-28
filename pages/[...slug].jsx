@@ -22,7 +22,7 @@ const ListPage = (props) => {
                 username,
                 fields: [
                     "name", "description", "curator", "properties", "items",
-                    "createdTimestamp", "lastEditTimestamp"
+                    "createdTimestamp", "lastEditTimestamp", "itemCount", "userCanEdit"
                 ]
             }).then(res => {
                 setQueried(true);

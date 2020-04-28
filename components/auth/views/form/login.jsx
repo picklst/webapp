@@ -31,6 +31,7 @@ export default ({ onLogin }) => {
             isRequired
             onValidate={(state) => setInvalidUsernameState(!state)}
             minimal
+            autoFocus
         />
         <TextInput
             autoCapitalize="off"

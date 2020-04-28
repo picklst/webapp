@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 
-import getListsAPI from "../../../../actions/api/getLists.ts";
-
 import { Feed } from '../../views'
+import { getListsAPI } from "../../../list";
+import { APIRequest } from "../../../../utils";
+import ErrorCard from "../../../core/ErrorCard";
 
 export default ({ username }) => {
     const [data, setData] = useState([]);
@@ -17,32 +18,41 @@ export default ({ username }) => {
         }
     };
     const [isQueried, setQueried] = useState(false);
-    const [loadError, setError] = useState(false);
+    const [error, setError] = useState(false);
     const [isLoaded, setLoaded] = useState(false);
+
+    const query = getListsAPI({
+        fields: [
+            "name", "lastUpdateTimestamp", "createdTimestamp", "curator", "itemCount",
+            "properties", "userCanEdit"
+        ],
+    });
+
     useEffect(() => {
         if(!isQueried){
-            getListsAPI({
-                fields: [
-                    "name", "lastUpdateTimestamp", "createdTimestamp", "curator", "itemCount",
-                    "properties"
-                ],
-                limit: 2,
-                offset: offset,
-                query: {
-                    username: username
-                }
-            }).then(r => {
+            APIRequest(
+                { query, variables: { limit: 2, offset, query: { username } }}
+            ).then((r) => {
                 setQueried(true);
-                if(r.length === 0)
+                if(r.data.lists.length === 0)
                     setMaxLoaded(true);
-                setData([...data, ...r]);
+                else if(data.length === 0)
+                    setData(r.data.lists);
+                else
+                    setData([...data, ...r.data.lists]);
                 setLoaded(true);
+            }).catch(e => {
+                setQueried(true);
+                setError(e);
             })
         }
     });
 
-    return isLoaded ?
+
+    return error ? <ErrorCard {...error} />
+    : isLoaded ?
     <Feed
+        username={username}
         listData={data}
         onLoadMore={handleLoadMore}
         canLoadMore={!maxLoaded}

@@ -1,34 +1,16 @@
 import React, {createRef, useEffect, useState} from 'react';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faCog, faChevronDown } from "@fortawesome/free-solid-svg-icons";
-
-import DropDown from "../ui/DropDown";
-import Toggler from "../ui/Toggler";
-
-import Card from "../ui/Cards";
-import Button from "../ui/Button";
-
 import '../../styles/topbar.sass';
-import PopUp from "../ui/PopUp";
-import AuthCard from "../../modules/auth/AuthCard";
-import TextInput from "../forms/TextInput";
+
+
+import SearchBox from "./topbar/search";
+import Logo from "./topbar/logo";
+import AccountBox from "./topbar/account";
+import AccountDropDown from "./topbar/account/dropdown";
 
 
 const Topbar = () => {
 
-    const currentTheme = "light";
-
-    const [isLoginCardOpen, toggleLoginCard] = useState(false);
-    const renderLoginCard = () => {
-        return <PopUp
-            isOpen={isLoginCardOpen}
-            onClose={toggleLoginCard}
-            appElement=".app"
-        >
-            <AuthCard showLogin />
-        </PopUp>
-    };
 
     const [space, setSpacing] = useState('8vh');
     useEffect(() => {
@@ -36,32 +18,6 @@ const Topbar = () => {
             setSpacing(topbarRef.current.clientHeight);
     });
 
-    const renderSettingsDropDown = () =>
-    <Card p={3}>
-        <Toggler
-            small
-            className="p-0"
-            text={
-                <div className="small">
-                    {`Switch to ${currentTheme === "dark" ? "light" : "dark"} theme`}
-                </div>
-            }
-        />
-        <hr className="my-1" />
-        <a href="#" className="d-block plain-link line-height-1 my-2">
-            <small>Learn more about Picklst</small>
-            <div className="mt-1">
-                Help & Support
-            </div>
-        </a>
-        <hr className="my-1" />
-        <a href="#" className="d-block plain-link line-height-1 my-2">
-            <small>We Care, We Protect</small>
-            <div className="mt-1">
-                Privacy Policy
-            </div>
-        </a>
-    </Card>;
 
     const topbarRef = createRef();
 
@@ -71,49 +27,26 @@ const Topbar = () => {
             id="topbar"
             style={{ position: "fixed", top: 0, zIndex: 5000 }}
         >
-            <div className="container p-0">
-                <div className="row m-0">
-                    <div className="col-3">
-                        <img
-                            src={require('../../images/assets/branding/logo-dark.png')}
-                            style={{ maxHeight: '40px' }}
-                        />
+            <div className="row m-0">
+                <div className="col-12 col-sm-3 col-md-6 col-xl-3 d-flex align-items-center justify-content-center">
+                    <Logo />
+                    <div className="d-none d-md-block ml-3">
+                        <SearchBox />
                     </div>
-                    <div className="col-md-6 d-none d-md-flex align-items-center">
-                        <TextInput
-                            label="Search"
-                            name="search-bar"
-                            className="w-100"
-                            hideLabel
-                        />
-                    </div>
-                    <div className="col d-none d-md-flex justify-content-end align-items-center">
-                        <Button
-                            className="plain-button p-0 mr-2 no-shadow"
-                            onClick={() => toggleLoginCard(true)}
-                            text={
-                                <div className="btn btn-outline-info">
-                                    <FontAwesomeIcon icon={faUser} />
-                                </div>
-                            }
-                        />
-                        { isLoginCardOpen ? renderLoginCard() : null }
-                        <DropDown
-                            triggerComponent={
-                                <div className="btn btn-outline-warning">
-                                <span className="pr-3">
-                                    <FontAwesomeIcon icon={faCog} />
-                                </span>
-                                    <FontAwesomeIcon icon={faChevronDown} />
-                                </div>
-                            }
-                            dropdownComponent={renderSettingsDropDown()}
-                        />
-                    </div>
+                </div>
+                <div className="col-xl-4 d-none d-xl-flex align-items-center">
 
                 </div>
+                <div className="col d-none d-sm-flex justify-content-end align-items-center">
+                    <div className="d-none d-md-block mr-2">
+                        <AccountBox />
+                    </div>
+                    <div className="mx-2">
+                        <AccountDropDown />
+                    </div>
+                </div>
             </div>
-        </div>
+            </div>
         <div style={{ height: space }} />
     </React.Fragment>
 

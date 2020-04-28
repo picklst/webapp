@@ -2,21 +2,12 @@ import React, { useState } from 'react';
 import shortid from 'shortid';
 import classNames from 'classnames';
 
+import { Card } from '../../views'
 import { ItemCard } from '../../../item'
 import PopUp from "../../../ui/PopUp";
-import ListHeaderViewer from "../../views/viewer/header";
 
 
 const ListViewer = ({ slug, data, requireUpdate }) => {
-
-    const [isEditing, setEditMode] = useState(false);
-    const handleEnableEdit = () => { setEditMode(true); };
-
-    const handleRequireUpdate = () => {
-        setCurrItem(null);
-        if(typeof requireUpdate === 'function')
-            requireUpdate();
-    };
 
     const [showItemAdder, setShowItemAdder] = useState(false);
     const renderItemAdder = () => {
@@ -46,48 +37,49 @@ const ListViewer = ({ slug, data, requireUpdate }) => {
         </PopUp>
     };
 
-    const [currItem, setCurrItem] = useState(null);
     const renderListItems = () => {
         return data.items.map((i,index) =>
             <ItemCard
                 key={i.key}
-                className="mb-4 mt-2"
-
+                slug={slug}
+                itemKey={i.key}
                 index={index}
                 totalItems={data.items.length}
 
-                slug={slug}
-                itemKey={i.key}
                 name={i.name}
                 comment={i.comment}
                 url={i.url}
                 media={i.media}
+                className="mb-4 mt-2"
 
-                onEdit={(i) => { setCurrItem(i)}}
-                isEditing={currItem===index}
-                showEditButton={isEditing && currItem !== index}
-                showMoveButton={isEditing && currItem === null}
-                showDeleteButton={isEditing && currItem !== index}
+                userCanEdit={data.userCanEdit}
+
                 showSaveButton
 
-                requireUpdate={handleRequireUpdate}
+                requireUpdate={requireUpdate}
 
             />
         )
     };
 
-    return <div className="container p-0">
-        <ListHeaderViewer
-            name={data.name}
-            curator={data.curator}
-            showEditButton={!isEditing}
-            showAddItemButton
-            onEdit={handleEnableEdit}
-            onAdd={() => setShowItemAdder(true)}
-        />
-        <div className="p-2 p-md-0">
-            { renderListItems() }
+    return <div className="row mx-0 mb-4">
+        <div className="col-lg-3 p-2 p-md-0"/>
+        <div className="col-md-6 p-0 p-md-2">
+            <Card
+                name={data.name}
+                slug={slug}
+                curator={data.curator}
+                userCanEdit={data.userCanEdit}
+                itemCount={data.itemCount}
+                createdTimestamp={data.createdTimestamp}
+                lastEditTimestamp={data.lastEditTimestamp}
+                isTitleCard
+            />
+            <div className="pt-2 pb-5">
+                { renderListItems() }
+            </div>
         </div>
+        <div className="col-lg-3 p-2 p-md-0"/>
         { showItemAdder ? renderItemAdder() : false }
     </div>;
 

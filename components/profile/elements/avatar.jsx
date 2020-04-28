@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencilAlt } from "@fortawesome/free-solid-svg-icons"
+import { faCamera } from "@fortawesome/free-solid-svg-icons"
 
 import Button from "../../../components/ui/Button";
 import ImageUploader from "../../../components/forms/ImageUploader";
@@ -19,6 +19,7 @@ const Wrapper = styled.div`
 const Container = styled.div`
     height: 100%;
     position: relative;
+    
     .list-media-uploader {
         bottom: 0.5rem;
         right: 0.5rem;
@@ -39,7 +40,7 @@ const Avatar = ({ url,  showEditButton, onChange }) => {
 
     return <Wrapper>
         <Container>
-            <AvatarImage bg={url} />
+            <AvatarImage bg={url ? url : require('../../../images/assets/placeholders/avatar.webp')} />
             {
                 showEditButton ?
                     <ImageUploader
@@ -47,8 +48,8 @@ const Avatar = ({ url,  showEditButton, onChange }) => {
                         aspect={1}
                         buttonComponent={
                             <Button
-                                className="small-button blue-button"
-                                text={<FontAwesomeIcon icon={faPencilAlt} />}
+                                className="blue-button p-3"
+                                text={<FontAwesomeIcon icon={faCamera} />}
                             />
                         }
                         onComplete={onChange}

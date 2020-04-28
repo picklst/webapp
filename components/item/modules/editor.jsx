@@ -5,11 +5,12 @@ import { Editor } from '../views'
 
 
 export default ({
-    slug, itemKey, name, url, comment,
-    showSaveButton, onSave
+    slug, itemKey, index, totalItems,
+    name, url, comment, media,
+    className, showSaveButton, onSave
 }) => {
     const [data, setData] = useState({
-        name, comment, url
+        name, comment, url, media
     });
 
     const getHashTags = () => {
@@ -31,6 +32,7 @@ export default ({
         };
         if(typeof obj.media == "object")
         {
+            if(media && media.key && typeof obj.media.key !== media.key)
             uploadMediaAPI(obj.media).then(r => {
                 currObj['media'] = r.returning.key;
                 updateItemAPI({ object: currObj, slug }).then(r => {
@@ -48,14 +50,17 @@ export default ({
     };
 
     return <Editor
+        slug={slug}
+        totalItems={totalItems}
+        index={index}
         name={data.name}
         comment={data.comment}
         url={data.url}
+        media={data.media}
+        className={className}
         onChange={setData}
         onSave={handleSave}
         showSaveButton={showSaveButton}
-        labels={{
-            save: 'Save'
-        }}
+        labels={{ save: 'Save' }}
     />
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencilAlt } from "@fortawesome/free-solid-svg-icons"
+import { faCamera } from "@fortawesome/free-solid-svg-icons"
 
 import ImageUploader from "../../../components/forms/ImageUploader";
 import Button from "../../../components/ui/Button";
@@ -10,6 +10,7 @@ import Button from "../../../components/ui/Button";
 const CoverImage = styled.div`
     padding-top: 35%;
     background-image: url(${ props => props.bg});
+    background-color: ${props => props.bgcolor};
     background-size: cover;
     background-position: center;
     position: relative;
@@ -21,9 +22,15 @@ const CoverImage = styled.div`
     }
 `;
 
+const colors = [
+    '#81D4FA', '#80DEEA', '#80CBC4', '#FFAB91', '#B39DDB', '#90CAF9', '#9FA8DA',
+    '#EF9A9A', '#F48FB1', '#CE93D8'
+];
+const bgColor = colors[Math.floor(Math.random() * colors.length)];
+
 const Cover = ({ url, showEditButton, onChange }) => {
 
-    return <CoverImage bg={url} className="rounded-top">
+    return <CoverImage bg={url} bgcolor={bgColor} className="rounded-top">
         {
             showEditButton ?
                 <ImageUploader
@@ -31,8 +38,8 @@ const Cover = ({ url, showEditButton, onChange }) => {
                     aspect={16/9}
                     buttonComponent={
                         <Button
-                            className="small-button blue-button"
-                            text={<FontAwesomeIcon icon={faPencilAlt} />}
+                            className="blue-button p-3"
+                            text={<FontAwesomeIcon icon={faCamera} />}
                         />
                     }
                     onComplete={onChange}

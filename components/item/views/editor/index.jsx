@@ -9,12 +9,13 @@ import ListEditorContentTypeSelector from "../../../../modules/editor/content/Ty
 import { MediaUploaderModule, MediaPreview } from "../../../media";
 
 import Button from "../../../ui/Button";
+import EditorHeader from "./header";
+import Card from "../../../ui/Cards";
 
 export default ({
+    itemKey, slug, index, totalItems,
     name: nm, comment: cm, url: ul, media: md,
-    labels,
-    showSaveButton,
-    onChange, onSave
+    labels, className, showSaveButton, onChange, onSave
 }) => {
 
     const [name, setName] = useState(nm ? nm : '');
@@ -30,7 +31,7 @@ export default ({
                 url,
                 media
             })
-    }, [name, comment, url]);
+    }, [name, comment, url, media]);
 
     const handleSave = () => {
         onSave({
@@ -44,25 +45,38 @@ export default ({
     const [showCommentEditor, setCommentEditor] = useState(cm ? cm : '');
     const [showLinkAttacher, setLinkAttacher] = useState(!!url);
 
-    return <div>
-        <NameInput
-            onChange={setName}
-            value={name}
+    return <Card
+        className={className}
+        p={3}
+    >
+        <EditorHeader
+            itemKey={itemKey}
+            slug={slug}
+            index={index}
+            totalItems={totalItems}
+            showDeleteButton
+            showMoveButtons
         />
-        { media ? <MediaPreview type={media.type} url={media.url} onDelete={() => setMedia(null)} /> : null }
-        { showCommentEditor ?
-            <CommentInput
-                id={`list-editor-description-input`}
-                value={comment}
-                onChange={setComment}
-                enableUserMentioning
-            /> : null
-        }
-        <LinkAttacher
-            isOpen={showLinkAttacher && !url}
-            onClose={() => setLinkAttacher(false)}
-            onComplete={setURL}
-        />
+        <div>
+            <NameInput
+                onChange={setName}
+                value={name}
+            />
+            { media ? <MediaPreview type={media.type} url={media.url} onDelete={() => setMedia(null)} /> : null }
+            { showCommentEditor ?
+                <CommentInput
+                    id={`list-editor-description-input`}
+                    value={comment}
+                    onChange={setComment}
+                    enableUserMentioning
+                /> : null
+            }
+            <LinkAttacher
+                isOpen={showLinkAttacher && !url}
+                onClose={() => setLinkAttacher(false)}
+                onComplete={setURL}
+            />
+        </div>
         <div className="py-2">
             <ListEditorContentTypeSelector
                 types={[
@@ -94,5 +108,5 @@ export default ({
                     onClick={handleSave}
                 /> : null
         }
-    </div>
+    </Card>
 };

@@ -1,34 +1,24 @@
 import React from 'react';
-import formatDistance from 'date-fns/formatDistance'
 
 import Card from "../../../../components/ui/Cards";
 
 import Header from './header';
+import Body from './body';
+import Footer from './footer';
 
 export default ({
   name, slug, curator, itemCount, properties,
-  createdTimestamp, lastEditTimestamp
+  createdTimestamp, lastEditTimestamp,
+  isTitleCard, userCanEdit
 }) => {
-    console.log(properties);
 
-    const renderListAge = () => {
-        let isEdited = false;
-        if(createdTimestamp)
-        {
-            let timestamp = createdTimestamp;
-            if(lastEditTimestamp)
-            {
-                isEdited = true;
-                timestamp = lastEditTimestamp;
-            }
-
-            return <React.Fragment>
-                {isEdited ? 'edited ' : null}
-                {formatDistance(new Date(timestamp), new Date(), { addSuffix: true })}
-            </React.Fragment>;
-        }
-        return null;
-    };
+   const renderBody = (isTitleCard) => <Body
+       name={name}
+       itemCount={itemCount}
+       createdTimestamp={createdTimestamp}
+       lastEditTimestamp={lastEditTimestamp}
+       isTitleCard={isTitleCard}
+   />;
 
     return <Card p={0}>
         <Header
@@ -36,11 +26,17 @@ export default ({
             curator={curator}
             lastEditTimestamp={lastEditTimestamp}
             createdTimestamp={createdTimestamp}
+            userCanEdit={userCanEdit}
         />
-        <a className="d-block w-100 pb-4 px-3 plain-link" href={`/${curator.username}/${slug}`}>
-            <h3 className="mb-0">{name}</h3>
-            <div className="small"> {itemCount} items • 0 views • {renderListAge()}</div>
-        </a>
+        <div className="px-3">
+        {   isTitleCard ?
+            renderBody(true) :
+            <a className="d-block w-100 plain-link" href={`/${curator.username}/${slug}`}>
+                { renderBody(false) }
+            </a>
+        }
+        </div>
+        <Footer/>
     </Card>;
 
 };

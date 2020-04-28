@@ -4,9 +4,10 @@ import Base from "../components/core/Base";
 import {Logout} from "../actions/states/Auth.ts";
 
 const IndexPage = () => {
-    const [data] = useGlobalState('userData');
-    const [token] = useGlobalState('token');
+    const [data] = useGlobalState('UserInfo');
     const isLoggedIn = typeof token === 'string' && token.length>0;
+
+    console.log(data);
 
     const renderAuthenticatedView = () =>
     <Base
@@ -31,7 +32,7 @@ const IndexPage = () => {
     >
         <div className="container d-flex align-items-center justify-content-center min-vh-100">
             <div className="bg-white p-2" style={{ width: '500px' }}>
-                <h1>Welcome!</h1>
+                <h1>Picklst Beta Trials</h1>
                 <a href="/login"><button className="btn btn-primary">Login</button></a>
             </div>
         </div>

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from "next/head";
-import styled from 'styled-components';
 
 import '../../styles/styles.sass';
 import '../../styles/bootstrap.min.css';
+import '../../styles/gg.css';
 import Topbar from "./Topbar";
 import BottomBar from "./BottomBar";
 

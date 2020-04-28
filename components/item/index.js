@@ -1,1 +1,1 @@
-export {Card as ItemCard} from './views';
+export {Card as ItemCard} from './modules';

@@ -1,13 +1,13 @@
 import dataFetch from "../../../utils/dataFetch";
 // @ts-ignore
-import {setUsername, setToken, setRefreshToken, setUserData} from '../../../actions/states/Auth.ts';
+import {setUsername, setToken, setRefreshToken, setUserInfo} from '../../../actions/states/Auth.ts';
 
 interface tokenAuthParams { username: string, password: string }
 
 async function getAuthToken(username: string, password: string)
 {
     const query = `mutation TokenAuth($username: String!, $password: String!) {
-      tokenAuth(input: { username: $username, password: $password}){
+      tokenCreate(input: { username: $username, password: $password}){
         token
         refreshToken
         user
@@ -33,7 +33,7 @@ async function getTokenAPI({username, password}: tokenAuthParams)
             setToken(response.data.tokenAuth.token);
             setUsername(response.data.tokenAuth.user.username);
             setRefreshToken(response.data.tokenAuth.refreshToken);
-            setUserData(response.data.tokenAuth.user);
+            setUserInfo(response.data.tokenAuth.user);
             return response.data.tokenAuth;
         } else {
             console.error("We are facing technical issues in authenticating you.");

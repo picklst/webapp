@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Action} from "../index";
+
 import { NameElement } from '../../../profile'
+import Action from './actions';
 
 const HeaderWrapper = styled.div`
   padding: 0.75rem;
@@ -17,12 +18,8 @@ const Avatar = styled.div`
 `;
 
 export default ({
-    slug,
-    curator: { firstName, lastName, username, avatarURL, isVerified },
-    createdTimestamp, lastEditTimestamp
+    slug, curator: { firstName, lastName, username, avatarURL, isVerified }, userCanEdit
 }) => {
-
-
 
     const renderCuratorCard = () =>
     <a href={`/${username}`} className="plain-link d-flex">
@@ -40,6 +37,7 @@ export default ({
             <Action
                 username={username}
                 slug={slug}
+                userCanEdit={userCanEdit}
             />
         </div>
     </HeaderWrapper>;

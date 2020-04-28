@@ -1,6 +1,6 @@
 import dataFetch from "../../utils/dataFetch";
 // @ts-ignore
-import {setUsername, setToken, setRefreshToken, setUserData} from '../states/Auth.ts';
+import {setUsername, setToken, setRefreshToken, setUserInfo} from '../states/Auth.ts';
 
 interface tokenAuthParams { username: string, password: string }
 
@@ -10,7 +10,7 @@ async function getAuthToken(username: string, password: string)
       tokenAuth(input: { username: $username, password: $password}){
         token
         refreshToken
-        user
+        returning
         {
           firstName
           lastName
@@ -33,7 +33,7 @@ async function Login({username, password}: tokenAuthParams)
             setToken(response.data.tokenAuth.token);
             setUsername(response.data.tokenAuth.user.username);
             setRefreshToken(response.data.tokenAuth.refreshToken);
-            setUserData(response.data.tokenAuth.user);
+            setUserInfo(response.data.tokenAuth.returning);
             return response.data.tokenAuth;
         } else {
             console.error("We are facing technical issues in authenticating you.");

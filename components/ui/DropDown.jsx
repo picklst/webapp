@@ -30,8 +30,9 @@ const DropDown = ({
                 <div
                     className="position-absolute"
                     style={{
-                        left: '-8vmax',
-                        minWidth: '150px'
+                        right: '0',
+                        minWidth: '220px',
+                        width: 'auto'
                     }}
                 >
                     {dropdownComponent}

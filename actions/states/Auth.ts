@@ -1,13 +1,15 @@
 import { createGlobalState } from 'react-hooks-global-state';
 import Cookies from 'universal-cookie';
 
+import store from 'store2';
+
 const cookies = new Cookies();
 
 type State = {
     token: string|null,
     username: string|null,
     refreshToken: string|null,
-    userData: object|null,
+    UserInfo: object|null,
     rememberUser: boolean
 };
 
@@ -15,7 +17,7 @@ const defaultState: State = {
     token: cookies.get('token') || null,
     refreshToken: cookies.get('refreshToken') || null,
     username: cookies.get('username') || null,
-    userData: cookies.get('userData') || null,
+    UserInfo: store.get('UserInfo') || null,
     rememberUser: cookies.get('rememberUser') || false
 };
 
@@ -46,12 +48,13 @@ export const setUsername = (username: string|null) => {
     setGlobalState('username', username);
 };
 
-export const setUserData = (userData: object|null) => {
-    if(userData === null)
-        cookies.remove('userData', { path: '/' });
+export const setUserInfo = (UserInfo: object|null) => {
+    console.log('setting user info', UserInfo);
+    if(UserInfo === null)
+        store.remove('UserInfo');
     else
-        cookies.set('userData', userData);
-    setGlobalState('userData', userData);
+        store.set('UserInfo', UserInfo);
+    setGlobalState('UserInfo', UserInfo);
 };
 
 export const setRememberUser = (value: boolean) => {
@@ -60,7 +63,7 @@ export const setRememberUser = (value: boolean) => {
     if(!value)
     {
         setUsername(null);
-        setUserData(null);
+        setUserInfo(null);
     }
 };
 
@@ -69,10 +72,10 @@ export const Logout = () => {
     setRefreshToken(null);
     if(cookies.get('rememberUser') === 'false')
     {
-        cookies.remove('userData', { path: '/' });
+        store.remove('UserInfo');
         console.log('removing user data');
         setUsername(null);
-        setUserData(null);
+        setUserInfo(null);
     }
 };
 

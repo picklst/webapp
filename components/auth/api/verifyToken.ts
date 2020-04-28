@@ -1,6 +1,6 @@
 import dataFetch from "../../../utils/dataFetch";
 // @ts-ignore
-import {setUsername, setToken, setRefreshToken, setUserData} from '../../../actions/states/Auth.ts';
+import {setUsername, setToken, setRefreshToken, setUserInfo} from '../../../actions/states/Auth.ts';
 
 interface tokenAuthParams { token: string}
 
@@ -22,7 +22,7 @@ async function verifyTokenAPI({token}: tokenAuthParams)
             setToken(null);
             setRefreshToken(null);
             setUsername(null);
-            setUserData(null);
+            setUserInfo(null);
             console.error("We have an error in authenticating you.");
             return { errors: response.errors };
         } else if(response.data) {

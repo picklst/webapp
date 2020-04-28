@@ -9,7 +9,7 @@ import Popup from './Popup';
 
 export default ({ usePopup, onComplete, onExit, }) => {
     const [data, setData] = useState(null);
-    const [myUserData] = useGlobalState('userData');
+    const [myUserData, setUserInfo] = useGlobalState('UserInfo');
 
     const [isQueried, setQueried] = useState(false);
     useEffect(() => {
@@ -23,6 +23,7 @@ export default ({ usePopup, onComplete, onExit, }) => {
                     ]
                 }).then((r) => {
                     setQueried(true);
+                    setUserInfo(r);
                     setData(r);
                 });
         }
@@ -32,7 +33,7 @@ export default ({ usePopup, onComplete, onExit, }) => {
     const [isSaving, setSaving] = useState(false);
     const handleSave = () => {
         setSaving(true);
-        if(typeof data.avatar == "object" || typeof data.cover == "object")
+        if(data.avatar && typeof data.avatar === "object" || data.cover && typeof data.cover === "object")
         {
             uploadProfileMediaAPI({
                 avatarURL:  data.avatar ? data.avatar.url : null,
@@ -48,9 +49,9 @@ export default ({ usePopup, onComplete, onExit, }) => {
             url: data.url,
             username: myUserData.username
         }).then(r => {
+            setUserInfo(data);
             console.log(r);
         });
-        setSaving(false);
         onComplete({
             ...data,
             avatarURL: '',

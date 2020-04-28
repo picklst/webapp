@@ -15,11 +15,17 @@ import StatCard from "./StatCard";
 export default ({
      firstName, lastName, username, bio, url, stats,
      isVerified, avatarURL, coverURL,
-    requireUpdate
+     requireUpdate
 }) => {
 
-    const [myUserData] = useGlobalState('userData');
+    const [myUserData] = useGlobalState('UserInfo');
     const isOwnProfile = myUserData && myUserData.username === username;
+
+    const handleComplete = () => {
+        console.log('profile updated');
+        setEditing(false);
+        requireUpdate();
+    };
 
     const [isEditing, setEditing] = useState(false);
     const renderEditButton = () =>
@@ -29,13 +35,12 @@ export default ({
                 text="Edit Profile"
                 onClick={() => setEditing(true)}
             />
-            {
-                isEditing ?
-                    <ProfileEditor
-                        usePopup
-                        onComplete={() => setEditing(false)}
-                        onExit={() => setEditing(false)}
-                    /> : null
+            {isEditing ?
+                <ProfileEditor
+                    usePopup
+                    onComplete={handleComplete}
+                    onExit={() => setEditing(false)}
+                /> : null
             }
         </React.Fragment>;
 

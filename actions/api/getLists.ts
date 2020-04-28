@@ -50,6 +50,7 @@ async function getLists({ fields, query: q, limit, offset })
                     isVerified: true,
                 },
                 itemCount: fields.includes("itemCount"),
+                userCanEdit: fields.includes("userCanEdit"),
                 slug: true,
             },
         }

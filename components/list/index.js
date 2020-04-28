@@ -1,2 +1,3 @@
-export {Viewer as ListViewer} from './modules';
-export {Card as ListCard} from './views';
+export { getListsAPI } from './api';
+export { Viewer as ListViewer } from './modules';
+export { Card as ListCard } from './views';

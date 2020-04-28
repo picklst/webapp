@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import Base from "../components/core/Base";
 import ErrorPage from "../components/core/ErrorPage";
-import getUserAPI from "../actions/api/getUser.ts";
+import getUserAPI from "../components/profile/api/getUser.ts";
 
-import { ProfileCard, ProfileFeed } from '../components/profile';
+import { ProfilePage } from '../components/profile';
 
 const UserProfilePage = (props) => {
     const [username, setUsername] = useState(props.username);
@@ -13,11 +13,14 @@ const UserProfilePage = (props) => {
     const [isQueried, setQueried] = useState(false);
     const [loadError, setError] = useState(false);
     const [isProfileLoaded, setLoaded] = useState(false);
+
     useEffect(() => {
         if(!isQueried) {
+            console.log('queried');
             getUserAPI({
                 username: username,
-                fields: [ "firstName", "lastName" ]
+                fields: [ "firstName", "lastName" ],
+                requireAuth: false
             }).then(res => {
                 setQueried(true);
                 if (!Object.prototype.hasOwnProperty.call(res, 'errors')) {
@@ -29,46 +32,29 @@ const UserProfilePage = (props) => {
                 else {
                     setError(true);
                 }
+            }).catch(e => {
+                console.log(e);
             });
         }
     });
 
-    const generateTitle = () => {
-        if(firstName !== null || lastName !== null)
-            return `${firstName} ${lastName} (${username})`;
-        else
-            return `@${username}`
-    };
+    const generateTitle = () =>
+    firstName !== null || lastName !== null ?
+    `${firstName} ${lastName} (${username})` : `@${username}`;
 
-    const generateDescription = () => {
-        return `See lists created and shared by @${username}'s profile on Picklst.`
-    };
+    const generateDescription = () => `See lists created and shared by @${username}'s profile on Picklst.`;
 
 
     const renderProfilePage = <Base
         meta={{ title: generateTitle(), description: generateDescription() }}
     >
         <div className="min-vh-100">
-            {
-                isProfileLoaded ?
-                    <div className="row mx-0 p-lg-4 p-md-2 p-0">
-                        <div className="col-md-2 px-2">
-                        </div>
-                        <div className="col-md-10 p-0">
-                            <ProfileCard username={username} />
-                            <div className="row m-0">
-                                <div className="col-md-9 my-3">
-                                    <ProfileFeed username={username} />
-                                </div>
-                            </div>
-
-                        </div>
-                    </div> : null
-            }
+            <ProfilePage username={username} />
         </div>
     </Base>;
 
-    return loadError ? <ErrorPage
+    return loadError ?
+    <ErrorPage
         title="Page Not Found"
         description="We cannot retrieve this page at the moment. Please try again later, or check the url."
     /> : renderProfilePage;
@@ -78,13 +64,14 @@ UserProfilePage.getInitialProps = async ({ query }) => {
     const res = await getUserAPI({
         username: query.username,
         fields: [ "firstName", "lastName" ],
-        endpoint: "http://framework:8000"
+        endpoint: "http://framework:8000/api/graphql/",
+        requireAuth: false
     });
     if (!Object.prototype.hasOwnProperty.call(res, 'errors')) {
         return {
             firstName: res.firstName,
             lastName: res.lastName,
-            username: res.username,
+            username: query.username,
         }
     } else {
         return {

@@ -1,0 +1,1 @@
+export { default as getListsAPI } from './getLists.ts'

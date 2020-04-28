@@ -1,16 +1,12 @@
 FROM node:alpine
 
-RUN apk add build-base zlib-dev jpeg-dev
+RUN apk add build-base zlib-dev autoconf jpeg-dev g++ gcc libgcc libstdc++ linux-headers make python
 RUN mkdir /app
-WORKDIR /app
-
+COPY . /app
+RUN npm cache clean --force
 COPY package.json /app/package.json
 RUN cd /app; npm install
+
 COPY . /app
-
-#RUN npm run build
-#COPY .next ./app/.next
-
-EXPOSE 3000
-
-CMD [ "npm", "run", "dev" ]
+RUN cd /app; npm run build
+WORKDIR ./app

@@ -1,20 +1,22 @@
-import dataFetch from "../../../utils/dataFetch";
+import APICall from "../../../utils/APICall.ts";
+
 import { jsonToGraphQLQuery, VariableType } from 'json-to-graphql-query';
 
 interface getUserAPIParams {
     username: string,
-    fields: object,
-    endpoint: string
+    fields: [string],
+    endpoint: string,
+    requireAuth: boolean,
 }
 
-async function getUser({ username, fields, endpoint})
+async function getUserAPI({ fields, username, endpoint, requireAuth}: getUserAPIParams)
 {
     const q = {
         query: {
             __variables: {
                 username: 'String!',
             },
-            getUser: {
+            user: {
                 __args: {
                     username: new VariableType('username')
                 },
@@ -45,7 +47,7 @@ async function getUser({ username, fields, endpoint})
                 //     username: false,
                 //     avatarURL: false,
                 // },
-                isOwnProfile: fields.includes("isOwnProfile"),
+                // isOwnProfile: fields.includes("isOwnProfile"),
                 username: true,
             },
         }
@@ -54,25 +56,10 @@ async function getUser({ username, fields, endpoint})
     if(!fields.includes("stats"))
         ignoreFields.push("stats");
     const query = jsonToGraphQLQuery(q, { pretty: false, ignoreFields }).toString();
-    return await dataFetch({ query, variables: { username } }, endpoint).then(res => res);
-}
 
-async function getUserAPI(params: getUserAPIParams)
-{
-    return await getUser(params).then(response => {
-        if (response.errors) {
-            return { errors: response.errors };
-        } else if(response.data) {
-            return response.data.getUser;
-        } else {
-            return { errors: [
-                {
-                    message: "We tried our best, but we got no response from our servers. Please try refreshing the page or coming back later.",
-                    response: response
-                }
-            ]};
-        }
-    });
+    return await APICall({ query, variables: { username }, requireAuth: requireAuth, endpoint}).then((res) =>
+    { return res && res.data ? res.data.user : res; }
+    );
 }
 
 export default getUserAPI;

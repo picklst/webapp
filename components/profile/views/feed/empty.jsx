@@ -24,7 +24,7 @@ const Content = styled.div`
 
 export default ({ username }) => {
     const [isOpen, setOpen] = useState(false);
-    const [myUserData] = useGlobalState('userData');
+    const [myUserData] = useGlobalState('UserInfo');
 
     const isOwnFeed = myUserData && username === myUserData.username;
 

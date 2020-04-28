@@ -3,7 +3,7 @@ module.exports = {
         providers: [
             {
                 key: "localhost",
-                endpoint: '/api/',
+                endpoint: '/api/graphql/',
                 token_prefix: 'JWT '
             }
         ]

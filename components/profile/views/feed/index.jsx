@@ -10,7 +10,7 @@ const FeedWrapper = styled.div`
   margin: 5vh 0 15vh 0;
 `;
 
-export default ({ listData, onLoadMore, canLoadMore }) => {
+export default ({ username, listData, onLoadMore, canLoadMore }) => {
 
     return <React.Fragment>
     {
@@ -18,7 +18,7 @@ export default ({ listData, onLoadMore, canLoadMore }) => {
             <FeedWrapper className="row">
             {
                 listData.map(i =>
-                    <div key={shortid.generate()} className="col-md-12 p-2">
+                    <div key={shortid.generate()} className="col-md-12 p-md-1 p-0">
                         <ListCard {...i} />
                     </div>
                 )

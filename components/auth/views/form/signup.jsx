@@ -30,6 +30,7 @@ export default ({ onSignUp }) => {
             onValidate={(state) => setInvalidEmailState(!state)}
             isRequired
             minimal
+            autoFocus
         />
         <TextInput
             autoCapitalize="off"
@@ -43,7 +44,7 @@ export default ({ onSignUp }) => {
             isRequired
             minimal
         />
-        <p className="small mt-2">
+        <p className="small mt-3 text-center">
             To create an account, you must be at-least 13 years old, and
             you agree to our Terms, Data Policy and Cookie Policy.
         </p>
