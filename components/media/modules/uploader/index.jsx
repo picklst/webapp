@@ -1,10 +1,29 @@
 import React, {useState} from 'react';
 import shortid from 'shortid';
+import styled from '@emotion/styled'
 
 import Button from "../../../../components/ui/Button";
 import ImageEditor from "../../../../components/editors/ImageEditor/imageEditor";
 
-import '../../../../styles/list/media-uploader.sass';
+const UploaderButtonWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  input
+  {
+    opacity: 0;
+    left: 0;
+    top: 0;
+    width: 100%;
+    position: absolute;
+    height: 100%;
+    cursor: pointer;
+  }
+`;
+
+const AttachmentTypeButton = styled(Button)`
+    width: 40px;
+    height: 40px;
+`;
 
 function readFile(file) {
     return new Promise(resolve => {
@@ -43,18 +62,15 @@ export default ({ onComplete }) => {
     };
 
     return !isSelected ?
-        <div className="list-media-uploader">
-            <Button
-                className="plain-button bg-light rounded-pill no-shadow text-dark px-3 py-1"
-                text={<div className="small">📸 Media</div>}
-            />
+        <UploaderButtonWrapper>
+            <AttachmentTypeButton text={<div><i className="gg-image" /></div>} />
             <input
                 type="file"
                 onChange={handleSelection}
                 accept="image/*,video/*"
                 data-max-size="1024 * 1024 * 10"
             />
-        </div> :
+        </UploaderButtonWrapper> :
         <ImageEditor
             onComplete={onComplete}
             image={image}

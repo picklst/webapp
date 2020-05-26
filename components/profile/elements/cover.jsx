@@ -1,11 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons"
 
 import ImageUploader from "../../../components/forms/ImageUploader";
-import Button from "../../../components/ui/Button";
+import { Button } from "../../../components/ui";
 
 const CoverImage = styled.div`
     padding-top: 35%;
@@ -31,19 +31,14 @@ const bgColor = colors[Math.floor(Math.random() * colors.length)];
 const Cover = ({ url, showEditButton, onChange }) => {
 
     return <CoverImage bg={url} bgcolor={bgColor} className="rounded-top">
-        {
-            showEditButton ?
-                <ImageUploader
-                    lockAspectRatio
-                    aspect={16/9}
-                    buttonComponent={
-                        <Button
-                            className="blue-button p-3"
-                            text={<FontAwesomeIcon icon={faCamera} />}
-                        />
-                    }
-                    onComplete={onChange}
-                /> : null
+        { showEditButton &&
+            <ImageUploader
+                lockAspectRatio
+                aspect={16/9}
+                className="list-media-uploader"
+                buttonComponent={<Button className="p-2" text={<i className="gg-image" />} />}
+                onComplete={onChange}
+            />
         }
     </CoverImage>;
 };

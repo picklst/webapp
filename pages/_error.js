@@ -6,6 +6,7 @@ const ErrorPage = () => {
         meta={{
             title: 'Error'
         }}
+        hideFooter
     >
         <h1>Error Page</h1>
     </Base>

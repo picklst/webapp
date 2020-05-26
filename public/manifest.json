@@ -1,6 +1,6 @@
 {
-  "name": "NextJS Boilerplate",
-  "short_name": "boilerplate",
+  "name": "Picklst WebApp",
+  "short_name": "picklst",
   "theme_color": "#2196f3",
   "background_color": "#2196f3",
   "display": "standalone",

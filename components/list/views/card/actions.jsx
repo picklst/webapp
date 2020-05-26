@@ -1,16 +1,16 @@
 import React, {useState} from 'react';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisH } from "@fortawesome/free-solid-svg-icons"
-
-import Button from "../../../ui/Button";
+import { Button } from "../../../ui/";
 import { ReportModule } from "../../../misc/modules";
 import OptionMenu from "../../../ui/OptionMenu";
+import {ShareCard} from "../../../commons";
 
+import { ListDeleteButton } from "../../index";
 
-export default ({ username, slug, userCanEdit }) => {
+export default ({ name, username, slug, userCanEdit, onEdit, onDelete }) => {
 
     const [showMenu, setMenu] = useState(false);
+    const [showDelete, setDelete] = useState(false);
 
     const getMenuOptions = () => {
         const options = [];
@@ -22,12 +22,17 @@ export default ({ username, slug, userCanEdit }) => {
                 label: "Edit List",
                 onClick: () => {
                     setMenu(false);
-                    console.log('clicked');
+                    if(typeof onEdit === "function")
+                        onEdit();
                 }
             });
             options.push({
                 optionBody: <div className="text-danger font-weight-bold">Delete</div>,
                 label: "Delete List",
+                onClick: () => {
+                    setMenu(false);
+                    setDelete(true);
+                }
             });
             options.push({
                 optionBody: <div>Pin this </div>,
@@ -50,18 +55,9 @@ export default ({ username, slug, userCanEdit }) => {
         }
 
         options.push({
-            optionBody: <div>Share</div>,
+            optionBody: <div>Share </div>,
             label: "Share List",
-        });
-
-        options.push({
-            optionBody: <div>Copy Link</div>,
-            label: "Copy Link to List",
-        });
-
-        options.push({
-            optionBody: <div>Embed Link</div>,
-            label: "Embed List",
+            module: <ShareCard title={name} url={`https://picklst.com/${username}/${slug}`} />
         });
 
         return options;
@@ -70,11 +66,24 @@ export default ({ username, slug, userCanEdit }) => {
 
     return <React.Fragment>
         <Button
-            text={<FontAwesomeIcon icon={faEllipsisH} />}
-            className="no-shadow p-0 plain-button"
+            text={<i className="gg-more-alt" />}
+            className="no-shadow p-2 plain-button"
             onClick={() => setMenu(true)}
         />
-        { showMenu ? <OptionMenu title="List Actions" onClose={() => setMenu(false)} options={getMenuOptions()} /> : null }
+        { showDelete &&
+            <ListDeleteButton
+                slug={slug}
+                skipButton
+                onCancel={() => setDelete(false)}
+                onDelete={() => {
+                    setDelete(false);
+                    setMenu(false);
+                    if(typeof onDelete === "function")
+                        onDelete();
+                }}
+            />
+        }
+        {showMenu && <OptionMenu title="List Actions" onClose={() => setMenu(false)} options={getMenuOptions()} />}
     </React.Fragment>
 
 };

@@ -1,71 +1,52 @@
 import React, {useEffect, useState} from 'react';
-import Base from "../components/core/Base";
 import ErrorPage from "../components/core/ErrorPage";
-import getListAPI from "../actions/api/getList.ts";
+import { getListAPI } from "../components/list/api";
 
-import { ListViewer } from "../components/list";
+import { List } from "../components/pages";
 
-const ListPage = (props) => {
-    const [slug, setSlug] = useState(props.slug);
-    const [username, setUsername] = useState(props.username);
-    const [name, setName] = useState(props.name);
-    const [data, setData] = useState(null);
+import {APIRequest} from "../utils";
+const prefetchEndpoint = process.env.PREFETCH_SERVER_ENDPOINT;
 
-    const [isQueried, setQueried] = useState(false);
+const ListPage = ({ slug, username, name: propName, isEditing }) => {
+    const [name, setName] = useState(propName);
+
     const [loadError, setError] = useState(false);
-    const [isLoaded, setLoaded] = useState(props.name !== null);
+    const [isLoaded, setLoaded] = useState(propName !== null);
 
     useEffect(() => {
-        if(!isQueried) {
-            getListAPI({
-                slug,
-                username,
-                fields: [
-                    "name", "description", "curator", "properties", "items",
-                    "createdTimestamp", "lastEditTimestamp", "itemCount", "userCanEdit"
-                ]
-            }).then(res => {
-                setQueried(true);
+        if(propName == null) {
+            const query = getListAPI({ fields: ["name"] });
+            APIRequest({query, variables: { slug, username }, requireAuth: false }).then(res => {
                 if (!Object.prototype.hasOwnProperty.call(res, 'errors')) {
-                    setSlug(res.slug);
-                    setName(res.name);
-                    setData(res);
+                    setName(res.list.name);
                     setLoaded(true);
                 }
                 else {
                     setError(true);
                 }
-            });
+            }).catch((e) => setError(true));
         }
-    });
+    }, []);
 
-    const generateTitle = () => {
-        if( name !== null)
-            return `${name} - @${username}`;
-        else
-            return `${slug} - @${username}`
-    };
+    const generateTitle = () => `${name !== null ? name : slug} - @${username}`;
 
     const generateDescription = () => {
         return `See lists created and shared by @${username}'s profile on Picklst.`
     };
 
+    const renderListingPage = propName !== null &&
+    <List
+        title={generateTitle()}
+        description={generateDescription()}
+        isEditing={isEditing}
+        slug={slug}
+        username={username}
+    />;
 
-    const renderListingPage = <Base
-        meta={{ title: generateTitle(), description: generateDescription() }}
-    >
-        { isLoaded && data ?
-            <ListViewer
-                slug={slug}
-                data={data}
-                requireUpdate={() => setQueried(false)}
-            />
-            : null
-        }
-    </Base>;
-
-    return loadError ? <ErrorPage
-        title="Page Not Found"
+    return loadError ?
+    <ErrorPage
+        heading="List Not Found"
+        title="List Not Found"
         description="We cannot retrieve this page at the moment. Please try again later, or check the url."
     /> : renderListingPage;
 };
@@ -73,25 +54,30 @@ const ListPage = (props) => {
 ListPage.getInitialProps = async ({ query }) => {
     const username = query.slug[0];
     const slug = query.slug[1];
-    const res = await getListAPI({
-        slug,
-        username,
-        fields: [ "name", ],
-        endpoint: "http://framework:8000"
-    });
-    if (!Object.prototype.hasOwnProperty.call(res, 'errors')) {
+    const isEditing = query.slug[2] === "edit";
+    const q = getListAPI({ fields: [ "name", ] });
+    return await APIRequest({
+        query: q,
+        variables: { slug, username },
+        requireAuth: false,
+        endpoint: prefetchEndpoint
+    }).then(res => {
         return {
-            name: res.name,
+            name: res.list.name,
             slug: slug,
-            username: username
+            username: username,
+            isEditing
         }
-    } else {
+    }).catch((e) => {
         return {
             name: null,
             slug: slug,
-            username: username
+            username: username,
+            isEditing
         }
-    }
+    });
+
+
 };
 
 export default ListPage;

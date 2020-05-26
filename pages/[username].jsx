@@ -3,83 +3,71 @@ import Base from "../components/core/Base";
 import ErrorPage from "../components/core/ErrorPage";
 import getUserAPI from "../components/profile/api/getUser.ts";
 
-import { ProfilePage } from '../components/profile';
+import { Profile } from '../components/pages';
+import {APIRequest} from "../utils";
+const prefetchEndpoint = process.env.PREFETCH_SERVER_ENDPOINT;
 
 const UserProfilePage = (props) => {
-    const [username, setUsername] = useState(props.username);
     const [firstName, setFirstName] = useState(props.firstName);
     const [lastName, setLastName] = useState(props.lastName);
 
-    const [isQueried, setQueried] = useState(false);
     const [loadError, setError] = useState(false);
     const [isProfileLoaded, setLoaded] = useState(false);
 
-    useEffect(() => {
-        if(!isQueried) {
-            console.log('queried');
-            getUserAPI({
-                username: username,
-                fields: [ "firstName", "lastName" ],
-                requireAuth: false
-            }).then(res => {
-                setQueried(true);
-                if (!Object.prototype.hasOwnProperty.call(res, 'errors')) {
-                   setUsername(res.username);
-                   setFirstName(res.firstName);
-                   setLastName(res.lastName);
-                   setLoaded(true);
-                }
-                else {
-                    setError(true);
-                }
-            }).catch(e => {
-                console.log(e);
+    const fetchMeta = () => {
+        if(!firstName) {
+            const query = getUserAPI({ fields: [ "firstName", "lastName" ]});
+            APIRequest({ query, variables: { username: props.username }, requireAuth: false,}).then((data) => {
+                console.log(data);
+                setFirstName(data.user.firstName);
+                setLastName(data.user.lastName);
+                setLoaded(true);
+            }).catch((e) => {
+                setError(true);
             });
         }
-    });
+    };
 
-    const generateTitle = () =>
-    firstName !== null || lastName !== null ?
-    `${firstName} ${lastName} (${username})` : `@${username}`;
+    useEffect(() => fetchMeta(), []);
 
-    const generateDescription = () => `See lists created and shared by @${username}'s profile on Picklst.`;
+    const generateTitle = () => firstName !== null || lastName !== null ?
+    `${firstName} ${lastName} (${props.username})` : `@${props.username}`;
 
-
-    const renderProfilePage = <Base
-        meta={{ title: generateTitle(), description: generateDescription() }}
-    >
-        <div className="min-vh-100">
-            <ProfilePage username={username} />
-        </div>
-    </Base>;
+    const generateDescription = () => `See lists created and shared by @${props.username}'s profile on Picklst.`;
 
     return loadError ?
     <ErrorPage
         title="Page Not Found"
-        description="We cannot retrieve this page at the moment. Please try again later, or check the url."
-    /> : renderProfilePage;
+        heading="Sorry, this page isn't available."
+        description="We cannot retrieve this page at the moment. The link you followed may be broken, or the page may have been removed."
+    /> :
+    <Base meta={{ title: generateTitle(), description: generateDescription() }}>
+        { firstName || isProfileLoaded ? <Profile username={props.username} /> : null}
+    </Base>;
 };
 
 UserProfilePage.getInitialProps = async ({ query }) => {
-    const res = await getUserAPI({
-        username: query.username,
-        fields: [ "firstName", "lastName" ],
-        endpoint: "http://framework:8000/api/graphql/",
-        requireAuth: false
-    });
-    if (!Object.prototype.hasOwnProperty.call(res, 'errors')) {
-        return {
-            firstName: res.firstName,
-            lastName: res.lastName,
-            username: query.username,
-        }
-    } else {
+    const username = query.username.startsWith('@') ? query.username.substr(1) : query.username;
+    const q = getUserAPI({ fields: [ "firstName", "lastName" ] });
+    return await APIRequest({
+        query: q,
+        variables: { username },
+        requireAuth: false,
+        endpoint: prefetchEndpoint
+    }).then((res) => {
+        if (res && !Object.prototype.hasOwnProperty.call(res, 'errors'))
+            return {
+                firstName: res.user.firstName,
+                lastName: res.user.lastName,
+                username
+            }
+    }).catch((e) => {
         return {
             firstName: null,
             lastName: null,
-            username: query.username,
+            username
         }
-    }
+    })
 };
 
 export default UserProfilePage;

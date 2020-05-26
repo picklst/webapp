@@ -10,6 +10,9 @@ import PopUp from "../../ui/PopUp";
 import Button from "../../ui/Button";
 import getCroppedImg from "./cropImage";
 
+import '../../../styles/list/media-uploader.sass';
+import {clearAllBodyScrollLocks} from "body-scroll-lock";
+
 const AdjustmentButton = ({ text, isSelected, onClick, }) => {
     return <button
         onClick={onClick}
@@ -32,8 +35,14 @@ const ImageEditor = ({ image, aspect:as = 4/3, lockAspectRatio, onClose, onCompl
     };
 
     const handleSubmission = async (e) => {
+        clearAllBodyScrollLocks();
         const croppedImage = await getCroppedImg(image, croppedAreaPixels, rotation);
         onComplete({ key: shortid.generate(), url: croppedImage, aspect, type: "image" });
+    };
+
+    const handleClose = () => {
+        clearAllBodyScrollLocks();
+        onClose(false);
     };
 
     return  <PopUp
@@ -41,6 +50,7 @@ const ImageEditor = ({ image, aspect:as = 4/3, lockAspectRatio, onClose, onCompl
         className="media-editor-card"
         label="Media Uploader"
         appElement=".app"
+        showTopbarOnMobile={false}
     >
         <div
             className="bg-dark"
@@ -55,7 +65,7 @@ const ImageEditor = ({ image, aspect:as = 4/3, lockAspectRatio, onClose, onCompl
                     <Button
                         text={<FontAwesomeIcon icon={faTimes} size="lg" />}
                         className="plain-button text-white no-shadow"
-                        onClick={() => onClose(false)}
+                        onClick={handleClose}
                     />
                 </div>
                 <div className="col-6 p-2 text-right">

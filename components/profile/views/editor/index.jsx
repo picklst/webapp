@@ -39,11 +39,12 @@ const Editor = ({
                     showEditButton
                     url={avatar && typeof avatar === "object" ? avatar.url : avatar}
                     onChange={setAvatar}
+                    className="position-absolute"
                 />
             </div>
         </div>
         <div className="row mx-0 p-2 mb-4">
-            <div className="col-md-6 p-2">
+            <div className="col-6 p-2">
                 <TextInput
                     label="First Name"
                     name="firstName"
@@ -53,7 +54,7 @@ const Editor = ({
                     minimal
                 />
             </div>
-            <div className="col-md-6 p-2">
+            <div className="col-6 p-2">
                 <TextInput
                     label="Last Name"
                     name="lastName"

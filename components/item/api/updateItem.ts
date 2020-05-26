@@ -1,4 +1,4 @@
-import dataFetch from "../../../utils/dataFetch";
+import { APIRequest } from "../../../utils";
 
 interface updateItemAPIParams {
     object: {
@@ -14,14 +14,14 @@ interface updateItemAPIParams {
 async function updateItem({ object, slug })
 {
     const query = `mutation update_item($slug: String!, $objects: [ItemInput]!){
-      updateItem(list: { slug: $slug}, objects: $objects)
+      itemUpdate(list: { slug: $slug}, objects: $objects)
       {
         returning {
           key
         }
       }
     }`;
-    return await dataFetch({ query, variables: { slug, objects: [object] } }).then(res => res);
+    return await APIRequest({ query, variables: { slug, objects: [object] } }).then(res => res);
 }
 
 async function updateItemAPI(params: updateItemAPIParams)

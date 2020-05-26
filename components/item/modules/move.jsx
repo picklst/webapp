@@ -1,35 +1,77 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons"
-
-import { moveItemAPI } from '../api';
 import Button from "../../ui/Button";
+import {APIRequest} from "../../../utils";
 
-export default ({ slug, itemKey, index, totalItems, requireUpdate }) => {
+const emptyFun = () => {};
 
-    const handleMoveItem = ({ direction }) => {
-        moveItemAPI({
-            key: itemKey, direction, slug
-        }).then(r => {
-            requireUpdate(true);
+export default ({
+    slug, id, index, totalItems,
+    allowSave, requireUpdate = emptyFun,
+    onMoveUp = emptyFun, onMoveDown = emptyFun
+}) => {
+
+    const moveItem = async (variables) => {
+        const query = `
+        mutation update_item($slug: String!, $id: String!, $direction: Direction!){
+          itemMove(direction: $direction, id: $id, list: { slug: $slug })
+        }`;
+        return await APIRequest({ query, variables }).then((data) => {
+            return { success: true };
+        }).catch((errors) => {
+            return { success: false, errors }
         });
     };
 
+    const sendCallback = (direction) => {
+        requireUpdate();
+        if(direction === "up" && typeof onMoveUp === "function")
+            onMoveUp(index);
+        else if(direction === "down" && typeof onMoveDown === "function")
+            onMoveDown(index);
+    };
+
+    const handleMoveItem = ({ direction }) => {
+        if(allowSave) {
+            moveItem({ id, direction, slug }).then(({ success, errors, data }) => {
+                if(success)
+                {
+                    toast.success(
+                        "Moved successfully",
+                        {
+                            autoClose: 1000, hideProgressBar: true, closeButton: false,
+                            position: toast.POSITION.BOTTOM_CENTER,
+                        }
+                    );
+                    sendCallback(direction);
+                } else {
+                    toast.error(
+                        "Could not move due to an unknown error. Please try again.",
+                        {
+                            autoClose: 1000, hideProgressBar: true, closeButton: false,
+                            position: toast.POSITION.BOTTOM_CENTER,
+                        }
+                    );
+                }
+            });
+        } else { sendCallback(direction); }
+    };
+
     return <div className="d-inline-block">
-        {   index > 0 ?
+        {   index > 0 &&
             <Button
                 onClick={() => handleMoveItem({ direction: "up" }) }
-                className="plain-button p-1 text-dark small no-shadow mr-2"
-                text={<FontAwesomeIcon icon={faArrowUp} />}
-            /> : null
+                className="p-1 text-dark small no-shadow mr-2"
+                text={<i className="gg-chevron-double-up" />}
+            />
         }
-        { index+1 < totalItems  ?
+        { index+1 < totalItems  &&
             <Button
                 onClick={() => handleMoveItem({ direction: "down"})}
-                className="plain-button p-1 text-dark small no-shadow"
-                text={<FontAwesomeIcon icon={faArrowDown} />}
-            /> : null
+                className="p-1 text-dark small no-shadow"
+                text={<i className="gg-chevron-double-down" />}
+            />
         }
     </div>
 

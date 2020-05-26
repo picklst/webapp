@@ -1,15 +1,13 @@
 import React from 'react';
-import styled from 'styled-components';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faEye, faPlus, faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import styled from '@emotion/styled'
 
 import Button from "../../../ui/Button";
 
 const Container = styled.div`
-  border-top: 1px solid rgba(0,0,0,0.2);
   background-color: #FAFAFA;
   margin-top: 1rem;
   display: flex;
+  padding: 0.5rem
 `;
 
 const ActionsContainer = styled.div`
@@ -18,53 +16,30 @@ const ActionsContainer = styled.div`
     justify-content: left;
 `;
 
+const ActionButton = styled(Button)`
+    padding: 0.25rem 0.5rem;
+    height: 100%;
+`;
+
 const ActionWrap = styled.div`
   font-weight: 300;
   color: #333;
-  font-size: 1rem;
+  font-size: calc(0.8rem + 1vw);
+  display: flex;
+  align-items: center;
+  padding: 0.35rem;
+  height: 100%;
   span
-  {
-    padding-left: 0.5rem;
-  }
+  { padding-left: 0.5rem; }
 `;
 
 export default ({ }) => {
 
     return <Container className="rounded-bottom">
         <ActionsContainer>
-            <div>
-                <Button
-                    className="no-shadow plain-button"
-                    text={
-                        <ActionWrap>
-                            <FontAwesomeIcon icon={faStar} />
-                            <span>Star</span>
-                        </ActionWrap>
-                    }
-                />
-            </div>
-            <div>
-                <Button
-                    className="no-shadow plain-button"
-                    text={
-                        <ActionWrap>
-                            <FontAwesomeIcon icon={faEye} />
-                            <span>Watch</span>
-                        </ActionWrap>
-                    }
-                />
-            </div>
-            <div>
-                <Button
-                    className="no-shadow plain-button"
-                    text={
-                        <ActionWrap>
-                            <FontAwesomeIcon icon={faPlus} />
-                            <span>Add to Collection</span>
-                        </ActionWrap>
-                    }
-                />
-            </div>
+            <ActionButton text={<ActionWrap><i className="gg-play-list-add" /></ActionWrap>}/>
+            <ActionButton text={<ActionWrap><i className="gg-play-list-add" /></ActionWrap>}/>
+            <ActionButton text={<ActionWrap><i className="gg-play-list-add" /></ActionWrap>}/>
         </ActionsContainer>
     </Container>
 };

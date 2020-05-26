@@ -1,1 +1,1 @@
-export {AuthCard as AuthCard} from './modules';
+export { AuthCard, OnBoardingPopup, SettingsMenu } from './modules';

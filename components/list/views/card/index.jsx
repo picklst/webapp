@@ -1,42 +1,63 @@
 import React from 'react';
 
-import Card from "../../../../components/ui/Cards";
+import { Card } from "../../../../components/ui";
+
+import PropertiesEditor from "../../modules/editor/properties";
 
 import Header from './header';
 import Body from './body';
 import Footer from './footer';
 
 export default ({
-  name, slug, curator, itemCount, properties,
-  createdTimestamp, lastEditTimestamp,
-  isTitleCard, userCanEdit
+  name, slug, curator,  description, properties, coverURL, topic,
+  itemCount, timestampCreated, timestampLastEdited,
+  compact, isTitleCard, isEditing, userCanEdit, hideUsername, hideTopbar,
+  onEdit, onSave, onDelete, onExitEdit
 }) => {
 
    const renderBody = (isTitleCard) => <Body
        name={name}
+       description={description}
+       curator={curator}
+       coverURL={coverURL}
+       topic={topic}
        itemCount={itemCount}
-       createdTimestamp={createdTimestamp}
-       lastEditTimestamp={lastEditTimestamp}
+       compact={compact}
+       timestampCreated={timestampCreated}
+       timestampLastEdited={timestampLastEdited}
        isTitleCard={isTitleCard}
+       hideUsername={hideUsername}
    />;
 
-    return <Card p={0}>
-        <Header
-            slug={slug}
-            curator={curator}
-            lastEditTimestamp={lastEditTimestamp}
-            createdTimestamp={createdTimestamp}
-            userCanEdit={userCanEdit}
-        />
-        <div className="px-3">
-        {   isTitleCard ?
-            renderBody(true) :
+    return <Card p={compact ? 0 : 2} className="rounded">
+        {
+            !isEditing && !compact && !hideTopbar &&
+            <Header
+                slug={slug}
+                curator={curator}
+                userCanEdit={userCanEdit}
+                isEditing={isEditing}
+                onEdit={onEdit}
+                onExitEdit={onExitEdit}
+                onDelete={onDelete}
+            />
+        }
+        {   isEditing ?
+                <PropertiesEditor
+                    name={name}
+                    properties={properties}
+                    description={description}
+                    cover={coverURL}
+                    topic={topic}
+                    onSave={onSave}
+                /> :
+            isTitleCard ?
+                renderBody(true) :
             <a className="d-block w-100 plain-link" href={`/${curator.username}/${slug}`}>
                 { renderBody(false) }
             </a>
         }
-        </div>
-        <Footer/>
+        {/*{ !isEditing ?  <Footer/> : null }*/}
     </Card>;
 
 };

@@ -1,66 +1,139 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import { toast } from 'react-toastify';
 
-import { updateItemAPI, uploadMediaAPI } from "../api";
 import { Editor } from '../views'
+import {APIRequest} from "../../../utils";
 
+const emptyFun = () => {};
+
+const defaultLabels = {
+    save: 'Save',
+    close: 'Close'
+};
 
 export default ({
-    slug, itemKey, index, totalItems,
-    name, url, comment, media,
-    className, showSaveButton, onSave
+    slug, id, index, totalItems,
+    name, url, comment, media, poll,
+    className, labels: labelProps,
+    allowSave, showSaveButton, showDeleteButton, showMoveButtons, requireUpdate,
+    onSave = emptyFun, onClose = emptyFun, onChange = emptyFun, onMoveUp = emptyFun, onMoveDown = emptyFun, onDelete = emptyFun
 }) => {
-    const [data, setData] = useState({
-        name, comment, url, media
-    });
+
+    const labels = {...defaultLabels, ...labelProps};
+
+    const [data, setData] = useState({ name, comment, url, media, poll });
+
+    useEffect(() => {
+        if(typeof onChange === "function")
+            onChange({
+                name: data.name,
+                comment: data.comment,
+                id: id,
+                media: data.media,
+                url: data.url,
+                tags: getHashTags(),
+                poll: data.poll
+            });
+    }, [data]);
 
     const getHashTags = () => {
         const hashtagRegex = /([#][\w-\d|.]+)/g;
-        let dTags = data.comment.match(hashtagRegex);
-        let tTags = data.name.match(hashtagRegex);
+        let dTags = data.comment ? data.comment.match(hashtagRegex) : false;
+        let tTags = data.name ? data.name.match(hashtagRegex) : false;
         tTags = tTags ? tTags : [];
         dTags = dTags ? dTags : [];
         return [...new Set([...tTags ,...dTags])];
     };
 
-    const handleSave = (obj) => {
-        const currObj = {
+    const updateItem = async (variables) => {
+        const query = `
+        mutation update_item($slug: String!, $id: String!, $object: ItemInput!){
+          itemUpdate(list: { slug: $slug}, id: $id, object: $object)
+          {
+            returning {
+              id
+            }
+          }
+        }`;
+        return await APIRequest({ query, variables }).then((data) => {
+            return { success: true, data };
+        }).catch((errors) => {
+            return { success: false, errors }
+        });
+    };
+
+    const handleSave = async (data) => {
+        const object =  {
             name: data.name,
             comment: data.comment,
-            key: itemKey,
             url: data.url,
             tags: getHashTags()
         };
-        if(typeof obj.media == "object")
+        if(data.poll && data.poll.options && data.poll.options.length > 1)
         {
-            if(media && media.key && typeof obj.media.key !== media.key)
-            uploadMediaAPI(obj.media).then(r => {
-                currObj['media'] = r.returning.key;
-                updateItemAPI({ object: currObj, slug }).then(r => {
-                    if(typeof onSave === 'function')
-                        onSave(currObj);
-                })
-            })
+            const poll = {};
+            const options = [];
+            data.poll.options.forEach(({id, name, media}) => {
+                const op = { id, name };
+                if(media && media.id) { op['mediaID'] = media.id }
+                options.push(op);
+            });
+            if(data.poll.answer !== null)
+                poll['answerID'] = data.poll.answer;
+            poll['options'] = options;
+            object['poll'] = poll;
         }
-        else {
-            updateItemAPI({ object: currObj, slug }).then(r => {
-                if(typeof onSave === 'function')
-                    onSave(currObj);
+        if(data.media && data.media !== '' && data.media.id)
+            object['mediaID'] = data.media.id;
+        if(allowSave)
+        {
+            updateItem({ slug, id, object }).then(({ success, errors, data }) => {
+                if(success)
+                {
+                    toast.success(
+                        "Saved successfully",
+                        {
+                            autoClose: 1000, hideProgressBar: true, closeButton: false,
+                            position: toast.POSITION.BOTTOM_CENTER,
+                        }
+                    );
+                    onSave(data.returning);
+                } else {
+                    toast.error(
+                        "Could not save due to an unknown error. Please try again.",
+                        {
+                            autoClose: 1000, hideProgressBar: true, closeButton: false,
+                            position: toast.POSITION.BOTTOM_CENTER,
+                        }
+                    );
+                }
             })
-        }
+        } else { onSave(object); }
     };
 
     return <Editor
+        id={id}
         slug={slug}
         totalItems={totalItems}
         index={index}
+
         name={data.name}
         comment={data.comment}
         url={data.url}
         media={data.media}
+        poll={data.poll}
+
         className={className}
+        labels={labels}
+        showSaveButton={showSaveButton||allowSave}
+        showDeleteButton={showDeleteButton}
+        showMoveButtons={showMoveButtons}
         onChange={setData}
         onSave={handleSave}
-        showSaveButton={showSaveButton}
-        labels={{ save: 'Save' }}
+        onClose={onClose}
+        onDelete={onDelete}
+        onMoveDown={onMoveDown}
+        onMoveUp={onMoveUp}
+        requireUpdate={requireUpdate}
     />
 };

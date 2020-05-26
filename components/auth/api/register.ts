@@ -6,10 +6,12 @@ interface UserRegisterParams { email: string, password: string }
 async function registerUser(email: string, password: string)
 {
     const query = `mutation registerUser($email: String!, $password: String!){
-      registerUser(email: $email, password: $password)
+      accountCreate(  input: {email: $email, password: $password})
       {
-        username
-        status
+        returning
+        {
+          username
+        }
       }
     }`;
     const variables = { email, password };
@@ -23,7 +25,7 @@ async function SignupAPI({email, password}: UserRegisterParams)
             console.error("We have an error in creating an account for you.");
             return { errors: response.errors };
         } else if(response.data) {
-            return response.data.registerUser;
+            return response.data.accountCreate.returning;
         } else {
             console.error("We have an error in creating an account for you.");
             return { errors: [

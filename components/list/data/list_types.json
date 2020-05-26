@@ -1,0 +1,42 @@
+[
+  {
+    "name": "A Simple List",
+    "ranked": false,
+    "votable": false,
+    "publicVoting": false,
+    "collaboration": false,
+    "acceptEntries": false,
+    "private": false,
+    "thumbnail": "list-type-wishlist.jpg"
+  },
+  {
+    "name": "Accept Entries",
+    "ranked": true,
+    "votable": false,
+    "publicVoting": false,
+    "collaboration": false,
+    "acceptEntries": true,
+    "private": false,
+    "thumbnail": "list-type-vote-ranking.jpg"
+  },
+  {
+    "name": "Votable",
+    "ranked": true,
+    "votable": true,
+    "publicVoting": true,
+    "collaboration": false,
+    "acceptEntries": false,
+    "private": false,
+    "thumbnail": "list-type-vote-ranking.jpg"
+  },
+  {
+    "name": "Votable & Accepting Entries",
+    "ranked": true,
+    "votable": true,
+    "publicVoting": true,
+    "collaboration": true,
+    "acceptEntries": true,
+    "private": false,
+    "thumbnail": "list-type-public-entries.jpg"
+  }
+]

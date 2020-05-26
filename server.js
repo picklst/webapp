@@ -17,7 +17,7 @@ app.prepare().then(() => {
         } else {
             handle(req, res, parsedUrl);
         }
-    }).listen(process.env.PORT, () => {
-        console.log(`> Ready on http://localhost:${process.env.PORT}`);
+    }).listen(process.env.PORT||3300, () => {
+        console.log(`> Ready on http://localhost:${process.env.PORT||3300}`);
     });
 });

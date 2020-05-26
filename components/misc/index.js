@@ -1,1 +1,4 @@
-export { ReportModule } from './modules'
+export {
+    ReportModule,
+    FeedbackModule
+} from './modules'

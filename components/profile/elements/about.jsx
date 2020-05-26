@@ -5,9 +5,9 @@ import { Name } from '../elements'
 const UserInfo = ({ firstName, lastName, username, isVerified, bio, url }) => {
 
     return  <div>
-        <h3 className="m-0">
+        <h5 className="m-0">
             <Name firstName={firstName ? firstName : username} lastName={lastName} isVerified={isVerified} />
-        </h3>
+        </h5>
         <div>@{username}</div>
         <p className="my-2">{bio}</p>
         {

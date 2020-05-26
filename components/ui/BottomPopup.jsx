@@ -1,14 +1,14 @@
-import React, {useState} from 'react';
-import styled from 'styled-components';
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import React, {useEffect, useRef, useState} from 'react';
+import styled from '@emotion/styled'
+import { useMediaQuery } from 'react-responsive';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 import Button from "./Button";
+import {motion} from "framer-motion";
 
 const Container = styled.div`
     position: fixed;
-    z-index: 9000;
+    z-index: 8500;
     top: 0;
     left: 0;
     display: flex;
@@ -22,28 +22,43 @@ const Container = styled.div`
     }
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled(motion.div)`
     width: 100%;
-    max-width: 720px;
+    max-width: ${({maxWidth}) => maxWidth ? maxWidth : '720px'};
     box-shadow: 2px 5px 15px rgba(0,0,0,0.5);
-    @media (max-width: 480px) {
-      padding-bottom: 8vh
-    }
+    background: white;
 `;
 
 const Topbar = styled.div`
     display: flex;
     z-index: 7000;
     margin-bottom: 0.5rem;
-    position: sticky;
+    position: fixed;
+    background-color: white;
     box-shadow: 2px 3px 5px rgba(0,0,0,0.5);
     top: 0;
     left: 0;
     width: 100%;
     padding: 0.5rem;
     font-size: 1rem;
-    border-bottom-color: #007bff!important;
-    border-bottom: 3px solid;
+    i {
+      --ggs: 1.3
+    }
+    &::after{
+        content: "";
+        height: 3px;
+        animation: gradient 2s infinite;
+        background: linear-gradient(-45deg,#0CC1B0,#0AA5C3);
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        @keyframes gradient { 
+          0% { background: linear-gradient(-45deg,#0CC1B0,#0AA5C3); } 
+          50% { background: linear-gradient(0deg,#0CC1B0,#0AA5C3); } 
+          100% { background: linear-gradient(45deg,#0CC1B0,#0AA5C3); } 
+        }
+    }
 `;
 
 const CancelWarning = styled.div`
@@ -62,34 +77,69 @@ const CancelWarning = styled.div`
 const ContentWrapper = styled.div`
     max-height: 100vh;
     overflow-y: auto;
+    margin: 1rem 0;
 `;
 
 const BottomPopup = ({
-    children, title, discardLabel,
-    showDiscardWarning = false,
-    className, containerClassName,
+    children, title, discardLabel, maxWidth,
+    isOpen = true, appElement = ".app", showDiscardWarning = false,
+    className, containerClassName, contentClassName,
     onClose
 }) => {
     const [cancelWarning, showCancelWarning] = useState(false);
 
-    return <Container className={containerClassName}>
-        <Wrapper className={className}>
-            <Topbar>
+    useEffect(() => {
+        const targetElement = document.querySelector(appElement);
+        if(isOpen)
+            disableBodyScroll(targetElement);
+    }, [isOpen]);
+
+    const handleOnClose = (e) => {
+        e.stopPropagation();
+        const targetElement = document.querySelector(appElement);
+        enableBodyScroll(targetElement);
+        clearAllBodyScrollLocks();
+        onClose();
+    };
+
+    const [space, setSpacing] = useState('8vh');
+    const topbarRef = useRef();
+    useEffect(() => {
+        if(topbarRef && topbarRef.current)
+            setSpacing(topbarRef.current.clientHeight);
+    }, [topbarRef]);
+
+    const isMobile = useMediaQuery({
+        query: '(max-width: 768px)'
+    });
+
+    return <Container onClick={(e) => e.stopPropagation()} className={containerClassName}>
+        <Wrapper
+            maxWidth={maxWidth}
+            initial={{ translateY: "8vh", opacity: 0.5 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            exit={{ display: "none", opacity: 0 }}
+            transition={{
+                type: "tween",
+                stiffness: 60,
+                damping: 15
+            }}
+            className={className}
+        >
+            <Topbar ref={topbarRef}>
                 <div style={{ width: '45px' }} className="d-flex align-items-center justify-content-center">
                     <button
-                        onClick={() => showDiscardWarning ? showCancelWarning(true) : onClose()}
+                        onClick={(e) => showDiscardWarning ? showCancelWarning(true) : handleOnClose(e)}
                         className="plain-button text-dark"
                     >
-                        <FontAwesomeIcon icon={faTimes} size="lg" />
+                        <i className="gg-close" />
                     </button>
                 </div>
                 <div style={{ width: 'auto' }} className="d-flex align-items-center p-2">
-                    <b>{ title ? title : null }</b>
+                    <b>{ title }</b>
                 </div>
             </Topbar>
-            <div className={className}>
-
-            </div>
+            <div style={{ height: space }} />
             {  showDiscardWarning && cancelWarning ?
                 <CancelWarning>
                     <div className="text-center">
@@ -104,14 +154,15 @@ const BottomPopup = ({
                         <Button
                             text="Discard"
                             className="red-button rounded-pill px-4 py-1 mr-2"
-                            onClick={() => onClose()}
+                            onClick={() => handleOnClose()}
                         />
                     </div>
                 </CancelWarning>
                 : null
             }
-            <ContentWrapper>
+            <ContentWrapper className={contentClassName}>
                 {children}
+                {isMobile && <div style={{ height: '56px' }} />}
             </ContentWrapper>
         </Wrapper>
     </Container>

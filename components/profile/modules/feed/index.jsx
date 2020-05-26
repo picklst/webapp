@@ -7,55 +7,56 @@ import ErrorCard from "../../../core/ErrorCard";
 
 export default ({ username }) => {
     const [data, setData] = useState([]);
-    const [offset, setOffset] = useState(0);
-
-    const [maxLoaded, setMaxLoaded] = useState(false);
-    const handleLoadMore = () => {
-        if(isQueried)
-        {
-            setOffset(offset + 2);
-            setQueried(false);
-        }
-    };
-    const [isQueried, setQueried] = useState(false);
     const [error, setError] = useState(false);
-    const [isLoaded, setLoaded] = useState(false);
 
-    const query = getListsAPI({
-        fields: [
-            "name", "lastUpdateTimestamp", "createdTimestamp", "curator", "itemCount",
-            "properties", "userCanEdit"
-        ],
-    });
+    const fetchList = async (variables) => {
+        const query = getListsAPI({
+            fields: [
+                "name", "topic", "timestampCreated", "timestampLastEdited", "curator", "itemCount",
+                "properties", "userCanEdit", "coverURL"
+            ],
+        });
+        return await APIRequest({ query, variables, requireAuth: false }).then((data) => {
+            return { success: true, data };
+        }).catch((errors) => {
+            return { success: false, errors }
+        })
+    };
 
-    useEffect(() => {
-        if(!isQueried){
-            APIRequest(
-                { query, variables: { limit: 2, offset, query: { username } }}
-            ).then((r) => {
-                setQueried(true);
-                if(r.data.lists.length === 0)
-                    setMaxLoaded(true);
-                else if(data.length === 0)
-                    setData(r.data.lists);
-                else
-                    setData([...data, ...r.data.lists]);
-                setLoaded(true);
-            }).catch(e => {
-                setQueried(true);
-                setError(e);
-            })
-        }
-    });
+    const [lastCursor, setCursor] = useState(null);
+    const handleFetch = (after = lastCursor) => {
+        const variables = { count: 1, query: { username } };
+        if(after)
+            variables['after'] = after;
+        fetchList(variables).then(({ success, errors, data: d }) => {
+            if (success && d) {
+                setCursor(d.lists && d.lists.hasNext ? d.lists.lastCursor : null);
+                // @todo confirm lists.lists will always be an array
+                setData(data.length > 0 ? [...data, ...d.lists.lists] : d.lists.lists);
+            } else {
+                setError(errors);
+                console.error('failed to load', errors);
+            }
+        });
+    };
 
+    useEffect(() => handleFetch(), []);
+
+    const handleDelete = (index) => {
+        setData((p) => [
+            ...data.slice(0,index),
+            ...data.slice(index+1)
+        ]);
+    };
 
     return error ? <ErrorCard {...error} />
-    : isLoaded ?
+    : data ?
     <Feed
         username={username}
         listData={data}
-        onLoadMore={handleLoadMore}
-        canLoadMore={!maxLoaded}
+        onDelete={handleDelete}
+        onLoadMore={() => handleFetch()}
+        canLoadMore={lastCursor !== null}
     /> : null;
 
 };

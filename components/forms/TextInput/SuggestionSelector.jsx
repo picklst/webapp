@@ -3,26 +3,27 @@ import shortid from 'shortid';
 
 
 const SuggestionSelector = ({ options, focused, onSelect, valueField }) => {
-    const renderSuggestionSelector = i =>
-        <div onClick={() => onSelect(i[valueField])}>
-            <div className="d-flex p-2">
-                <div className="d-none d-sm-block" style={{ width: '4rem' }}>
 
-                </div>
-                <div style={{ width: 'auto' }}>
-                    <div className="font-weight-bold d-block d-sm-none">
-                        {  i.name && i.name.length > 0 ?
-                            `${i.name.substring(0, 35)}${i.name.length > 35 ? '...'  : ''}` :
-                            `${i[valueField].substring(0, 35)}${i.value.length > 35 ? '...' : ''}`
-                        }
-                    </div>
-                    <div className="font-weight-bold d-sm-block d-none">
-                        {i.name && i.name.length > 0 ? i.name : i[valueField]}
-                    </div>
-                    <div className="small">{i[valueField]}</div>
-                </div>
+    const renderSuggestionSelector = i =>
+    <div onClick={() => onSelect(i[valueField])}>
+        <div className="d-flex p-2">
+            <div className="d-none d-sm-block" style={{ width: '4rem' }}>
+
             </div>
-        </div>;
+            <div style={{ width: 'auto' }}>
+                <div className="font-weight-bold d-block d-sm-none">
+                    {  i.name && i.name.length > 0 ?
+                        `${i.name.substring(0, 35)}${i.name.length > 35 ? '...'  : ''}` :
+                        `${i[valueField].substring(0, 35)}${i.value.length > 35 ? '...' : ''}`
+                    }
+                </div>
+                <div className="font-weight-bold d-sm-block d-none">
+                    {i.name && i.name.length > 0 ? i.name : i[valueField]}
+                </div>
+                <div className="small">{i[valueField]}</div>
+            </div>
+        </div>
+    </div>;
 
     return <div>
         <div

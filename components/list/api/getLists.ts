@@ -12,45 +12,55 @@ function getListsAPI({ fields }: getListsAPIParams)
         query: {
             __variables: {
                 query: 'ListQueryInput!',
-                limit: 'Int',
-                offset: 'Int',
+                count: 'Int',
+                after: 'String',
             },
             lists: {
                 __args: {
                     query: new VariableType('query'),
-                    limit: new VariableType('limit'),
-                    offset: new VariableType('offset'),
+                    count: new VariableType('count'),
+                    after: new VariableType('after'),
                 },
-                name: fields.includes("name"),
-                createdTimestamp: fields.includes("createdTimestamp"),
-                lastUpdateTimestamp: fields.includes("lastUpdateTimestamp"),
-                description: fields.includes("description"),
-                coverURL: fields.includes("coverURL"),
-                properties: {
-                    isPrivate: true,
-                    isRanked: true,
-                    forceCuratorRanking: true,
-                    isVotable: true,
-                    areVotesPrivate: true,
-                    canVoteMultipleItems: true,
-                    isRateable: true,
-                    areRatingsPrivate: true,
-                    acceptEntries: true
+                lists: {
+                    name: fields.includes("name"),
+                    timestampCreated: fields.includes("timestampCreated"),
+                    timestampLastEdited: fields.includes("timestampLastEdited"),
+                    description: fields.includes("description"),
+                    coverURL: fields.includes("coverURL"),
+                    properties: {
+                        isPrivate: true,
+                        isRanked: true,
+                        forceCuratorRanking: true,
+                        isVotable: true,
+                        areVotesPrivate: true,
+                        canVoteMultipleItems: true,
+                        isRateable: true,
+                        areRatingsPrivate: true,
+                        acceptEntries: true
+                    },
+                    topic: {
+                        slug: true,
+                        name: true,
+                    },
+                    curator: {
+                        username: true,
+                        firstName: true,
+                        lastName: true,
+                        avatarURL: true,
+                        isVerified: true,
+                    },
+                    itemCount: fields.includes("itemCount"),
+                    userCanEdit: fields.includes("userCanEdit"),
+                    slug: true,
                 },
-                curator: {
-                    username: true,
-                    firstName: true,
-                    lastName: true,
-                    avatarURL: true,
-                    isVerified: true,
-                },
-                itemCount: fields.includes("itemCount"),
-                userCanEdit: fields.includes("userCanEdit"),
-                slug: true,
+                hasNext: true,
+                lastCursor: true
             },
         }
     };
     const ignoreFields = [];
+    if(!fields.includes("topic"))
+        ignoreFields.push("topic");
     if(!fields.includes("curator"))
         ignoreFields.push("curator");
     if(!fields.includes("properties"))

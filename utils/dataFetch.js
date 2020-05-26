@@ -2,11 +2,12 @@ import fetch from 'isomorphic-fetch';
 import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
-import { API } from '../constants';
+
+const graphQLEndpoint = process.env.GRAPHQL_SERVER_ENDPOINT || '/api/graphql/';
 
 export default (
     { query, variables },
-    API_URL = API.providers[0].endpoint
+    API_URL = graphQLEndpoint
 ) => {
 
     //@todo support custom/multiple providers, currently uses the 0 index provider

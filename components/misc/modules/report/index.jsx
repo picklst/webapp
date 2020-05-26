@@ -1,15 +1,40 @@
 import React, {useState} from 'react';
-import styled from 'styled-components';
-import Button from "../../../ui/Button";
-import TextInput from "../../../forms/TextInput";
+import shortid from 'shortid';
 
-export default ({ slug, username, onComplete }) => {
+import {APIRequest} from "../../../../utils";
+import { Button, TextInput } from "../../../ui";
+
+export default ({ slug, type = 'list', onComplete }) => {
 
     const [reason, setReason] = useState(false);
     const [reasonSelected, setReasonSelected] = useState(false);
 
     const [remark, setRemark] = useState('');
     const [isSubmitted, setSubmitted] = useState(false);
+
+    const reportList = async (variables) => {
+        const query = `
+        mutation report_list($list: ListSelectInput!, $subject: String!, $remarks: String){
+          reportList(list: $list, subject: $subject, remarks: $remarks)
+        }`;
+        return await APIRequest({ query, variables, requireAuth: false }).then((data) => {
+            return { success: true, data };
+        }).catch((errors) => { return { success: false, errors }});
+    };
+
+    const handleSubmit = () => {
+        if(type === "list")
+        {
+            reportList({
+                list: { slug }, subject: reason, remarks: remark,
+            }).then(({ success, data, errors}) => {
+                if(success)
+                {
+                    setSubmitted(true);
+                }
+            });
+        }
+    };
 
     const categories = [
         {
@@ -53,7 +78,7 @@ export default ({ slug, username, onComplete }) => {
         <h5 className="mb-3">What's wrong with this?</h5>
         {
             categories.map(c =>
-                <div className="form-check my-2">
+                <div key={shortid.generate()} className="form-check my-2">
                     <input
                         className="form-check-input"
                         type="radio"
@@ -68,18 +93,21 @@ export default ({ slug, username, onComplete }) => {
                         htmlFor={`report_cat_${c.value}`}
                     >
                         <div className="font-weight-bold line-height-1 mb-2">{c.label}</div>
-                        <div className="text-secondary small line-height-1">Examples: {c.examples}</div>
+                        {c.examples &&
+                            <div className="text-secondary small line-height-1">Examples: {c.examples}</div>
+                        }
                     </label>
                 </div>
             )
         }
         {
-            reason ?
-                <Button
-                    onClick={() => setReasonSelected(true)}
-                    text="Continue"
-                    className="blue-button mt-2 mb-4"
-                /> : null
+            reason &&
+            <Button
+                onClick={() => setReasonSelected(true)}
+                text="Continue"
+                brandAccent
+                className="mt-2 mb-4"
+            />
         }
     </div>;
 
@@ -98,7 +126,7 @@ export default ({ slug, username, onComplete }) => {
             showLimit
         />
         <Button
-            onClick={() => setSubmitted(true)}
+            onClick={handleSubmit}
             text="Submit Report"
             className="orange-button my-2"
         />

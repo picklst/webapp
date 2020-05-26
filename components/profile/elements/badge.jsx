@@ -1,48 +1,80 @@
 import React from "react";
-import styled from 'styled-components';
+import styled from '@emotion/styled'
 
-import { Name } from "./index";
+import {NameElement} from "../index";
+import formatDistance from "date-fns/formatDistance";
+import format  from 'date-fns/format';
 
+const Avatar = styled.div`
+  width: ${({larger}) => larger ? '2.5rem' : '1.8rem'};
+  height: ${({larger}) => larger ? '2.5rem' : '1.8rem'};
+  background-image: url(${(props) => props.src});
+  background-position: center;
+  background-size: cover;
+  border-radius: ${({rounded}) => rounded ? '100vw' : '0.15rem'};
+`;
 
-const BadgeWrap = styled.a`
-  padding: ${(props) => props.paddingY} ${(props) => props.paddingX};
-  color: inherit;
-  border-radius: ${(props) => props.borderRadius};
-  background-color: #ECEFF1;
-  &:hover, &:focus {
-    background-color: #CFD8DC;
-    text-decoration: none;
-    color: inherit;
+const TextWrapper = styled.div`
+  display: inline-block;
+  font-size: 0.9rem;
+  line-height: 1.25;
+  .text-secondary {
+    font-size: 95%;
+    display: inline-block;
+    padding: 0 0.15rem;
   }
 `;
 
-const NameContainer = styled.div`font-size: 0.9rem; font-weight: bold;`;
-const UsernameContainer = styled.div`font-size: 0.75rem; margin-top: 0.25rem`;
+const UserBadge = ({
+   firstName, lastName, username,  avatarURL, timestamp,
+   suffixText, prefixText,
+   hideAvatar, isVerified,
+}) => {
 
-const AvatarImage = styled.div`
-    background-image: url(${(props) => props.src});
-    background-size: cover;
-    border-radius: 100vw;
-    height: ${(props) => props.size};
-    width: ${(props) => props.size};
-`;
+    const getTimestamp = () => {
+        const diff = (new Date() - new Date(timestamp)) / (1000 * 3600 * 24);
+       if(diff < 0.5)
+           return formatDistance(new Date(timestamp), new Date(), { addSuffix: true });
+       if(diff < 1 && new Date().getDate() === new Date(timestamp).getDate())
+           return format(new Date(timestamp), "'today' B");
+       if(diff < 7)
+            return format(new Date(timestamp), "EEE',' do 'at' h:mm aaa");
+       else
+            return format(new Date(timestamp), "LLL d 'at' h:mm aaa");
+    };
 
-const UserBadge = ({ firstName, lastName, username, isVerified, avatarURL, showDetailedView }) => {
-
-    return <BadgeWrap
-        title="Open your profile"
-        borderRadius={showDetailedView ? 0 : "0.5rem"}
-        paddingY={showDetailedView ? "1.5rem" : "0.5rem"}
-        paddingX="0.75rem"
-        href={`/${username}`}
-        className="d-flex align-items-center justify-content-center"
-    >
-        <AvatarImage size={showDetailedView ? '2.5rem' : '2rem'} src={avatarURL ? avatarURL : require('../../../images/assets/placeholders/avatar.webp')} />
-        <div className="pl-2" style={{ width: 'auto', lineHeight: 1.1 }}>
-            <NameContainer><Name firstName={firstName ? firstName : `@${username}`} lastName={showDetailedView ? lastName : null} isVerified={isVerified} /></NameContainer>
-            { showDetailedView && firstName ? <UsernameContainer>@{username}</UsernameContainer> : null }
+    return <a href={`/${username}`} className="plain-link d-flex">
+        { !hideAvatar &&
+            <div className="d-flex align-items-center justify-content-center pr-2">
+            <Avatar
+                rounded={!!suffixText}
+                larger={!!suffixText}
+                src={avatarURL ? avatarURL : require('../../../images/assets/placeholders/avatar.webp')}
+            />
+            </div>
+        }
+        <div className="d-flex align-items-center" style={{ width: 'auto' }}>
+            <div>
+                <TextWrapper>
+                    {prefixText && <span className="text-secondary">{prefixText}</span>}
+                    <NameElement
+                        firstName={firstName}
+                        lastName={lastName}
+                        isVerified={isVerified}
+                    />
+                    {suffixText && <span className="text-secondary">{suffixText}</span> }
+                </TextWrapper>
+                { timestamp &&
+                    <div
+                        title={format(new Date(timestamp), "LLL d 'at' h:mm aaa")}
+                        className="line-height-1 text-secondary small mt-1"
+                    >
+                        {getTimestamp()}
+                    </div>
+                }
+            </div>
         </div>
-    </BadgeWrap>
+    </a>
 };
 
 export default UserBadge;

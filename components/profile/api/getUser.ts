@@ -1,15 +1,10 @@
-import APICall from "../../../utils/APICall.ts";
-
 import { jsonToGraphQLQuery, VariableType } from 'json-to-graphql-query';
 
 interface getUserAPIParams {
-    username: string,
     fields: [string],
-    endpoint: string,
-    requireAuth: boolean,
 }
 
-async function getUserAPI({ fields, username, endpoint, requireAuth}: getUserAPIParams)
+function getUserAPI({ fields}: getUserAPIParams)
 {
     const q = {
         query: {
@@ -55,11 +50,7 @@ async function getUserAPI({ fields, username, endpoint, requireAuth}: getUserAPI
     const ignoreFields = [];
     if(!fields.includes("stats"))
         ignoreFields.push("stats");
-    const query = jsonToGraphQLQuery(q, { pretty: false, ignoreFields }).toString();
-
-    return await APICall({ query, variables: { username }, requireAuth: requireAuth, endpoint}).then((res) =>
-    { return res && res.data ? res.data.user : res; }
-    );
+    return jsonToGraphQLQuery(q, { pretty: false, ignoreFields }).toString();
 }
 
 export default getUserAPI;

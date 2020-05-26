@@ -1,13 +1,16 @@
 import React from 'react';
-import {useGlobalState} from "../../../../actions/states/Auth.ts";
 import Button from "../../../ui/Button";
+import {useAuthState} from "../../../../states";
 
 export default ({ isVerified, onComplete }) => {
 
-    const [myUserData] = useGlobalState('userData');
+    const [myUserData] = useAuthState('userInfo');
 
     return <div className="p-2">
-        <div>Hello {myUserData.firstName} {myUserData.lastName} ({myUserData.username})!</div>
+        {
+            myUserData &&
+            <div>Hello {myUserData.firstName} {myUserData.lastName} ({myUserData.username})!</div>
+        }
         {
             isVerified ?
             <div>
@@ -19,7 +22,6 @@ export default ({ isVerified, onComplete }) => {
                 <p>Please wait while we are verifying your login session.</p>
             </div>
         }
-
     </div>
 
 };

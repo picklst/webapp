@@ -1,22 +1,24 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import PropTypes from 'prop-types';
-import shortid from 'shortid';
 import classNames from 'classnames';
 
 import '../../styles/ui/card.sass';
 
 const Card = ({
     children, className: propClasses, style,
-    hasShadow = true,
-    p = 2, m = 0
+    transparent = false, hasShadow = true,
+    p = 2, m = 0,
+    onClick
 }) => {
 
-    return <div className={classNames(
-            'bg-white',
-            { 'card-shadow': hasShadow },
+    return <div
+        className={classNames(
+            {'bg-white': !transparent},
+            { 'card-shadow': hasShadow && !transparent },
             `p-${p}`, `m-${m}`,
             propClasses
         )}
+        onClick={onClick}
         style={style}
     >
         {children}

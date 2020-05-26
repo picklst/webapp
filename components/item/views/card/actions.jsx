@@ -1,15 +1,14 @@
 import Button from "../../../ui/Button";
 import React, {useState} from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisV } from "@fortawesome/free-solid-svg-icons"
-
 import OptionMenu from "../../../ui/OptionMenu";
+import {DeleteButton} from "../../modules";
+import {ReportModule} from "../../../misc/modules";
 
-
-export default ({ userCanEdit, onEdit }) => {
+export default ({ id, slug, index, totalItems, userCanEdit, onEdit, onDelete }) => {
 
     const [showMenu, setMenu] = useState(false);
+    const [showDelete, setDelete] = useState(false);
 
     const getMenuOptions = () => {
         const options = [];
@@ -18,42 +17,60 @@ export default ({ userCanEdit, onEdit }) => {
         {
             options.push({
                 optionBody: <div className="text-primary font-weight-bold">Edit</div>,
-                label: "Edit List",
+                label: "Edit Item",
                 onClick: () => {
                     setMenu(false);
-                    onEdit()
+                    if(typeof onEdit === "function")
+                        onEdit()
                 }
             });
+            if(totalItems > 1)
+                options.push({
+                    optionBody: <div className="text-danger font-weight-bold">Delete</div>,
+                    label: "Delete Item",
+                    onClick: () => {
+                        setMenu(false);
+                        setDelete(true);
+                    }
+                });
+        } else {
             options.push({
-                optionBody: <div className="text-danger font-weight-bold">Delete</div>,
-                label: "Delete List",
+                optionBody: <div className="text-danger font-weight-bold">Report Inappropriate</div>,
+                label: "Report Item",
+                module: <ReportModule
+                    slug={slug}
+                    onComplete={() => setMenu(false)}
+                />
             });
         }
 
-        options.push({
-            optionBody: <div>Share</div>,
-            label: "Share Item",
-        });
 
-        options.push({
-            optionBody: <div>Copy Link</div>,
-            label: "Copy Link to Item",
-        });
-
-        options.push({
-            optionBody: <div>Embed Link</div>,
-            label: "Embed Item",
-        });
 
         return options;
     };
 
     return <React.Fragment>
         <Button
-            text={<FontAwesomeIcon icon={faEllipsisV} />}
-            className="no-shadow p-0 plain-button"
-            onClick={() => setMenu(true)}
+            text={<i className="gg-more-vertical-alt" />}
+            className="no-shadow p-2 plain-button"
+            onClick={() => setMenu(true) }
         />
+        { showDelete &&
+        <DeleteButton
+            id={id}
+            slug={slug}
+            index={index}
+            skipButton
+            allowSave
+            onCancel={() => setDelete(false)}
+            onDelete={(i) => {
+                setDelete(false);
+                setMenu(false);
+                if(typeof onDelete === "function")
+                    onDelete(i);
+            }}
+        />
+        }
         { showMenu ?
             <OptionMenu
                 title="Item Actions"

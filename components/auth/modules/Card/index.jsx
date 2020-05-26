@@ -1,18 +1,18 @@
 import React, {useEffect, useState} from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled'
+import {motion} from "framer-motion";
 
-import {useGlobalState} from "../../../../actions/states/Auth.ts";
+import { useGlobalState, setUserInfo } from "../../../../actions/states/Auth.ts";
 
-import Card from "../../../ui/Cards";
-
-import { registerAPI, verifyTokenAPI } from "../../api";
 import { AuthForm } from '../../views';
 
 import AlreadyLoggedIn from "./AlreadyLoggedIn";
-import BottomPopup from "../../../ui/BottomPopup";
 
 import { TokenCreate } from "../../../../utils/authMutations.ts";
-import PopUp from "../../../ui/PopUp";
+import {Card, BottomPopup, PopUp } from "../../../ui";
+import { LoginSidebar } from "../../../pages";
+import {APIRequest} from "../../../../utils";
+import {clearAllBodyScrollLocks} from "body-scroll-lock";
 
 const LoginModal = styled.div`
     width: 100vw;
@@ -21,81 +21,87 @@ const LoginModal = styled.div`
     overflow-y: auto;
     position: unset;
     background-color: white;
-    .auth-filler{
-      background: linear-gradient(to right, #7f00ff, #e100ff);
-    }
-    .auth-section {
-      padding: 7.5vh 1.5rem;
-    }
 `;
 
 export default ({
     variant, isSignup, onComplete, onClose,
-    labels,
+    labels, startFocused = true, requireInvite = true,
 }) => {
     const [isLoading, setLoading] = useState(false);
     const [errors, setErrors] = useState(null);
 
-    const [token] = useGlobalState('token');
-    const [hasToken, setHasToken] = useState(!!token);
-    const [isTokenVerified, setTokenVerified] = React.useState(false);
-
-    useEffect(() => {
-        if(hasToken && !isTokenVerified)
-            VerifyToken()
-    });
-
-    const VerifyToken = () => {
-        verifyTokenAPI({ token }).then(r => {
-            if(r.hasOwnProperty('errors'))
-                setHasToken(false);
-            setTokenVerified(true);
-        })
-    };
+    const [userInfo] = useGlobalState('UserInfo');
 
     const handleLogin = ({ email, password }) => {
         setLoading(true);
-        console.log('logging in');
-        TokenCreate({ username: email, password }).then(r => {
+        TokenCreate({ username: email, password }).then((response) => {
             setLoading(false);
-            if(r.hasOwnProperty('errors'))
-                setErrors(r.errors);
-            else
+            if(response.hasOwnProperty('errors'))
+                setErrors(response.errors);
+            else if(typeof onComplete === "function")
+            {
+                setUserInfo({
+                    ...response.user,
+                    "avatarURL": response.user.avatarURL && response.user.avatarURL.split('?')[0],
+                });
+                clearAllBodyScrollLocks();
                 onComplete()
+            }
         });
+    };
+
+    const accountCreate = async (variables) => {
+        const query = `
+        mutation registerUser($email: String!, $password: String!){
+          accountCreate(input: {email: $email, password: $password})
+          {
+            returning
+            {
+              username
+            }
+          }
+        }`;
+        return await APIRequest({ query, variables, requireAuth: false }).then((data) => {
+            return {success: true, data}
+        }).catch((errors) => { return { success: false, errors } })
     };
 
     const handleSignUp = ({ email, password }) => {
         setLoading(true);
-        registerAPI({ email, password }).then(r => {
+        accountCreate({ email, password }).then(({ success, data, errors }) => {
             setLoading(false);
-            if(r.hasOwnProperty('errors'))
-                setErrors(r.errors);
-            else
+            if(success)
+            {
                 handleLogin({ email, password })
+            } else {
+                setErrors(errors);
+            }
         });
     };
 
 
-    const renderAuthComp = hasToken ?
-    <AlreadyLoggedIn isVerified={isTokenVerified} onContinue={onComplete} /> :
-    <AuthForm
-        onSignUp={handleSignUp}
-        onLogin={handleLogin}
-        isLoading={isLoading}
-        errors={errors}
-        isSignup={isSignup}
-        hasErrors={errors!=null}
-    />;
+    const renderAuthComp = (showIllustrations) => userInfo ?
+    <AlreadyLoggedIn isVerified={false} onContinue={onComplete} /> :
+        <AuthForm
+            onSignUp={handleSignUp}
+            onLogin={handleLogin}
+            isLoading={isLoading}
+            errors={errors}
+            isSignup={isSignup}
+            hasErrors={errors!=null}
+            startFocused={startFocused}
+            requireInvite={requireInvite}
+            showIllustrations={showIllustrations}
+        />;
 
     return variant ==="bottom-popup" ?
         <BottomPopup
             className="bg-white"
             onClose={onClose}
-            title={labels && labels.title ? labels.title : hasToken ? "Verifying Session" : "Login Required"}
+            title={labels && labels.title ? labels.title : "Authenticating You"}
         >
             <div className="p-4">
-                {renderAuthComp}
+                {renderAuthComp(false)}
             </div>
         </BottomPopup>
     : variant === "modal"?
@@ -103,19 +109,29 @@ export default ({
             isOpen
             onClose={onClose}
             appElement=".app"
-            className="bg-none"
         >
             <LoginModal>
                 <div className="row m-0">
-                    <div className="auth-filler d-none d-md-block col-md-6 p-0">
-
+                    <div className="d-none d-md-block col-md-6 p-0">
+                        <LoginSidebar/>
                     </div>
                     <div className="auth-section col-12 col-md-6">
-                        {renderAuthComp}
+                        {renderAuthComp(true)}
                     </div>
                 </div>
             </LoginModal>
         </PopUp>
-    : <Card p="2">{renderAuthComp}</Card>
+    : <motion.div
+        initial={{ scale: 0.8, opacity: 0.2 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{
+            type: "spring",
+            stiffness:100,
+            damping: 20
+        }}
+        className="w-100"
+    >
+        <Card p={4} className="w-100">{renderAuthComp(true)}</Card>
+    </motion.div>
 
 };

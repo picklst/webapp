@@ -15,13 +15,16 @@ const TextInput = ({
     highlighters, suggesters,
     errorText, customRegex, disableSpace, charLimit,
     rows, spellCheck, autoComplete, autoCorrect, autoCapitalize,
-    onValidate, onChange,
+    onValidate, onChange, onFocus, onBlur
 }) => {
+
+    const inputID = `${name}-input-${shortid.generate()}`;
 
     const [value, setValue] = useState(val ? val : '');
     const [isTyping, setTyping] = useState(false);
     const [errorState, setErrorState] = useState(false);
     const [showSuggestor, setShowSuggestor] = useState(false);
+
 
     const validateInput = (str) => {
         if(str.length < 1)
@@ -59,11 +62,15 @@ const TextInput = ({
     };
 
     const handleFocus = (e) => {
+        if(typeof onFocus === "function")
+            onFocus();
         setTyping(true);
         setErrorState(false);
     };
 
     const handleBlur = (e) => {
+        if(typeof onBlur === "function")
+            onBlur();
         setTyping(false);
         const val = e.currentTarget.value;
         if(!validateInput(val))
@@ -92,6 +99,7 @@ const TextInput = ({
             }
         }
     };
+
     useEffect(() => {
         handleScroll();
     });
@@ -155,8 +163,10 @@ const TextInput = ({
         return null;
     };
 
-
-    const inputID = `${name}-input-${shortid.generate()}`;
+    // set ID only after mount, to avoid mismatch warnings
+    useEffect(() => {
+        textInput.current.id = inputID || id;
+    }, []);
 
     return <div
         className={classNames(
@@ -170,9 +180,9 @@ const TextInput = ({
                 !hideLabel ?
                     <div className="col-8 p-1">
                         <label
+                            htmlFor={id ? id : inputID}
                             aria-hidden={false}
                             className={value.length > 0 && !errorState ? 'font-weight-bold text-primary small' : 'd-none'}
-                            htmlFor={id ? id : inputID}
                         >
                             {label}
                         </label>
@@ -205,7 +215,6 @@ const TextInput = ({
                     dangerouslySetInnerHTML={{ __html: getBackdropText(value) }}
                 />
                 <textarea
-                    id={id ? id : inputID}
                     ref={textInput}
                     onKeyDown={handleKey}
                     aria-label={label}
@@ -237,7 +246,6 @@ const TextInput = ({
                 ref={textInput}
                 onKeyDown={handleKey}
                 aria-label={label}
-                id={id ? id : inputID}
                 name={name}
                 placeholder={placeholder ? placeholder : label}
                 spellCheck={spellCheck}
@@ -270,7 +278,7 @@ TextInput.propTypes  = {
     label: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
-    type: PropTypes.oneOf(["email", "password", "text", "textarea", "url"]),
+    type: PropTypes.oneOf(["email", "password", "text", "textarea", "search", "url"]),
     value: PropTypes.string,
     charLimit: PropTypes.number,
     disableSpace: PropTypes.bool,

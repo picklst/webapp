@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import shortid from 'shortid';
-import styled from 'styled-components';
+import styled from '@emotion/styled'
 
 import BottomPopup from "./BottomPopup";
+import {clearAllBodyScrollLocks} from "body-scroll-lock";
 
 const ActionOption = styled.button`
     padding: 1rem;
@@ -11,14 +12,11 @@ const ActionOption = styled.button`
     background: none!important;
     display: block;
     border: none;
-    border-bottom: 1px solid rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(0,0,0,0.2);
     width: 100%;
-    &:hover {
-      background-color: #eee!important;
-    }
-    &:focus {
+    &:hover, &:focus {
       outline: none;
-      background-color: #eef!important;
+      background-color: #eee!important;
     }
 `;
 
@@ -31,7 +29,9 @@ const OptionMenu = ({
 }) => {
     const [actionSelected, selectAction] = useState(null);
 
-    const handleClick = (index) => {
+    const handleClick = (e, index) => {
+        e.stopPropagation();
+        clearAllBodyScrollLocks();
         if(options[index] && typeof options[index].onClick === "function")
             options[index].onClick();
         else
@@ -45,12 +45,12 @@ const OptionMenu = ({
         }
     >
     {   actionSelected == null ?
-            options && options.length > 0 ?
+            options && options.length > 0 &&
                 options.map((o, index) =>
-                    <ActionOption key={shortid.generate()} tabIndex={0} onClick={() => handleClick(index)}>
+                    <ActionOption key={shortid.generate()} tabIndex={0} onClick={(e) => o.module || o.onClick ? handleClick(e, index) : null }>
                         {o.optionBody}
                     </ActionOption>
-                ) : null
+                )
         : <ActionWrapper>{ options[actionSelected].module }</ActionWrapper>
     }
     </BottomPopup>

@@ -1,15 +1,4 @@
-import APICall from "../../../utils/APICall.ts";
-
-interface updateProfileAPIParams {
-    username: string,
-    firstName: string,
-    lastName: string,
-    bio: string,
-    url: string,
-}
-
-
-async function updateProfileAPI(params: updateProfileAPIParams)
+async function updateProfileAPI()
 {
     const query = `mutation update_account($profile: UserUpdationInput!)
     {
@@ -18,10 +7,7 @@ async function updateProfileAPI(params: updateProfileAPIParams)
          returning { username }
       }
     }`;
-
-    return await APICall({ query, variables: { profile: params }, requireAuth: true }).then((res) =>
-        { return res && res.data ? res.data.updateProfile : res; }
-    );
+    return query;
 }
 
 export default updateProfileAPI;

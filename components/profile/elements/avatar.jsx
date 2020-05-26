@@ -1,16 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled'
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCamera } from "@fortawesome/free-solid-svg-icons"
-
-import Button from "../../../components/ui/Button";
+import { Button } from "../../../components/ui";
 import ImageUploader from "../../../components/forms/ImageUploader";
 
 const Wrapper = styled.div`
-    position: absolute;
-    width: 25vw;
-    height: 25vw;
+    width:  ${(props) => props.size ? props.size : '25vw' };
+    height: ${(props) => props.size ? props.size : '25vw' };
     max-width: 150px;
     max-height: 150px;
     bottom: 2vh;
@@ -18,7 +14,6 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
     height: 100%;
-    position: relative;
     
     .list-media-uploader {
         bottom: 0.5rem;
@@ -29,31 +24,26 @@ const Container = styled.div`
 `;
 
 const AvatarImage = styled.div`
-    background-image: url(${(props) => props.bg});
+    background-image: url(${(props) => props.bg ? props.bg : require('../../../images/assets/placeholders/avatar.webp')});
     background-size: cover;
-    border-radius: 0.5rem;
+    border-radius: ${(props) => props.rounded ? '100vw' : '0.5rem' };
     height: 100%;
 `;
 
 
-const Avatar = ({ url,  showEditButton, onChange }) => {
+const Avatar = ({ url, size, rounded, className, showEditButton, onChange }) => {
 
-    return <Wrapper>
+    return <Wrapper className={className} size={size}>
         <Container>
-            <AvatarImage bg={url ? url : require('../../../images/assets/placeholders/avatar.webp')} />
-            {
-                showEditButton ?
-                    <ImageUploader
-                        lockAspectRatio
-                        aspect={1}
-                        buttonComponent={
-                            <Button
-                                className="blue-button p-3"
-                                text={<FontAwesomeIcon icon={faCamera} />}
-                            />
-                        }
-                        onComplete={onChange}
-                    /> : null
+            <AvatarImage rounded={rounded} bg={url} />
+            {showEditButton &&
+                <ImageUploader
+                    lockAspectRatio
+                    aspect={1}
+                    className="list-media-uploader"
+                    buttonComponent={<Button className="p-2" text={<i className="gg-image" />}/>}
+                    onComplete={onChange}
+                />
             }
         </Container>
     </Wrapper>;

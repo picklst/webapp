@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import ImageEditor from "../../editors/ImageEditor/imageEditor";
 
-import '../../../styles/list/media-uploader.sass';
+import styled from '@emotion/styled'
 
 function readFile(file) {
     return new Promise(resolve => {
@@ -9,10 +9,24 @@ function readFile(file) {
         reader.addEventListener('load', () => resolve(reader.result), false);
         reader.readAsDataURL(file)
     })
-}
+};
+
+const UploaderButton = styled.div`
+    position: relative;
+    display: inline-block;
+    input
+    {
+        opacity: 0;
+        left: 0;
+        top: 0;
+        width: 100%;
+        position: absolute;
+        height: 100%;
+    }
+`;
 
 const ImageUploader = ({
-   buttonComponent, aspect, lockAspectRatio,
+   className, buttonComponent, aspect, lockAspectRatio,
    onComplete
 }) => {
     const [isSelected, setSelected] = useState(false);
@@ -34,14 +48,14 @@ const ImageUploader = ({
     };
 
     return !isSelected ?
-        <div className="list-media-uploader" tabIndex={0}>
+        <UploaderButton className={className} tabIndex={0}>
             {buttonComponent}
             <input
                 type="file"
                 onChange={handleSelection}
                 accept="image/*,video/*"
             />
-        </div> :
+        </UploaderButton> :
         <ImageEditor
             aspect={aspect}
             lockAspectRatio={lockAspectRatio}

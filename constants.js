@@ -1,11 +1,8 @@
 module.exports = {
     API: {
-        providers: [
-            {
-                key: "localhost",
-                endpoint: '/api/graphql/',
-                token_prefix: 'JWT '
-            }
-        ]
+        providers: {
+            "prefetch": "http://framework:8000/api/graphql",
+            "graphql": '/api/graphql/',
+        }
     },
 };
