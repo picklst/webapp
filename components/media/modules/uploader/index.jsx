@@ -33,7 +33,7 @@ function readFile(file) {
     })
 }
 
-export default ({ onComplete }) => {
+export default ({ onComplete, aspect, lockAspectRatio }) => {
     const [isSelected, setSelected] = useState(false);
     const [image, setImage] = useState(null);
 
@@ -67,7 +67,7 @@ export default ({ onComplete }) => {
             <input
                 type="file"
                 onChange={handleSelection}
-                accept="image/*,video/*"
+                accept="image/*"
                 data-max-size="1024 * 1024 * 10"
             />
         </UploaderButtonWrapper> :
@@ -75,5 +75,7 @@ export default ({ onComplete }) => {
             onComplete={onComplete}
             image={image}
             onClose={setSelected}
+            aspect={aspect}
+            lockAspectRatio={lockAspectRatio}
         />
 };

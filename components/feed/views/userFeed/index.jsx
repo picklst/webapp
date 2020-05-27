@@ -12,7 +12,7 @@ export default ({ stories }) => {
             stories.map((s) => {
                 if(s['type'] === "user_create_list")
                     return <CreatedListCard key={shortid.generate()} story={s} />;
-                else if(s['type'] === "user_contribute_item")
+                if(s['type'] === "user_contribute_item")
                     return <ContributedItemCard key={shortid.generate()} story={s} />;
                 return null;
             }) : null

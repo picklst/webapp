@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import shortid from "shortid";
 import styled from '@emotion/styled';
 import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 
@@ -47,7 +48,7 @@ export default ({
                     >
                         {items.map((data,i) =>
                             <Draggable
-                                key={data.id}
+                                key={data.id || shortid.generate()}
                                 draggableId={data.id}
                                 index={i}
                             >
@@ -59,7 +60,7 @@ export default ({
                                         {...draggableProvided.dragHandleProps}
                                     >
                                         <ItemCard
-                                            key={data.id}
+                                            key={data.id || shortid.generate()}
 
                                             index={i}
                                             totalItems={items.length}

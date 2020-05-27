@@ -45,7 +45,7 @@ export default ({ id, votes }) => {
 
     return <Container className="rounded-bottom">
         <div>
-            {(votes.upVotes.count > 0 || votes.downVotes.count > 0) &&
+            {(votes && (votes.upVotes.count > 0 || votes.downVotes.count > 0)) &&
                 <div className="small ml-2 mb-2">
                     {votes.upVotes.count > 0 && `${votes.upVotes.count} Upvote${votes.upVotes.count > 1 ? 's' : ''}`}
                     {votes.upVotes.count > 0 && votes.downVotes.count > 0 && `•`}
@@ -53,7 +53,7 @@ export default ({ id, votes }) => {
                 </div>
             }
             <ActionsContainer>
-                <VoteButtons value={votes.userVote} id={id} />
+                <VoteButtons value={votes && votes.userVote} id={id} />
                 {/*<ActionButton text={<ActionWrap><i className="gg-comment" /></ActionWrap>}/>*/}
                 {/*<ActionButton text={<ActionWrap><i className="gg-play-list-add" /></ActionWrap>}/>*/}
             </ActionsContainer>

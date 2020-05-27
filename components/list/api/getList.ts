@@ -12,7 +12,7 @@ function getListAPI({ fields= [], args= [] }: getListsAPIParams)
             __variables: {
                 slug: 'String!',
                 username: 'String!',
-                itemCount: args.includes("itemCount") ? 'Int' : 'Int = 10',
+                itemCount: args.includes("itemCount") ? 'Int' : 'Int = 20',
                 itemStarting: args.includes("itemStarting") ? 'String' : 'String = "-1"'
             },
             list: {

@@ -36,6 +36,7 @@ const ListPage = ({ slug, username, name: propName, isEditing }) => {
 
     const renderListingPage = propName !== null &&
     <List
+        name={name}
         title={generateTitle()}
         description={generateDescription()}
         isEditing={isEditing}

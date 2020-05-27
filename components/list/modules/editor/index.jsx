@@ -54,11 +54,10 @@ export default ({ onExit }) => {
 
     const handlePublish = async () => {
         setSaving(true);
-
         items.forEach((i, index) => {
-            i.position = index + 1;
+            items[index].position = index + 1;
             if(i.media && i.media.id)
-                i.mediaID = i.media.id;
+                items[index].mediaID = i.media.id;
             if(i.poll && i.poll.options && i.poll.options.length > 1)
             {
                 const poll = {};
@@ -71,11 +70,11 @@ export default ({ onExit }) => {
                 if(i.poll.answer !== null)
                     poll['answerID'] = i.poll.answer;
                 poll['options'] = options;
-                i['poll'] = poll;
+                items[index]['poll'] = poll;
             }
-            delete i.media;
-            delete i.id;
-            delete i.key;
+            delete items[index].media;
+            delete items[index].id;
+            delete items[index].key;
         });
 
         const variables = {
@@ -85,7 +84,7 @@ export default ({ onExit }) => {
                 description: data.comment,
                 tags: data.tags,
                 properties: data.properties,
-                items: items
+                items: [...items]
             }
         };
         if(data.topic)
@@ -134,6 +133,8 @@ export default ({ onExit }) => {
 
 
     const renderEditor = () =>
+    response ?
+        <PublishedWindow username={response.curator.username} slug={response.slug} onClose={onExit} /> :
     <EditorContainer
         labels={{
             "topbarTitle": "Creating a List",
@@ -143,7 +144,6 @@ export default ({ onExit }) => {
         header={
             <Card className="bg-white py-2 mb-2">
                 { isSaving ? <PublishingWindow /> : null}
-                { response ? <PublishedWindow username={response.curator.username} slug={response.slug} onClose={onExit} /> : null }
                 <PropertiesEditor
                     name={data.name}
                     properties={data.properties}

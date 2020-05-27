@@ -49,7 +49,6 @@ export default ({ username, slug, title, description, onClose }) => {
                     className="w-100"
                     link={`/${username}/${slug}`}
                 />
-
                 <div className="p-2 mt-4">
                     <h6>Share this list with your friends</h6>
                     <ShareCard

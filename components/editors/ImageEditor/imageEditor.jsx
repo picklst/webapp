@@ -2,16 +2,19 @@ import React, {useState} from 'react';
 import shortid from 'shortid';
 import classNames from 'classnames';
 import Cropper from 'react-easy-crop'
+import { useBeforeunload } from 'react-beforeunload';
+import {clearAllBodyScrollLocks} from "body-scroll-lock";
+
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes, faUndo, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faUndo, faCheck } from "@fortawesome/free-solid-svg-icons";
 
 import PopUp from "../../ui/PopUp";
 import Button from "../../ui/Button";
 import getCroppedImg from "./cropImage";
 
 import '../../../styles/list/media-uploader.sass';
-import {clearAllBodyScrollLocks} from "body-scroll-lock";
+
 
 const AdjustmentButton = ({ text, isSelected, onClick, }) => {
     return <button
@@ -30,6 +33,8 @@ const ImageEditor = ({ image, aspect:as = 4/3, lockAspectRatio, onClose, onCompl
     const [rotation, onRotationChange] = useState(0);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
 
+    useBeforeunload(event => event.preventDefault());
+
     const onCropComplete = (croppedArea, croppedAreaPixels) => {
         setCroppedAreaPixels(croppedAreaPixels);
     };
@@ -47,35 +52,29 @@ const ImageEditor = ({ image, aspect:as = 4/3, lockAspectRatio, onClose, onCompl
 
     return  <PopUp
         isOpen={true}
-        className="media-editor-card"
+        className="media-editor-card bg-dark"
         label="Media Uploader"
         appElement=".app"
-        showTopbarOnMobile={false}
+        showTopbar
+        onClose={handleClose}
+        topbarClassName="bg-dark text-light"
+        closeButtonClassName="text-light"
+        button={
+            <Button
+                text={<FontAwesomeIcon icon={faCheck} size="lg" />}
+                className="plain-button text-white no-shadow"
+                onClick={handleSubmission}
+            />
+        }
     >
         <div
-            className="bg-dark"
+            className="bg-dark position-relative"
             style={{
                 width: '100vw',
                 minHeight: '600px',
                 maxWidth: '720px',
             }}
         >
-            <div className="row mx-0">
-                <div className="col-6 p-2">
-                    <Button
-                        text={<FontAwesomeIcon icon={faTimes} size="lg" />}
-                        className="plain-button text-white no-shadow"
-                        onClick={handleClose}
-                    />
-                </div>
-                <div className="col-6 p-2 text-right">
-                    <Button
-                        text={<FontAwesomeIcon icon={faCheck} size="lg" />}
-                        className="plain-button text-white no-shadow"
-                        onClick={handleSubmission}
-                    />
-                </div>
-            </div>
             <div>
                 <div className="crop-container">
                     <Cropper

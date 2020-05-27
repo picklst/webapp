@@ -78,7 +78,7 @@ export default ({ }) => {
             dropDownClassName="mt-2 shadow-lg rounded"
             onClose={() => setShowResults(false)}
             isOpen={query.length>0 && showResults}
-            dropdownComponent={!isMobile() && results && <ResultViewer hideTypeSelector results={results} />}
+            dropdownComponent={!isMobile() && results && <ResultViewer isDropdown hideTypeSelector results={results} />}
         />
     </div>;
 

@@ -62,7 +62,7 @@ export default ({ value, onSelect }) => {
             if(success) {
                 onSelect({
                     slug: val,
-                    name: data.name
+                    name: data.topicCreate.returning.name
                 });
             }
         })

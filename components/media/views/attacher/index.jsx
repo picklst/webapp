@@ -33,7 +33,7 @@ function readFile(file) {
     })
 }
 
-export default ({ onClose, onComplete }) => {
+export default ({ onClose, onComplete, lockAspectRatio, aspect }) => {
     const [isSelected, setSelected] = useState(false);
     const [image, setImage] = useState(null);
 
@@ -68,7 +68,6 @@ export default ({ onClose, onComplete }) => {
         }
     };
 
-
     return !isSelected ?
         <UploaderButtonWrapper>
             <AttachmentTypeButton
@@ -93,5 +92,8 @@ export default ({ onClose, onComplete }) => {
             onComplete={onComplete}
             image={image}
             onClose={onClose}
+            aspect={aspect}
+            lockAspectRatio={lockAspectRatio}
         />
+
 };

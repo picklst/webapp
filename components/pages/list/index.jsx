@@ -1,8 +1,7 @@
 import React, {useState} from "react";
-import shortid from "shortid";
 import styled from '@emotion/styled';
 
-import {Footer, Header, ShareCard, Topbar} from "../../commons";
+import {Header, ShareCard, Topbar} from "../../commons";
 import {ListViewer} from "../../list";
 import Base from "../../core/Base";
 
@@ -22,13 +21,15 @@ const TopbarIconsWrapper = styled.div`
   i {
     --ggs: 1.3
   }
-`
+`;
 
-export default ({ title, description, slug, username, isEditing }) => {
+export default ({ title, description, name, slug, username, isEditing }) => {
 
     const [hideDistractions, setHideDistractions] = usePreferenceState('hideDistractions');
 
     const [showShareCard, setShowShareCard] = useState(false);
+
+    const getShareTitle = () => `Checkout this list, ${name} by ${username} on Picklst - `;
 
     const renderSidebar =
     <SidebarContainer>
@@ -69,7 +70,10 @@ export default ({ title, description, slug, username, isEditing }) => {
                             title="Share this list"
                             children={
                                 <div className="p-2 my-2">
-                                    <ShareCard title={title} url={`https://picklst.com/${username}/${slug}`} />
+                                    <ShareCard
+                                        title={getShareTitle()}
+                                        url={`https://picklst.com/${username}/${slug}`}
+                                    />
                                 </div>
                             }
                             onClose={() => setShowShareCard(false)}

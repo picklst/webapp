@@ -10,7 +10,6 @@ const UpdateCard = styled(Card)`
   border-radius: 0.5rem;
 `;
 
-
 export default ({ story }) => {
 
     return <UpdateCard hasShadow={false} p={0}>

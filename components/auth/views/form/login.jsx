@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
-import styled from '@emotion/styled'
-
-import { Button } from "../../../ui";
-import TextInput from "../../../forms/TextInput";
+import styled from '@emotion/styled';
 import shortid from "shortid";
+
+import { Button, TextInput } from "../../../ui";
 
 
 const LoginFormWrap = styled.div`

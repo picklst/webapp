@@ -48,7 +48,7 @@ send a mail to build@picklst.com and let's team up!
             <meta name="description" content={meta && meta.description ? meta.description : seoTags.description} />
             <meta name="twitter:title" content={title} />
             <meta name="og:title" property="og:title" content={title} />
-            <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1, user-scalable=no" />
+            <meta name="viewport" content="width=device-width, minimum-scale=1, shrink-to-fit=no, initial-scale=1, user-scalable=no" />
             <link rel="manifest" href="/manifest.json" />
             <link href='/images/icons/icon-32x32.png' rel='icon' type='image/png' sizes='16x16' />
             <link href='/images/icons/icon-32x32.png' rel='icon' type='image/png' sizes='32x32' />

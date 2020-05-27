@@ -63,7 +63,7 @@ const ListViewer = ({ username, slug, isEditing: isEditingProps }) => {
             ],
             args: [ "itemCount" ]
         });
-        const variables = { slug, username, itemCount: 5 };
+        const variables = { slug, username, itemCount:20 };
         const requireAuth = !(userInfo === null);
         APIRequest({ query, variables, requireAuth }).then(res => {
             if (!Object.prototype.hasOwnProperty.call(res, 'errors')) {

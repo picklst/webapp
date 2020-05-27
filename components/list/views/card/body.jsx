@@ -1,5 +1,7 @@
 import React from 'react';
 import formatDistance from 'date-fns/formatDistance'
+import parseISO from "date-fns/parseISO";
+
 import styled from '@emotion/styled';
 
 import {Button} from "../../../ui";
@@ -50,7 +52,7 @@ export default ({
 
             return <React.Fragment>
                 {isEdited && 'edited '}
-                {formatDistance(new Date(timestamp), new Date(), { addSuffix: true })}
+                {formatDistance(parseISO(timestamp), new Date(), { addSuffix: true })}
             </React.Fragment>;
         }
         return null;

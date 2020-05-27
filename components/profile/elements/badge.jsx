@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import {NameElement} from "../index";
 import formatDistance from "date-fns/formatDistance";
 import format  from 'date-fns/format';
+import parseISO from 'date-fns/parseISO'
 
 const Avatar = styled.div`
   width: ${({larger}) => larger ? '2.5rem' : '1.8rem'};
@@ -32,15 +33,15 @@ const UserBadge = ({
 }) => {
 
     const getTimestamp = () => {
-        const diff = (new Date() - new Date(timestamp)) / (1000 * 3600 * 24);
+        const diff = (new Date() - parseISO(timestamp)) / (1000 * 3600 * 24);
        if(diff < 0.5)
-           return formatDistance(new Date(timestamp), new Date(), { addSuffix: true });
-       if(diff < 1 && new Date().getDate() === new Date(timestamp).getDate())
-           return format(new Date(timestamp), "'today' B");
+           return formatDistance(parseISO(timestamp), new Date(), { addSuffix: true });
+       if(diff < 1 && new Date().getDate() === parseISO(timestamp).getDate())
+           return format(parseISO(timestamp), "'today' B");
        if(diff < 7)
-            return format(new Date(timestamp), "EEE',' do 'at' h:mm aaa");
+            return format(parseISO(timestamp), "EEE',' do 'at' h:mm aaa");
        else
-            return format(new Date(timestamp), "LLL d 'at' h:mm aaa");
+            return format(parseISO(timestamp), "LLL d 'at' h:mm aaa");
     };
 
     return <a href={`/${username}`} className="plain-link d-flex">
@@ -66,7 +67,7 @@ const UserBadge = ({
                 </TextWrapper>
                 { timestamp &&
                     <div
-                        title={format(new Date(timestamp), "LLL d 'at' h:mm aaa")}
+                        title={format(parseISO(timestamp), "LLL d h:mm aaa")}
                         className="line-height-1 text-secondary small mt-1"
                     >
                         {getTimestamp()}

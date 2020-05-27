@@ -21,7 +21,12 @@ const TypeSelectorContainer = styled.div`
     }
 `;
 
-export default ({ results, hideTypeSelector }) => {
+const ResultsContainer = styled.div`
+  max-height: ${({isDropdown}) => isDropdown ? `400px` : `100vh` };
+  overflow-y: auto;
+`;
+
+export default ({ results, hideTypeSelector, isDropdown }) => {
     const [type, setType] = useState('top');
     const [normalizedResults, setNormalizedResult] = useState(false);
 
@@ -56,7 +61,7 @@ export default ({ results, hideTypeSelector }) => {
     const typeSelectorButton = (name, value) =>
     <Button className={type===value ? "active-type" : null} text={name} onClick={() => setType(value)} />;
 
-    return <div>
+    return <ResultsContainer isDropdown={isDropdown}>
         {
            !hideTypeSelector &&
            <TypeSelectorContainer>
@@ -82,5 +87,5 @@ export default ({ results, hideTypeSelector }) => {
                             renderTopResults()
             }
         </div>
-    </div>
+    </ResultsContainer>
 };

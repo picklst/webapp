@@ -144,14 +144,18 @@ export default ({
         isEditing={!isCoverSet}
         onRequestEdit={() => setCoverSet(false)}
         editor={
+            (cover && cover.url && !cover.delete) ?
             <MediaPreview
                 type={cover.type}
                 url={!cover.delete && cover.url}
                 showDeleteButton={!cover.delete}
                 onDelete={handleMediaDelete}
-            />
+            /> : cover.delete ?
+                <div>Cover Deleted. Save to apply.</div>
+            : null
         }
         previewer={
+            (cover && cover.url && !cover.delete) &&
             <div className="py-2">
                 <MediaPreview type={cover.type} url={cover.url} />
             </div>
@@ -191,7 +195,7 @@ export default ({
                     },
                     {
                         "isActive": !cover,
-                        "customButton": <MediaUploaderModule onComplete={setCover} />
+                        "customButton": <MediaUploaderModule lockAspectRatio aspect={16/9} onComplete={setCover} />
                     },
                 ]}
             /> : null

@@ -12,7 +12,8 @@ export default ({ }) => {
                 <UserSettingsPane />
             </div>
             <div className="my-4 text-center p-2">
-                Picklst Beta.
+                <div>Picklst is in Beta.</div>
+                <span className="small">Only Limited Settings & Features Work Now.</span>
             </div>
         </div>
     </Base>

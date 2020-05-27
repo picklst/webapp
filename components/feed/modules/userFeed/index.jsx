@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import { toast } from 'react-toastify';
 
 import {fetchUserFeedAPI} from "../../api";
 import {APIRequest} from "../../../../utils";
@@ -30,7 +31,7 @@ export default ({ }) => {
                 fields.push('user_contributeItem');
             const query = fetchUserFeedAPI({fields});
             const variables = {
-                count: 1,
+                count: 5,
                 createListAfterCursor: cursors['createListAfterCursor'],
                 contributeItemAfterCursor: cursors['contributeItemAfterCursor']
             };
@@ -38,7 +39,13 @@ export default ({ }) => {
                 if(data && data.feed)
                     generateFeedStories(data.feed);
             }).catch((errors) => {
-
+                toast.error(
+                    "Failed to load your feed. Try reloading this page.",
+                    {
+                        autoClose: 1000, hideProgressBar: true, closeButton: false,
+                        position: toast.POSITION.BOTTOM_CENTER,
+                    }
+                );
             });
         }
     };
@@ -100,21 +107,46 @@ export default ({ }) => {
     }
     {   canLoadMore() && <div style={{ height: '40vmax' }}  />}
     {   canLoadMore() &&
-        <Waypoint onEnter={fetchFeed} onLeave={fetchFeed} threshold={1.5}><div style={{ height: '10vh' }}  /></Waypoint>
+        <Waypoint
+            onEnter={fetchFeed}
+            onLeave={fetchFeed}
+            topOffset='50px'
+            bottomOffset='-200px'
+        >
+            <div style={{ height: '10vh' }}  />
+        </Waypoint>
     }
     {   !canLoadMore()  ?
         <div className="my-2 d-flex align-items-center justify-content-center p-2">
             <div className="text-center my-4 p-2">
-                <img
-                    src={require('../../../../images/assets/illustrations/cheers.png')}
-                    className="w-100 p-3"
-                    alt="all caught up"
-                    style={{ maxWidth: "150px" }}
-                />
-                <h5>You're All Caught Up</h5>
-                <p className="small">
-                    You have seen all updates on your feed. Expand your feed by following users and topics.
-                </p>
+                {
+                    stories.length > 0 ?
+                    <React.Fragment>
+                        <img
+                            src={require('../../../../images/assets/illustrations/cheers.png')}
+                            className="w-100 p-3"
+                            alt="all caught up"
+                            style={{ maxWidth: "150px" }}
+                        />
+                        <h5>You're All Caught Up</h5>
+                        <p className="small">
+                            You have seen all updates on your feed. Expand your feed by following more users and topics.
+                        </p>
+                    </React.Fragment> :
+                    <React.Fragment>
+                        <img
+                            src={require('../../../../images/assets/illustrations/come-back-later.png')}
+                            className="w-100 p-3"
+                            alt="all caught up"
+                            style={{ maxWidth: "150px" }}
+                        />
+                        <h5>You have an empty feed.</h5>
+                        <p className="small">
+                            Follow users and topics to get updates from them. For now, you can go to search for finding those.
+                        </p>
+                    </React.Fragment>
+                }
+
             </div>
         </div> :
         <div className="d-flex align-items-center justify-content-center p-4">

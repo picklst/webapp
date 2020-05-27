@@ -25,7 +25,7 @@ export default ({ username }) => {
 
     const [lastCursor, setCursor] = useState(null);
     const handleFetch = (after = lastCursor) => {
-        const variables = { count: 1, query: { username } };
+        const variables = { count: 15, query: { username } };
         if(after)
             variables['after'] = after;
         fetchList(variables).then(({ success, errors, data: d }) => {

@@ -45,7 +45,7 @@ const FeaturedLists = () => {
         fetchFeaturedLists().then(({ success, data, errors}) => {
             if(success)
             {
-                setData(data.featuredLists);
+                setData(data && data.featuredLists);
             }
         });
     };

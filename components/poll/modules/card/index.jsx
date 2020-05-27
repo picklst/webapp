@@ -21,7 +21,7 @@ export default ({
         }
     };
 
-    useEffect(() => getUserVoted(data.userVotedOption), []);
+    useEffect(() => getUserVoted(data && data.userVotedOption), []);
 
     const submitEntry = async (variables) => {
         const query = `

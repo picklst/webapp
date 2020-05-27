@@ -14,7 +14,7 @@ export default ({
     name, comment, url, media,  poll, votes,
     className, viewType,
     showRank, userCanEdit, isVotable, hideOptionMenu,
-    header,
+    header, hideFooter,
     onClick, onEdit, onDelete
 }) => {
 
@@ -73,7 +73,7 @@ export default ({
         <div style={{ height: space }} />
         <div ref={footerRef} className="position-absolute bottom-0 w-100">
             { (viewType !== "grid"  && isVotable) && <ListItemVoteBar slug={slug} itemID={id} />}
-            { viewType !== "grid" && <Footer id={id} votes={votes} />}
+            { (!hideFooter && viewType !== "grid") && <Footer id={id} votes={votes} />}
         </div>
     </Card>
 }

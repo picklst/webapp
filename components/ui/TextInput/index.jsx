@@ -40,9 +40,28 @@ const StyledTextArea = styled.textarea`
     border-radius: 0!important;
     
     ${({ minimal }) => minimal && `
-          border-radius: 0;
-          border: none;
-          border-bottom: 1.2px solid;
+          border-radius: 0!important;
+          border: none!important;
+          border-bottom: 1.2px solid!important;
+          &:focus {
+            outline: none!important;
+            box-shadow: none!important;
+          }
+    `}
+`;
+
+const StyledTextInput = styled.input`
+    position: relative!important;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background: none!important;
+    border-radius: 0!important;
+    
+    ${({ minimal }) => minimal && `
+          border-radius: 0!important;
+          border: none!important;
+          border-bottom: 1.2px solid!important;
           &:focus {
             outline: none!important;
             box-shadow: none!important;
@@ -187,8 +206,8 @@ const TextInput = ({
         ref: textInput,
         "aria-label": label,
         "aria-required":  isRequired,
-        value,
-        placeholder,
+        value: value,
+        placeholder: placeholder || label,
         isDisabled,
         spellCheck,
         autoComplete,
@@ -214,7 +233,7 @@ const TextInput = ({
             {...props}
         />
     </div> :
-    <input
+    <StyledTextInput
         name={name}
         type={type}
         className={classNames(

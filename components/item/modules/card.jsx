@@ -91,12 +91,12 @@ export default ({
         userCanEdit={userCanEdit}
         viewType={viewType}
         showRank={showRank}
-        isEditing={isEditing}
         isVotable={isVotable}
         hideOptionMenu={hideOptionMenu}
         onClick={onClick}
         onEdit={handleEdit}
         onDelete={onDelete}
+        hideFooter={!allowSave || showEditButton}
         header={
             !allowSave || showEditButton ?
             <React.Fragment>

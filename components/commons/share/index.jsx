@@ -11,11 +11,11 @@ import LinkedInButton from './linkedin';
 import SnapchatButton from './snapchat';
 
 const ShareButtons = styled.div`
-    button {
+    a {
       box-shadow: none!important;
       margin: 0 0.25rem;
       img {
-        max-width: 36px;
+        max-width: 36px!important;
       }
     }
 `;

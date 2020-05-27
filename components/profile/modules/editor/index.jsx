@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import { useBeforeunload } from 'react-beforeunload';
 
 import { getUserAPI } from "../../api"
 
@@ -12,6 +13,8 @@ import {useAuthState} from "../../../../states";
 export default ({ usePopup, onComplete, onExit, }) => {
     const [data, setData] = useState(null);
     const [myUserData, setUserInfo] = useAuthState('userInfo');
+
+   useBeforeunload(event => event.preventDefault());
 
     useEffect(() => {
         if(myUserData && myUserData.username.length > 0) {
@@ -60,10 +63,18 @@ export default ({ usePopup, onComplete, onExit, }) => {
         {
           accountUpdate(input: $profile)
           {
-             returning { username }
+             returning { 
+                username 
+                firstName
+                lastName
+                avatarURL
+                coverURL
+                
+             }
           }
         }`;
         return await APIRequest({ query, variables, requireAuth: true}).then((data) => {
+            console.log(data);
             return { success: true, data }
         }).catch((errors) => {
             return { success: false, errors}
@@ -75,17 +86,19 @@ export default ({ usePopup, onComplete, onExit, }) => {
         setSaving(true);
         await uploadProfileMedia(data);
         updateProfile({
-            firstName: data.firstName,
-            lastName: data.lastName,
-            bio: data.bio,
-            url: data.url,
-            username: myUserData.username
+            profile: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                bio: data.bio,
+                url: data.url,
+                username: myUserData.username
+            }
         }).then(({ success, data, errors}) => {
             if(success)
             {
-                setUserInfo(data);
+                setUserInfo(data.accountUpdate.returning);
                 onComplete({
-                    ...data,
+                    ...data.accountUpdate.returning,
                     avatarURL: '',
                     coverURL: ''
                 })
@@ -94,7 +107,7 @@ export default ({ usePopup, onComplete, onExit, }) => {
     };
 
     const renderEditor = () =>
-    isSaving ? <h5>Saving</h5>
+    isSaving ? <h5>Saving Changes</h5>
     : <Editor onChange={setData} {...data} />;
 
     const renderEditorWrapper = () =>
