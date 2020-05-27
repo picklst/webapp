@@ -2,11 +2,10 @@ import React, {useState} from 'react';
 import dynamic from "next/dynamic";
 import styled from '@emotion/styled'
 
-import {useGlobalState} from "../../../../actions/states/Auth.ts";
-const ListEditor =  dynamic(import("../../../list"));
 const ListRequester = dynamic(() => import("../../index").then(mod => mod.ListRequester));
 
 import Button from "../../../ui/Button";
+import {useAuthState} from "../../../../states";
 
 const EmptyCover = styled.div`
   background-image: ${(props) => props.bg && `url("${props.bg}")`};
@@ -43,7 +42,7 @@ const Content = styled.div`
 
 export default ({ username }) => {
     const [isOpen, setOpen] = useState(false);
-    const [myUserData] = useGlobalState('UserInfo');
+    const [myUserData] = useAuthState('userInfo');
 
     const isOwnFeed = myUserData && username === myUserData.username;
 
@@ -55,14 +54,7 @@ export default ({ username }) => {
                         <span>Looks like you don't have any lists published...</span>
                         Create your first list now!
                     </p>
-                    <Button
-                        brandAccent
-                        className="ml-2 mt-4 rounded"
-                        text={<div>Make A List</div>}
-                        onClick={() => setOpen(true)}
-                    />
                 </Content>
-                { isOpen && <ListEditor isNew  onExit={() => setOpen(false)} /> }
             </Wrapper>
         </EmptyCover> :
         <EmptyCover bg={require('../../../../images/illustrations/covers/404.png')}>

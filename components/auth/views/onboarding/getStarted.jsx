@@ -41,12 +41,12 @@ export default ({ }) => {
             Picklst let's you discover, create & share lists with your friends.
         </OnboardingCardText>
         <div className="p-2">
-            <Button
-                brandAccent
-                text="Make a List"
-                className="mb-2 mx-0 w-100"
-                onClick={() => { router.push(`/new`) }}
-            />
+            {/*<Button*/}
+            {/*    brandAccent*/}
+            {/*    text="Make a List"*/}
+            {/*    className="mb-2 mx-0 w-100"*/}
+            {/*    onClick={() => { router.push(`/new`) }}*/}
+            {/*/>*/}
             <Button
                 text="View Your Profile"
                 className="w-100 mx-0"
