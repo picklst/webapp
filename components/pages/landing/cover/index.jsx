@@ -73,7 +73,7 @@ export default ({}) => {
                     { loginModal ?
                         <AuthCard
                             isSignup
-                            onComplete={() => console.log('logged in')}
+                            onComplete={() => showLoginModal(false)}
                             onClose={() => showLoginModal(false)}
                             variant="modal"
                             startFocused={false}

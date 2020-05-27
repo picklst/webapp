@@ -52,31 +52,28 @@ const FeaturedLists = () => {
 
     useEffect(handleFetch, []);
 
-    return <DiscoveryContainer>
+    return data && data.length > 0 ?
+    <DiscoveryContainer>
         <div className="container-lg p-0">
             <h3>🤩 Featured Lists</h3>
-            {
-                data && data.length > 0 ?
-                    <div className="row m-0">
-                        {
-                            data.map(({ list }) =>
-                                <div className="col-md-6 col-lg-4 p-2">
-                                    <ListCard
-                                        name={list.name}
-                                        slug={list.slug}
-                                        curator={list.curator}
-                                        topic={list.topic}
-                                        coverURL={list.coverURL}
-                                        compact
-                                    />
-                                </div>
-                            )
-                        }
-                    </div>
-                    : null
-            }
+                <div className="row m-0">
+                    {
+                        data.map(({ list }) =>
+                            <div className="col-md-6 col-lg-4 p-2">
+                                <ListCard
+                                    name={list.name}
+                                    slug={list.slug}
+                                    curator={list.curator}
+                                    topic={list.topic}
+                                    coverURL={list.coverURL}
+                                    compact
+                                />
+                            </div>
+                        )
+                    }
+                </div>
         </div>
-    </DiscoveryContainer>
+    </DiscoveryContainer> : null
 };
 
 export default FeaturedLists;

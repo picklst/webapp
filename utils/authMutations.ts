@@ -2,7 +2,7 @@ import Cookies from 'universal-cookie';
 import fromUnixTime from 'date-fns/fromUnixTime'
 
 import { GraphQLFetch } from "./fetch.ts";
-import { setUserInfo } from "../actions/states/Auth.ts";
+import { setUserInfo } from "../states";
 
 const cookies = new Cookies();
 
@@ -45,8 +45,9 @@ export async function TokenCreate({
     const variables = { username, password };
     return await GraphQLFetch({ query, variables, endpoint }).then((response) => {
         if(response.hasOwnProperty('errors')) {
-            throw Error("CREATING_TOKEN_FAILED");
+            throw response;
         } else {
+            setUserInfo(response.data.tokenCreate.user);
             setCookies(response.data.tokenCreate);
             return response.data.tokenCreate;
         }
@@ -91,7 +92,6 @@ export async function TokenDelete({ endpoint = graphQLEndpoint }) {
     if(response.hasOwnProperty('errors'))
         throw Error("DELETING_TOKEN_FAILED");
     else {
-
         setUserInfo(null);
         return response.data.deleteTokenCookie;
     }

@@ -1,13 +1,15 @@
 import React from 'react';
-import { useGlobalState } from '../actions/states/Auth.ts';
 import {Landing, UserDashboard} from "../components/pages";
+import {useAuthState} from "../states";
 
 
 const IndexPage = () => {
-    const [data] = useGlobalState('UserInfo');
+    const [data, setData] = useAuthState('userInfo');
     const isLoggedIn = !!data;
 
-    return isLoggedIn ? <UserDashboard /> :  <Landing />;
+    console.log(isLoggedIn);
+
+    return isLoggedIn ? <UserDashboard /> : <Landing />;
 };
 
 export default IndexPage;

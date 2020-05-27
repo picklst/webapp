@@ -257,8 +257,8 @@ export default () => {
                 onExit={() => { Router.back() }}
                 panes={menu}
             /> :
-            <div className="text-center">
-                <h3>You need to be logged-in to view this page.</h3>
+            <div className="min-vh-100 align-items-center d-flex justify-content-center text-center">
+                <h4 className="mb-2">You need to be logged-in to view this page.</h4>
             </div>
         }
     </div>

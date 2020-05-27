@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef} from "react";
 import { useMediaQuery } from 'react-responsive';
 import styled from '@emotion/styled';
 

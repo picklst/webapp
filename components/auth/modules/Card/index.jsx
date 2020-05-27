@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react';
 import styled from '@emotion/styled'
 import {motion} from "framer-motion";
 
-import { useGlobalState, setUserInfo } from "../../../../actions/states/Auth.ts";
-
+import {useAuthState, setUserInfo } from "../../../../states";
 import { AuthForm } from '../../views';
 
 import AlreadyLoggedIn from "./AlreadyLoggedIn";
@@ -21,6 +20,7 @@ const LoginModal = styled.div`
     overflow-y: auto;
     position: unset;
     background-color: white;
+    padding-bottom: 5vh;
 `;
 
 export default ({
@@ -30,15 +30,13 @@ export default ({
     const [isLoading, setLoading] = useState(false);
     const [errors, setErrors] = useState(null);
 
-    const [userInfo] = useGlobalState('UserInfo');
+    const [userInfo] = useAuthState('userInfo');
 
     const handleLogin = ({ email, password }) => {
         setLoading(true);
         TokenCreate({ username: email, password }).then((response) => {
             setLoading(false);
-            if(response.hasOwnProperty('errors'))
-                setErrors(response.errors);
-            else if(typeof onComplete === "function")
+            if(typeof onComplete === "function")
             {
                 setUserInfo({
                     ...response.user,
@@ -47,6 +45,9 @@ export default ({
                 clearAllBodyScrollLocks();
                 onComplete()
             }
+        }).catch(({ errors }) => {
+            setLoading(false);
+            setErrors(errors);
         });
     };
 
@@ -63,7 +64,7 @@ export default ({
         }`;
         return await APIRequest({ query, variables, requireAuth: false }).then((data) => {
             return {success: true, data}
-        }).catch((errors) => { return { success: false, errors } })
+        }).catch(({errors}) => { return { success: false, errors } })
     };
 
     const handleSignUp = ({ email, password }) => {

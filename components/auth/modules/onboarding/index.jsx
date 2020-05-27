@@ -31,7 +31,7 @@ const StyledPopup = styled(PopUp)`
 export default () => {
     const [myUserData, setUserInfo] = useAuthState('userInfo');
 
-    const showPopup = () => !(myUserData && myUserData.firstName.length >0);
+    const showPopup = () => !(myUserData && myUserData.firstName && myUserData.firstName.length >0 && myUserData.firstName !== myUserData.username);
 
     const [showWelcomePopup, setShowWelcomePopup] = useState(showPopup());
     const [onBoardingStage, setOnBoardingStage] = useState(1);

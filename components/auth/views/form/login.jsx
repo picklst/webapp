@@ -3,6 +3,7 @@ import styled from '@emotion/styled'
 
 import { Button } from "../../../ui";
 import TextInput from "../../../forms/TextInput";
+import shortid from "shortid";
 
 
 const LoginFormWrap = styled.div`
@@ -14,7 +15,7 @@ const LoginFormWrap = styled.div`
   }
 `;
 
-export default ({ onLogin, startFocused, onRequestPasswordReset, showIllustration }) => {
+export default ({ onLogin, startFocused, onRequestPasswordReset, showIllustration, hasErrors, errors }) => {
     const [invalidUsername, setInvalidUsernameState] = useState(false);
     const [invalidPassword, setInvalidPasswordState] = useState(true);
 
@@ -27,14 +28,22 @@ export default ({ onLogin, startFocused, onRequestPasswordReset, showIllustratio
     };
 
     return <LoginFormWrap>
-        <div className="text-center">
+        <div className="text-center mb-2">
             {
-                showIllustration ?
+                !hasErrors && showIllustration ?
                     <img alt="invite-required" src={require('../../../../images/assets/illustrations/sign-in.png')} />
-                : null
+                : <div className="mt-3" />
             }
             <h3>Login to Your Account.</h3>
         </div>
+        {(hasErrors && errors && (errors.length > 1 || errors[0].code !== 'EMAIL_IN_USE')) &&
+            <div className="alert alert-danger p-2 mt-3">
+                {errors && errors.length > 0 ?
+                    errors.map(e => <span key={shortid.generate()}>{e.message}</span>) :
+                    <span>Some unknown error occurred. Please Try Again.</span>
+                }
+            </div>
+        }
         <form
             aria-label="Login Form"
             title="Login Form"

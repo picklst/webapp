@@ -3,8 +3,7 @@ import styled from '@emotion/styled'
 
 import {useInviteState} from "../../../../states";
 
-import TextInput from "../../../forms/TextInput";
-import { Button } from "../../../ui";
+import { TextInput, Button } from "../../../ui";
 
 const InviteFormWrap = styled.div`
   width: 100%;

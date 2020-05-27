@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import classNames from 'classnames';
 import styled from '@emotion/styled'
 
-import {useGlobalState} from "../../../../actions/states/Auth.ts";
+import { useAuthState } from "../../../../states";
 
 import { AuthCard } from "../../../auth";
 import { UserButton } from "../../../profile";
@@ -57,7 +57,7 @@ const CreateListButton = styled(Button)`
 
 const AccountBox = ({ isVertical = false }) => {
 
-    const [UserInfo] = useGlobalState('UserInfo');
+    const [UserInfo] = useAuthState('userInfo');
     const [isLoginCardOpen, toggleLoginCard] = useState(false);
     const [showCreator, setShowCreator] = useState(false);
 

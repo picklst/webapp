@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import TextInput from "../../../forms/TextInput";
-import Button from "../../../ui/Button";
+import { Button, TextInput } from "../../../ui";
 import styled from '@emotion/styled'
+import shortid from "shortid";
 
 
 const SignUpFormWrap = styled.div`
@@ -13,7 +13,7 @@ const SignUpFormWrap = styled.div`
   }
 `;
 
-export default ({ onSignUp, startFocused, inviteCode, showIllustration }) => {
+export default ({  hasErrors, errors, onSignUp, startFocused, inviteCode, showIllustration }) => {
     const [invalidEmail, setInvalidEmailState] = useState(false);
     const [invalidPassword, setInvalidPasswordState] = useState(true);
 
@@ -26,13 +26,22 @@ export default ({ onSignUp, startFocused, inviteCode, showIllustration }) => {
     };
 
     return <SignUpFormWrap>
-        <div className="text-center">
-            {   showIllustration ?
+        <div className="text-center mb-2">
+            {
+                !hasErrors && showIllustration ?
                     <img alt="invite-required" src={require('../../../../images/assets/illustrations/sign-up.png')} />
-                : null
+                : <div className="mt-3" />
             }
             <h2>Create an Account.</h2>
         </div>
+        {(hasErrors && errors && (errors.length > 1 || errors[0].code !== 'EMAIL_IN_USE')) &&
+            <div className="alert alert-danger p-2">
+                {errors && errors.length > 0 ?
+                    errors.map(e => <span key={shortid.generate()}>{e.message}</span>) :
+                    <span>Some unknown error occurred. Please Try Again.</span>
+                }
+            </div>
+        }
         {inviteCode ? <div className="my-2 text-center">Invite Code: <b>{inviteCode}</b></div> : null }
         <form
             onSubmit={handleSignUp}
@@ -51,6 +60,8 @@ export default ({ onSignUp, startFocused, inviteCode, showIllustration }) => {
                 isRequired
                 minimal
                 autoFocus={startFocused}
+                hasErrors={hasErrors}
+                errorText={(hasErrors && errors && errors.length > 0 && errors[0].code === "EMAIL_IN_USE") && errors[0].message}
             />
             <TextInput
                 autoCapitalize="off"

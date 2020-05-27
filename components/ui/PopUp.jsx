@@ -52,23 +52,26 @@ const PopUp = ({
     }, []);
 
     const renderTopbar = () =>
-    <Topbar className="popup-topbar" ref={topbarRef}>
-        <div style={{ width: '45px', maxWidth: '15%' }} className="d-flex align-items-center justify-content-center">
-            <button onClick={handleOnClose} className="plain-button p-2 text-dark">
-                <i className="gg-close" />
-            </button>
-        </div>
-        {title &&
+    <React.Fragment>
+        <Topbar className="popup-topbar" ref={topbarRef}>
+            <div style={{ width: '45px', maxWidth: '15%' }} className="d-flex align-items-center justify-content-center">
+                <button onClick={handleOnClose} className="plain-button p-2 text-dark">
+                    <i className="gg-close" />
+                </button>
+            </div>
+            {title &&
             <div style={{ width: 'auto', minWidth: '85%' }} className="d-flex align-items-center px-2">
                 <b>{ title }</b>
             </div>
-        }
-        {button &&
+            }
+            {button &&
             <div style={{ width: 'auto', minWidth: '85%' }} className="d-flex align-items-center justify-content-end px-2">
                 {button}
             </div>
-        }
-    </Topbar>;
+            }
+        </Topbar>
+        <div style={{ height: space, width: '100%' }} />
+    </React.Fragment>;
 
     return <Modal
         isOpen={isOpen}
@@ -79,7 +82,6 @@ const PopUp = ({
     >
         <div>
             {showTopbar ? renderTopbar() : showTopbarOnMobile && <div className="d-md-none d-flex">{renderTopbar()}</div>}
-            {(showTopbar || showTopbarOnMobile) && <div style={{ height: space, width: '100%' }} />}
             {children}
         </div>
     </Modal>

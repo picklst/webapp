@@ -36,7 +36,13 @@ export default ({
             damping: 15
         }}
     >
-    <LoginForm showIllustration={showIllustrations} onLogin={onLogin} startFocused={startFocused} />
+        <LoginForm
+            showIllustration={showIllustrations}
+            onLogin={onLogin}
+            startFocused={startFocused}
+            hasErrors={hasErrors}
+            errors={errors}
+        />
         <div className="text-center mt-2">
             <hr />
             <p className="mb-2">Do not have an account?</p>
@@ -75,7 +81,14 @@ export default ({
                 onRequestInvite={handleInvite}
                 onRequestStatus={handleInvite}
             /> :
-            <SignUpForm showIllustration={showIllustrations} inviteCode={inviteCode} onSignUp={onSignUp} startFocused={startFocused} />
+            <SignUpForm
+                showIllustration={showIllustrations}
+                inviteCode={inviteCode}
+                onSignUp={onSignUp}
+                startFocused={startFocused}
+                hasErrors={hasErrors}
+                errors={errors}
+            />
         }
         <div className="text-center mt-2">
             <hr />
@@ -103,16 +116,8 @@ export default ({
 
     return isLoading ? renderLoading :
     <div className="mb-5">
-    {   hasErrors ?
-            <div className="alert alert-danger">
-                { errors && errors.length > 0 ?
-                    errors.map(e => <span key={shortid.generate()}>{e.message}</span>) :
-                    <span>Some unknown error occurred. Please Try Again.</span>
-                }
-            </div> : null
-    }
-    {renderLogin(isNewUser)}
-    {renderSignUp(isNewUser)}
+        {renderLogin(isNewUser)}
+        {renderSignUp(isNewUser)}
     </div>
 
 };

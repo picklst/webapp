@@ -1,9 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
+import Link from 'next/link'
+
 import styled from '@emotion/styled'
 import { useMediaQuery } from 'react-responsive';
 
-import {useGlobalState} from "../../../actions/states/Auth.ts";
-import Link from 'next/link'
+import { useAuthState } from "../../../states";
 
 const BottomBarWrapper = styled.div`
     position: ${(props) => props.isKeyboardOpen ? 'static' : 'fixed' };
@@ -56,7 +57,7 @@ export default ({ tab, setTab }) => {
         }
     });
 
-    const [data, setData] = useGlobalState('UserInfo');
+    const [data] = useAuthState('userInfo');
 
     const [space, setSpacing] = useState('8vh');
     const footerBarRef = useRef();
@@ -67,11 +68,13 @@ export default ({ tab, setTab }) => {
 
     const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
+    const getProfileURL = () => data && data.username ? `/${data.username}` : "/login";
+
     return isMobile ?
     <React.Fragment>
         <div style={{ height: space }} />
         <BottomBarWrapper as="footer" ref={footerBarRef} isKeyboardOpen={isKeyboardOpen}>
-            <Link href="/" prefetch>
+            <Link href="/">
                 <a className={tab==='feed' ? 'active' : null}><i className="gg-feed" /></a>
             </Link>
             <Link href="/discover">
@@ -83,7 +86,7 @@ export default ({ tab, setTab }) => {
             <Link href="/notifications">
                 <a className={tab==='notifications' ? 'active' : null}><i className="gg-bell" /></a>
             </Link>
-            <Link href={data && data.username ? `/${data.username}` : "/login" }>
+            <Link href={getProfileURL()}>
                 <a className={tab==='profile' ? 'active' : null}><i className="gg-profile" /></a>
             </Link>
         </BottomBarWrapper>

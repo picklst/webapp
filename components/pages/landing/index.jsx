@@ -20,9 +20,10 @@ const LandingTopbar = styled.div`
 
 
 export default ({ }) => {
+
     const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
-    return <Base meta={{ title: "A Friendlier Way to Discover & Share Lists" }}>
+    return  <Base meta={{ title: "A Friendlier Way to Discover & Share Lists" }}>
         <Header />
         {isMobile &&
             <LandingTopbar as="div">

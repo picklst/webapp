@@ -54,7 +54,7 @@ const StyledTextArea = styled.textarea`
 const TextInput = ({
     id, label, name, placeholder, type, value: val, inputClassName, className,
     isRequired = false, isDisabled = false, showLimit = true, alwaysShowLabel = false, hideLabel = false, minimal = false, autoFocus = false,
-    highlighters, suggesters,
+    hasErrors = false, highlighters, suggesters,
     errorText, customRegex, disableSpace, charLimit,
     rows, spellCheck, autoComplete, autoCorrect, autoCapitalize,
     onValidate, onChange, onFocus, onBlur
@@ -66,7 +66,6 @@ const TextInput = ({
 
     const [isTyping, setTyping] = useState(false);
     const [errorState, setErrorState] = useState(false);
-
 
     const [showSuggestor, setShowSuggestor] = useState(false);
     const [currentSuggestor, setSuggestor] = useState(0);
@@ -221,7 +220,7 @@ const TextInput = ({
         className={classNames(
             inputClassName,
             'd-block form-control',
-            { 'is-invalid' : errorState && (value.length > 0 || isRequired) },
+            { 'is-invalid' : (hasErrors || errorState) && (value.length > 0 || isRequired) },
             { 'minimal': minimal},
         )}
         {...props}
@@ -238,7 +237,7 @@ const TextInput = ({
         </label>
     </div>;
 
-    const renderErrorState = errorState && (value.length > 0 || isRequired) &&
+    const renderErrorState = (hasErrors || errorState) && (value.length > 0 || isRequired) &&
     <div className="small text-danger mb-1">
         {errorText ? errorText : `Please enter a valid ${String(label).toLowerCase()}.`}
     </div>;
