@@ -18,7 +18,7 @@ const TopbarWrapper = styled.div`
 const TopbarSpacer = styled.div`
   width: 100%;
   @media screen and (max-width: 720px){
-            margin-top: 32px;
+    margin-top: 32px;
   }
 `;
 

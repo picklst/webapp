@@ -7,18 +7,18 @@ import shortid from 'shortid';
 import { Card } from '../'
 import { ItemCard } from '../../../item'
 
-import {Button, PopUp} from "../../../ui/";
-import {getListAPI} from "../../api";
-import {APIRequest} from "../../../../utils";
-import {EditorContainer} from "../../views";
+import { Button, PopUp } from "../../../ui/";
+import { getListAPI } from "../../api";
+import { APIRequest } from "../../../../utils";
+import { EditorContainer } from "../../views";
 import ErrorCard from "../../../core/ErrorCard";
 
 import { DeleteButton } from '../'
 
 import Sidebar from './sidebar';
-import {LogListVote, useAuthState} from "../../../../states";
+import { LogListVote, useAuthState } from "../../../../states";
 
-import {ListItemViewer} from '../../views';
+import { ListItemViewer } from '../../views';
 
 const FloatingButton = styled(Button)`
     position: fixed;
@@ -272,6 +272,7 @@ const ListViewer = ({ username, slug, isEditing: isEditingProps }) => {
                 canLoadMore={canLoadMore}
                 onLoadMore={loadMore}
                 sidebar={<Sidebar data={data} />}
+                mobileBar={<Sidebar data={data} isMobile />}
             />
         </div>
     </div>;
@@ -308,7 +309,7 @@ const ListViewer = ({ username, slug, isEditing: isEditingProps }) => {
 
 
     return loadError ?
-        <ErrorCard message="Failed to Load" code="FAILED_TO_LOAD" /> :
+        <ErrorCard message="Failed to Load.  Try refreshing the page." code="FAILED_TO_LOAD" /> :
     data && (isEditing && data.userCanEdit ? renderEditMode() : renderPreview())
 };
 

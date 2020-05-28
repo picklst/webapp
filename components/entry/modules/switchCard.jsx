@@ -5,7 +5,7 @@ import {ActionCard} from "../../ui";
 import {FeatureSwitch} from "../views";
 import {APIRequest} from "../../../utils";
 
-export default ({ isEnabled: isEnabledProp, slug, }) => {
+export default ({ isEnabled: isEnabledProp, slug, isMobile }) => {
 
     const [isEnabled, setEnabled] = useState(isEnabledProp);
 
@@ -46,7 +46,9 @@ export default ({ isEnabled: isEnabledProp, slug, }) => {
     const [isOpen, setOpen] = useState(false);
     useEffect(() => { !isOpen ? clearAllBodyScrollLocks() : null}, [isOpen]);
 
-    return isEnabled ? <ActionCard
+    return isEnabled ?
+    <ActionCard
+        isHorizontal={isMobile}
         labels={{
             title: "Disable Public Entries",
             description: "This list is currently accepting public entries. You can turn off this feature to stop accepting any new entries.",
@@ -65,6 +67,7 @@ export default ({ isEnabled: isEnabledProp, slug, }) => {
         onClose={() => setOpen(false)}
     /> :
     <ActionCard
+        isHorizontal={isMobile}
         cover={require('../../../images/illustrations/covers/brainstorm.png')}
         labels={{
             title: "Accept Public Entries",

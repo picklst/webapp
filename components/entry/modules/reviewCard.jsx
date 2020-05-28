@@ -6,7 +6,7 @@ import {ActionCard} from "../../ui";
 import { Reviewer } from '../views';
 import {clearAllBodyScrollLocks} from "body-scroll-lock";
 
-export default ({ hasEntries, isAccepting, slug }) => {
+export default ({ hasEntries, isAccepting, slug, isMobile }) => {
 
     const [entries, setEntries] = useState([]);
     const [totalCount, setTotalCount] = useState(false);
@@ -138,6 +138,7 @@ export default ({ hasEntries, isAccepting, slug }) => {
 
     return isAccepting ?
     <ActionCard
+        isHorizontal={isMobile}
         labels={{
             title: generateTitle(),
             description: generateDescription(),

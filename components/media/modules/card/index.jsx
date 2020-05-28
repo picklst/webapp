@@ -7,6 +7,12 @@ import {APIPost, APIRequest} from "../../../../utils";
 import {Attacher, Preview} from "../../views";
 import { PopUp } from "../../../ui";
 import {clearAllBodyScrollLocks} from "body-scroll-lock";
+import styled from "@emotion/styled";
+
+const StyledPopup = styled(PopUp)`
+    max-height: 150px!important;
+    max-width: 150px!important;
+`;
 
 export default ({
     media: mediaProps, aspect, lockAspectRatio,
@@ -105,7 +111,7 @@ export default ({
     };
 
     return isUploading ?
-    <PopUp
+    <StyledPopup
         isOpen
         appElement=".app"
         showTopbarOnMobile={false}
@@ -116,18 +122,20 @@ export default ({
                 <div className="d-flex justify-content-center p-2">
                     <i className="gg-spinner" />
                 </div>
-                <h6>Uploading Media</h6>
+                <div className="text-center">
+                    <h6>Uploading Media</h6>
+                </div>
             </div>
         </div>
-    </PopUp> :
+    </StyledPopup> :
     allowEditing && isAttaching ?
     <Attacher
         aspect={aspect}
         lockAspectRatio={lockAspectRatio}
         onClose={onCancel}
         onComplete={handleOnAttach}
-    />
-    : media ?
+    /> :
+    media ?
     <Preview
         onDelete={handleDelete}
         url={media.url}

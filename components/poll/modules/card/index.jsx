@@ -13,6 +13,9 @@ export default ({
     const [userVote, setUserVote] = useState(false);
     const [myUserInfo] = useAuthState('userInfo');
 
+    const [showResults, setShowResults] = useState(false);
+    const [isSubmitting, setSubmitting] = useState(false);
+
     const getUserVoted = (optionID) => {
         if(optionID && !data.hasAnswer)
         {
@@ -73,11 +76,13 @@ export default ({
             if(success) {
                 setResults(data.itemPoll.options);
                 setTotalEntries(data.itemPoll.totalEntries);
+                setShowResults(true);
             }
         })
     };
 
     const handleSelect = (optionID) => {
+        setSubmitting(true);
         if(!data.hasAnswer)
         {
             if(myUserInfo && myUserInfo.username !== null)
@@ -86,6 +91,7 @@ export default ({
                     if(success) {
                         getUserVoted(optionID);
                         getPollResults();
+                        setSubmitting(false);
                     }
                 });
             }
@@ -93,7 +99,8 @@ export default ({
         else
             submitAnswer({ itemID, optionID }).then(({ success, data, errors}) => {
                 if(success) {
-                    setResults(data.itemAnswerSubmit)
+                    setResults(data.itemAnswerSubmit);
+                    setSubmitting(false);
                 }
             });
 
@@ -108,13 +115,15 @@ export default ({
         onComplete={onComplete}
     /> :
     <Card
+        isSubmitting={isSubmitting}
         userVote={userVote}
         options={data.options}
         hasAnswer={data.hasAnswer}
         totalEntries={totalEntries}
         results={results}
-        showResults={!!results||(!data.hasAnswer && userVote)}
+        showResults={showResults&&(!!results||(!data.hasAnswer && userVote))}
         onShowResults={getPollResults}
+        onHideResults={() => setShowResults(false)}
         onSelect={handleSelect}
     />
 }

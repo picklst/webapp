@@ -14,14 +14,14 @@ const PollContainer = styled.div`
 `;
 
 
-export default ({ userVote, showResults, results, totalEntries, options, hasAnswer, onSelect, onShowResults }) => {
+export default ({
+    userVote, results, totalEntries, options,
+    hasAnswer, showResults, isSubmitting,
+    onSelect, onShowResults, onHideResults
+}) => {
 
     const handleSelect = (id) => {
         onSelect(id);
-    };
-
-    const handleShowResults = () => {
-        onShowResults();
     };
 
     const renderPollFooter = () =>
@@ -30,7 +30,7 @@ export default ({ userVote, showResults, results, totalEntries, options, hasAnsw
             brandAccent
             className="small"
             text="View Results"
-            onClick={handleShowResults}
+            onClick={onShowResults}
         />
     </div>;
 
@@ -40,7 +40,7 @@ export default ({ userVote, showResults, results, totalEntries, options, hasAnsw
             brandAccent
             className="small"
             text="Back to Poll"
-            // onClick={() => setShowResults(false)}
+            onClick={onHideResults}
         />
     </div>;
 
@@ -127,8 +127,19 @@ export default ({ userVote, showResults, results, totalEntries, options, hasAnsw
         </div>
     </React.Fragment>;
 
+    const renderSubmitting =
+    <React.Fragment>
+        <div className="d-flex align-items-center justify-content-center">
+            <i className="gg-spinner" />
+        </div>
+        <div className="mt-2 text-center">
+            <h6>Submitting</h6>
+        </div>
+    </React.Fragment>;
+
     return <PollContainer>
     {
+        isSubmitting ? renderSubmitting :
         showResults ?
         hasAnswer ?  renderAnswerResult() : renderPollResults() : renderPoll()
     }

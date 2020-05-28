@@ -6,7 +6,7 @@ import { ActionCard } from "../../ui";
 import {SubmitForm} from '../views';
 import {clearAllBodyScrollLocks} from "body-scroll-lock";
 
-export default ({ slug }) => {
+export default ({ slug, isMobile }) => {
 
     const [isSubmitting, setSubmitting] = useState(false);
     const [hasSubmitted, setSubmitted] = useState(false);
@@ -41,6 +41,7 @@ export default ({ slug }) => {
     useEffect(() => { !isOpen ? clearAllBodyScrollLocks() : null}, [isOpen]);
 
     return <ActionCard
+        isHorizontal={isMobile}
         cover={require('../../../images/illustrations/covers/workshop.png')}
         labels={{
             title: "Add to this List",

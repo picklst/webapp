@@ -33,23 +33,22 @@ export default ({ slug }) => {
 
     useEffect(handleFetch, []);
 
-    return <div>
+    return data && data.length > 0 ?
+    <div>
         <h6 className="small px-2" style={{ fontWeight: 600 }}>You may also like</h6>
         {
-            data && data.length > 0 ?
-                data.slice(0,5).map(i =>
-                    <div className="my-2">
-                        <ListCard
-                            name={i.name}
-                            slug={i.slug}
-                            curator={i.curator}
-                            topic={i.topic}
-                            coverURL={i.coverURL}
-                            compact
-                        />
-                    </div>
-                )
-            : null
+            data.slice(0,5).map(i =>
+                <div className="my-2">
+                    <ListCard
+                        name={i.name}
+                        slug={i.slug}
+                        curator={i.curator}
+                        topic={i.topic}
+                        coverURL={i.coverURL}
+                        compact
+                    />
+                </div>
+            )
         }
-    </div>
+    </div> : null
 }

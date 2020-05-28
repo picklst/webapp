@@ -38,7 +38,7 @@ const ItemVoteStatContainer = styled.div`
   margin: 0.25rem 0;
 `;
 
-const ItemVoteStat = ({ rank, name, votes, totalVotes }) =>
+const ItemVoteStat = ({ rank, name, votes, totalVotes, }) =>
 <ItemVoteStatContainer percent={(votes/totalVotes)*100} className="row mx-0">
     <div title={name} className="col-9 d-flex align-items-center px-1">
         <span className="font-weight-bold">{rank}.</span>
@@ -51,7 +51,7 @@ const ItemVoteStat = ({ rank, name, votes, totalVotes }) =>
     </div>
 </ItemVoteStatContainer>;
 
-export default ({ slug, }) => {
+export default ({ slug, isMobile }) => {
     const [data, setData] = useState(false);
     const [myVotes] = useListVoteState('votes');
     const [userInfo] = useGlobalState('UserInfo');
@@ -139,6 +139,7 @@ export default ({ slug, }) => {
         }
     </VoteStatCard> :
     <ActionCard
+        isHorizontal={isMobile}
         cover={require('../../../../images/illustrations/covers/thumbsup.png')}
         labels={{
             title: "Pick Your Choice",

@@ -9,6 +9,14 @@ import Popup from './Popup';
 import {APIPost, APIRequest} from "../../../../utils";
 import {createFileFromURI} from "../../../commons";
 import {useAuthState} from "../../../../states";
+import styled from "@emotion/styled";
+import {PopUp} from "../../../ui";
+
+
+const StyledPopup = styled(PopUp)`
+    max-height: 150px!important;
+    max-width: 150px!important;
+`;
 
 export default ({ usePopup, onComplete, onExit, }) => {
     const [data, setData] = useState(null);
@@ -106,16 +114,42 @@ export default ({ usePopup, onComplete, onExit, }) => {
         });
     };
 
-    const renderEditor = () =>
-    isSaving ? <h5>Saving Changes</h5>
-    : <Editor onChange={setData} {...data} />;
+    const renderEditor = () => <Editor onChange={setData} {...data} />;
+
+    const renderSavingWindow = () => isSaving &&
+    <StyledPopup
+        isOpen
+        appElement=".app"
+        showTopbarOnMobile={false}
+        onClose={() => {}}
+    >
+        <div className="p-4 rounded d-flex align-items-center justify-content-center bg-white">
+            <div>
+                <div className="d-flex justify-content-center p-2">
+                    <i className="gg-spinner" />
+                </div>
+                <div className="text-center">
+                    <h6>Saving Changes</h6>
+                </div>
+            </div>
+        </div>
+    </StyledPopup>;
 
     const renderEditorWrapper = () =>
-    usePopup ?
-        <Popup onClose={onExit} onSave={handleSave}>
-            {renderEditor()}
-        </Popup>
-    : renderEditor();
+    <React.Fragment>
+    {
+        usePopup ?
+            <Popup onClose={onExit} onSave={handleSave}>
+                {renderEditor()}
+                {renderSavingWindow()}
+            </Popup>
+            : <React.Fragment>
+                {renderEditor()}
+                {renderSavingWindow()}
+            </React.Fragment>
+    }
+    </React.Fragment>;
+
 
     return data && data.username !== null ? renderEditorWrapper() : null;
 

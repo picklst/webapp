@@ -6,7 +6,7 @@ import styled from '@emotion/styled'
 
 import {ItemCard} from "../../../item";
 import ModeSelector from "./ModeSelector";
-import {Button, Card, PopUp} from "../../../ui";
+import {Button, Card} from "../../../ui";
 import {usePreferenceState} from "../../../../states";
 
 const TopbarContainer = styled.div`
@@ -22,7 +22,7 @@ const TopbarContainer = styled.div`
 
 export default ({
     slug, items, listProperties,
-    isEditing, userCanEdit, canLoadMore, hideTopbar, sidebar,
+    isEditing, userCanEdit, canLoadMore, hideTopbar, sidebar, mobileBar,
     onDelete, requireUpdate, onLoadMore
 }) => {
     const [mode, setMode] = useState('card');
@@ -31,9 +31,8 @@ export default ({
     const [hideDistractions, setHideDistractions] = usePreferenceState('hideDistractions');
     const [space, setSpacing] = usePreferenceState('topbarHeight');
 
-    const isDesktopOrLaptop = useMediaQuery({
-        query: '(min-width: 768px)'
-    });
+    const isDesktopOrLaptop = useMediaQuery({query: '(min-width: 768px)'});
+    const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
     const renderItemCard = (id, i, index) =>
     <ItemCard
@@ -183,6 +182,9 @@ export default ({
                     </div>
                 }
             </div>
+        }
+        {
+            isMobile && mobileBar
         }
     </div>
 

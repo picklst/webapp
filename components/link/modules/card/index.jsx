@@ -50,7 +50,7 @@ export default ({ url, showDeleteButton = false, onDelete = emptyFun, onFetch = 
     return <Card p={0} className="position-relative">
         { showDeleteButton && <button
             onClick={() => onDelete()}
-            className="position-absolute top-0 right-0 text-dark plain-button"
+            className="position-absolute top-0 right-0 text-dark rounded plain-button"
         >
             <FontAwesomeIcon icon={faWindowClose} />
         </button>}
