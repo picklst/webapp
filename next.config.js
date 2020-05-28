@@ -32,24 +32,37 @@ const customConfig = {
 
     // generateInDevMode: true,
     workboxOpts: {
+        swDest: 'service-worker.js',
         runtimeCaching: [
+            {
+                urlPattern: /^https?.*/,
+                handler: 'NetworkFirst',
+                options: {
+                    cacheName: 'offlineCache',
+                    expiration: {
+                        maxEntries: 200,
+                    },
+                },
+            },
             {
                 urlPattern: /.png$/,
                 handler: 'CacheFirst'
             },
             {
-                urlPattern: /api/,
-                handler: 'NetworkFirst',
-                options: {
-                    cacheableResponse: {
-                        statuses: [0, 200],
-                        headers: {
-                            'x-test': 'true'
-                        }
-                    }
-                }
-            }
-        ]
+                urlPattern: /.jpg$/,
+                handler: 'CacheFirst'
+            },
+        ],
+    },
+    experimental: {
+        async rewrites() {
+            return [
+                {
+                    source: '/service-worker.js',
+                    destination: '/_next/static/service-worker.js',
+                },
+            ]
+        },
     },
 };
 
