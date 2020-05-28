@@ -55,13 +55,7 @@ send a mail to build@picklst.com and let's team up!
             <link href='/images/icons/icon-32x32.png' rel='icon' type='image/png' sizes='32x32' />
             <link rel='apple-touch-icon' href='/images/icons/icon-512x512.png' />
             <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167849096-1"></script>
-            <script dangerouslySetInnerHTML={{ __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-
-                gtag('config', 'UA-167849096-1');
-            `}} />
+            <script dangerouslySetInnerHTML={{ __html: `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-167849096-1');`}} />
         </Head>
         <div className="app light dark-mode animated fadeIn">
             {children}

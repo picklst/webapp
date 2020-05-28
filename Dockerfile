@@ -8,5 +8,6 @@ COPY package.json /app/package.json
 RUN cd /app; npm install --loglevel verbose
 
 COPY . /app
-#RUN cd /app; npm run build
+RUN cd /app; npm run build
 WORKDIR ./app
+CMD [ "npm", "start" ]
