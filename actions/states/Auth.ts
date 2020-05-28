@@ -1,5 +1,7 @@
 import { createGlobalState } from 'react-hooks-global-state';
+import Cookies from 'universal-cookie';
 
+const cookies = new Cookies();
 import store from 'store2';
 
 type State = {
@@ -7,7 +9,7 @@ type State = {
 };
 
 const defaultState: State = {
-    UserInfo: store.get('UserInfo') || null,
+    UserInfo: cookies.get('JWTRefreshExpiry') && store.get('UserInfo') || null,
 };
 
 // @ts-ignore

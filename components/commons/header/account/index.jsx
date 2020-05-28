@@ -23,6 +23,7 @@ const AccountAuthButton = styled(Button)`
     border-radius: 0.5rem;
     display: flex;
     align-items: center;
+    line-height: 1;
     justify-content: center;
     &:hover, &:focus {
       outline: none!important;

@@ -1,14 +1,14 @@
 {
   "name": "Webapp",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "NextJS based WebApp",
   "main": "server.js",
   "scripts": {
     "build": "next build",
     "build-analyse": "ANALYZE=true next build",
-    "dev": "node server.js",
-    "start": "NODE_ENV='production' node server.js",
-    "deploy": "next build && NODE_ENV='production' node server.js"
+    "dev": "next dev",
+    "start": "next start -p 80",
+    "deploy": "next build && next start -p 80"
   },
   "author": "aswinshenoy <aswinshenoy65@gmail.com>",
   "dependencies": {

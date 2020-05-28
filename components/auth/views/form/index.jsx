@@ -43,7 +43,7 @@ export default ({
             hasErrors={hasErrors}
             errors={errors}
         />
-        <div className="text-center mt-2">
+        <div className="text-center mt-2 pb-5 pb-md-0">
             <hr />
             <p className="mb-2">Do not have an account?</p>
             <div className="d-flex justify-content-center">

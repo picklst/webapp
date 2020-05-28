@@ -20,7 +20,6 @@ const LoginModal = styled.div`
     overflow-y: auto;
     position: unset;
     background-color: white;
-    padding-bottom: 5vh;
 `;
 
 export default ({

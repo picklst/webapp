@@ -31,8 +31,31 @@ const customConfig = {
     // },
 
     // generateInDevMode: true,
+    // workboxOpts: {
+    //     runtimeCaching: [
+    //         {
+    //             urlPattern: /^https?.*/,
+    //             handler: 'NetworkFirst',
+    //             options: {
+    //                 cacheName: 'offlineCache',
+    //                 expiration: {
+    //                     maxEntries: 200,
+    //                 },
+    //             },
+    //         },
+    //         {
+    //             urlPattern: /.png$/,
+    //             handler: 'CacheFirst'
+    //         },
+    //         {
+    //             urlPattern: /.jpg$/,
+    //             handler: 'CacheFirst'
+    //         },
+    //     ],
+    // },
+    generateInDevMode: true,
     workboxOpts: {
-        swDest: 'service-worker.js',
+        cleanupOutdatedCaches: true,
         runtimeCaching: [
             {
                 urlPattern: /^https?.*/,
@@ -53,16 +76,6 @@ const customConfig = {
                 handler: 'CacheFirst'
             },
         ],
-    },
-    experimental: {
-        async rewrites() {
-            return [
-                {
-                    source: '/service-worker.js',
-                    destination: '/_next/static/service-worker.js',
-                },
-            ]
-        },
     },
 };
 
