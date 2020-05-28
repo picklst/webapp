@@ -235,7 +235,7 @@ export default () => {
                 {
                     "label": "Version",
                     "icon": "🧬",
-                    "text": "Ver. 1.0.0"
+                    "text": `${process.env.APP_VERSION || "1.0.0"}`
                 }
             ]
         },

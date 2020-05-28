@@ -34,7 +34,7 @@ const ListPage = ({ slug, username, name: propName, isEditing }) => {
         return `See lists created and shared by @${username}'s profile on Picklst.`
     };
 
-    const renderListingPage = propName !== null &&
+    const renderListingPage = () => propName !== null &&
     <List
         name={name}
         title={generateTitle()}
@@ -49,7 +49,7 @@ const ListPage = ({ slug, username, name: propName, isEditing }) => {
         heading="List Not Found"
         title="List Not Found"
         description="We cannot retrieve this page at the moment. Please try again later, or check the url."
-    /> : renderListingPage;
+    /> : renderListingPage();
 };
 
 ListPage.getInitialProps = async ({ query }) => {
