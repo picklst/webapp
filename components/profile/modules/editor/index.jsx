@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
+import styled from "@emotion/styled";
 import { useBeforeunload } from 'react-beforeunload';
+import {clearAllBodyScrollLocks} from "body-scroll-lock";
 
 import { getUserAPI } from "../../api"
 
@@ -9,7 +11,6 @@ import Popup from './Popup';
 import {APIPost, APIRequest} from "../../../../utils";
 import {createFileFromURI} from "../../../commons";
 import {useAuthState} from "../../../../states";
-import styled from "@emotion/styled";
 import {PopUp} from "../../../ui";
 
 
@@ -82,7 +83,6 @@ export default ({ usePopup, onComplete, onExit, }) => {
           }
         }`;
         return await APIRequest({ query, variables, requireAuth: true}).then((data) => {
-            console.log(data);
             return { success: true, data }
         }).catch((errors) => {
             return { success: false, errors}
@@ -105,6 +105,7 @@ export default ({ usePopup, onComplete, onExit, }) => {
             if(success)
             {
                 setUserInfo(data.accountUpdate.returning);
+                clearAllBodyScrollLocks();
                 onComplete({
                     ...data.accountUpdate.returning,
                     avatarURL: '',

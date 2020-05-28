@@ -28,6 +28,7 @@ const AvatarImage = styled.div`
     background-size: cover;
     border-radius: ${(props) => props.rounded ? '100vw' : '0.5rem' };
     height: 100%;
+    box-shadow: 1px 2px 3px rgba(0,0,0,0.2);
 `;
 
 
