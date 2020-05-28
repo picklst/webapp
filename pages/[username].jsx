@@ -41,14 +41,14 @@ const UserProfilePage = (props) => {
         heading="Sorry, this page isn't available."
         description="We cannot retrieve this page at the moment. The link you followed may be broken, or the page may have been removed."
     /> :
-    <Base meta={{ title: generateTitle(), description: generateDescription() }}>
+    <Base meta={{ title: generateTitle(), description: generateDescription(), image: props.avatarURL }}>
         { firstName || isProfileLoaded ? <Profile username={props.username} /> : null}
     </Base>;
 };
 
 UserProfilePage.getInitialProps = async ({ query }) => {
     const username = query.username.startsWith('@') ? query.username.substr(1) : query.username;
-    const q = getUserAPI({ fields: [ "firstName", "lastName" ] });
+    const q = getUserAPI({ fields: [ "firstName", "lastName", "avatarURL" ] });
     return await APIRequest({
         query: q,
         variables: { username },
@@ -59,13 +59,15 @@ UserProfilePage.getInitialProps = async ({ query }) => {
             return {
                 firstName: res.user.firstName,
                 lastName: res.user.lastName,
+                avatarURL: res.user.avatarURL,
                 username
             }
     }).catch((e) => {
         return {
             firstName: null,
             lastName: null,
-            username
+            username,
+            avatarURL: null
         }
     })
 };

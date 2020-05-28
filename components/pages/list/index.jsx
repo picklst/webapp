@@ -23,7 +23,7 @@ const TopbarIconsWrapper = styled.div`
   }
 `;
 
-export default ({ title, description, name, slug, username, isEditing }) => {
+export default ({ title, description, coverURL, name, slug, username, isEditing }) => {
 
     const [hideDistractions, setHideDistractions] = usePreferenceState('hideDistractions');
 
@@ -45,7 +45,7 @@ export default ({ title, description, name, slug, username, isEditing }) => {
         />
     </TopbarIconsWrapper>;
 
-    return <Base meta={{ title, description }}>
+    return <Base meta={{ title, description, image: coverURL }}>
         <Header />
         <Topbar showLogoLeft button={renderTopbarButtons} />
         <div>

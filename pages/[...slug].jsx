@@ -7,7 +7,7 @@ import { List } from "../components/pages";
 import {APIRequest} from "../utils";
 const prefetchEndpoint = process.env.PREFETCH_SERVER_ENDPOINT;
 
-const ListPage = ({ slug, username, name: propName, isEditing }) => {
+const ListPage = ({ slug, username, coverURL, name: propName, isEditing }) => {
     const [name, setName] = useState(propName);
 
     const [loadError, setError] = useState(false);
@@ -39,6 +39,7 @@ const ListPage = ({ slug, username, name: propName, isEditing }) => {
         name={name}
         title={generateTitle()}
         description={generateDescription()}
+        coverURL={coverURL}
         isEditing={isEditing}
         slug={slug}
         username={username}
@@ -56,7 +57,7 @@ ListPage.getInitialProps = async ({ query }) => {
     const username = query.slug[0];
     const slug = query.slug[1];
     const isEditing = query.slug[2] === "edit";
-    const q = getListAPI({ fields: [ "name", ] });
+    const q = getListAPI({ fields: [ "name", "coverURL" ] });
     return await APIRequest({
         query: q,
         variables: { slug, username },
@@ -67,6 +68,7 @@ ListPage.getInitialProps = async ({ query }) => {
             name: res.list.name,
             slug: slug,
             username: username,
+            coverURL: res.list.coverURL,
             isEditing
         }
     }).catch((e) => {
@@ -74,7 +76,8 @@ ListPage.getInitialProps = async ({ query }) => {
             name: null,
             slug: slug,
             username: username,
-            isEditing
+            isEditing,
+            coverURL: null
         }
     });
 

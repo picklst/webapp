@@ -27,14 +27,6 @@ class MyDocument extends Document {
         return (
             <Html lang="en">
                 <Head>
-                    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167849096-1"></script>
-                    <script>
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){dataLayer.push(arguments);}
-                        gtag('js', new Date());
-
-                        gtag('config', 'UA-167849096-1');
-                    </script>
                     <style
                         data-emotion-css={this.props.ids.join(' ')}
                         dangerouslySetInnerHTML={{ __html: this.props.css }}
