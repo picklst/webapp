@@ -1,12 +1,28 @@
 {
-  "name": "Picklst WebApp",
-  "short_name": "picklst",
-  "theme_color": "#2196f3",
-  "background_color": "#2196f3",
+  "name": "Picklst",
+  "short_name": "Picklst",
+  "theme_color": "#0CC1B0",
+  "background_color": "#0CC1B0",
   "display": "standalone",
   "orientation": "portrait",
   "Scope": "/",
   "start_url": "/",
+  "shortcuts": [
+    {
+      "name": "Discover Lists",
+      "short_name": "Discover",
+      "description": "Search & Discover lists, users and topics",
+      "url": "/discover",
+      "icons": [{ "src": "/images/discover.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "View Notifications",
+      "short_name": "Notifications",
+      "description": "View Recent Notifications",
+      "url": "/notifications",
+      "icons": [{ "src": "/images/notifications.png", "sizes": "96x96" }]
+    }
+  ],
   "icons": [
     {
       "src": "images/icons/icon-72x72.png",
